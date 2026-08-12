@@ -1,0 +1,2368 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "b65914b0-6f1d-422d-bf5a-3b30cac0155a",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "ddl": [
+    {
+      "name": "entities",
+      "entityType": "tables"
+    },
+    {
+      "name": "aliases",
+      "entityType": "tables"
+    },
+    {
+      "name": "media",
+      "entityType": "tables"
+    },
+    {
+      "name": "media_links",
+      "entityType": "tables"
+    },
+    {
+      "name": "sources",
+      "entityType": "tables"
+    },
+    {
+      "name": "relationship_types",
+      "entityType": "tables"
+    },
+    {
+      "name": "people",
+      "entityType": "tables"
+    },
+    {
+      "name": "titans",
+      "entityType": "tables"
+    },
+    {
+      "name": "abilities",
+      "entityType": "tables"
+    },
+    {
+      "name": "titan_abilities",
+      "entityType": "tables"
+    },
+    {
+      "name": "families",
+      "entityType": "tables"
+    },
+    {
+      "name": "events",
+      "entityType": "tables"
+    },
+    {
+      "name": "locations",
+      "entityType": "tables"
+    },
+    {
+      "name": "factions",
+      "entityType": "tables"
+    },
+    {
+      "name": "objects",
+      "entityType": "tables"
+    },
+    {
+      "name": "relationships",
+      "entityType": "tables"
+    },
+    {
+      "name": "titan_holders",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "entities"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "entity_type",
+      "entityType": "columns",
+      "table": "entities"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "(strftime('%Y-%m-%dT%H:%M:%fZ','now'))",
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "entities"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "table": "entities"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "aliases"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "entity_id",
+      "entityType": "columns",
+      "table": "aliases"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "alias",
+      "entityType": "columns",
+      "table": "aliases"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "alias_type",
+      "entityType": "columns",
+      "table": "aliases"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "language",
+      "entityType": "columns",
+      "table": "aliases"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "aliases"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "media"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "media_type",
+      "entityType": "columns",
+      "table": "media"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "url",
+      "entityType": "columns",
+      "table": "media"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "caption",
+      "entityType": "columns",
+      "table": "media"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "source_id",
+      "entityType": "columns",
+      "table": "media"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "license_notes",
+      "entityType": "columns",
+      "table": "media"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "media_links"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "entity_id",
+      "entityType": "columns",
+      "table": "media_links"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "media_id",
+      "entityType": "columns",
+      "table": "media_links"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "false",
+      "generated": null,
+      "name": "is_primary",
+      "entityType": "columns",
+      "table": "media_links"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "display_order",
+      "entityType": "columns",
+      "table": "media_links"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "sources"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "title",
+      "entityType": "columns",
+      "table": "sources"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "source_type",
+      "entityType": "columns",
+      "table": "sources"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "chapter",
+      "entityType": "columns",
+      "table": "sources"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "episode",
+      "entityType": "columns",
+      "table": "sources"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "volume",
+      "entityType": "columns",
+      "table": "sources"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "page",
+      "entityType": "columns",
+      "table": "sources"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "url",
+      "entityType": "columns",
+      "table": "sources"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "sources"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "slug",
+      "entityType": "columns",
+      "table": "relationship_types"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "category",
+      "entityType": "columns",
+      "table": "relationship_types"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "inverse_slug",
+      "entityType": "columns",
+      "table": "relationship_types"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "false",
+      "generated": null,
+      "name": "is_symmetric",
+      "entityType": "columns",
+      "table": "relationship_types"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "relationship_types"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "slug",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "japanese_name",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'unknown'",
+      "generated": null,
+      "name": "gender",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'human'",
+      "generated": null,
+      "name": "species",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'unknown'",
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "birth_year_start",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "birth_year_end",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "birth_date_precision",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "death_year_start",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "death_year_end",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "death_date_precision",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "summary",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'manga'",
+      "generated": null,
+      "name": "canon_status",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "primary_source_id",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "people"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "titans"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "titans"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "slug",
+      "entityType": "columns",
+      "table": "titans"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "titan_class",
+      "entityType": "columns",
+      "table": "titans"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "titans"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'manga'",
+      "generated": null,
+      "name": "canon_status",
+      "entityType": "columns",
+      "table": "titans"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "titans"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "abilities"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "abilities"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'titan_power'",
+      "generated": null,
+      "name": "category",
+      "entityType": "columns",
+      "table": "abilities"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "abilities"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "titan_id",
+      "entityType": "columns",
+      "table": "titan_abilities"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "ability_id",
+      "entityType": "columns",
+      "table": "titan_abilities"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "titan_abilities"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "families"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "families"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "slug",
+      "entityType": "columns",
+      "table": "families"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "false",
+      "generated": null,
+      "name": "is_royal_bloodline",
+      "entityType": "columns",
+      "table": "families"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "families"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "families"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "slug",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "event_type",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "year_start",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "year_end",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "date_precision",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "summary",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'manga'",
+      "generated": null,
+      "name": "canon_status",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "source_id",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "events"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "locations"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "locations"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "slug",
+      "entityType": "columns",
+      "table": "locations"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "location_type",
+      "entityType": "columns",
+      "table": "locations"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "parent_location_id",
+      "entityType": "columns",
+      "table": "locations"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "locations"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'manga'",
+      "generated": null,
+      "name": "canon_status",
+      "entityType": "columns",
+      "table": "locations"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "locations"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "factions"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "factions"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "slug",
+      "entityType": "columns",
+      "table": "factions"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "faction_type",
+      "entityType": "columns",
+      "table": "factions"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "factions"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'manga'",
+      "generated": null,
+      "name": "canon_status",
+      "entityType": "columns",
+      "table": "factions"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "factions"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "objects"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "objects"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "slug",
+      "entityType": "columns",
+      "table": "objects"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "object_type",
+      "entityType": "columns",
+      "table": "objects"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "objects"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'manga'",
+      "generated": null,
+      "name": "canon_status",
+      "entityType": "columns",
+      "table": "objects"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "objects"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "subject_id",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "subject_type",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "predicate",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "object_id",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "object_type",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "qualifier",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "year_start",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "year_end",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "date_precision",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'manga'",
+      "generated": null,
+      "name": "canon_status",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "source_id",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "(strftime('%Y-%m-%dT%H:%M:%fZ','now'))",
+      "generated": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "table": "relationships"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": true,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "titan_id",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "person_id",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "holder_order",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "predecessor_person_id",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "successor_person_id",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "period_start_year",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "period_end_year",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "date_precision",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "false",
+      "generated": null,
+      "name": "is_current",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "inheritance_method",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "'manga'",
+      "generated": null,
+      "name": "canon_status",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "source_id",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "notes",
+      "entityType": "columns",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        "entity_id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_aliases_entity_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "aliases"
+    },
+    {
+      "columns": [
+        "source_id"
+      ],
+      "tableTo": "sources",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_media_source_id_sources_id_fk",
+      "entityType": "fks",
+      "table": "media"
+    },
+    {
+      "columns": [
+        "entity_id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_media_links_entity_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "media_links"
+    },
+    {
+      "columns": [
+        "media_id"
+      ],
+      "tableTo": "media",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_media_links_media_id_media_id_fk",
+      "entityType": "fks",
+      "table": "media_links"
+    },
+    {
+      "columns": [
+        "inverse_slug"
+      ],
+      "tableTo": "relationship_types",
+      "columnsTo": [
+        "slug"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "nameExplicit": false,
+      "name": "fk_relationship_types_inverse_slug_relationship_types_slug_fk",
+      "entityType": "fks",
+      "table": "relationship_types"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_people_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "people"
+    },
+    {
+      "columns": [
+        "primary_source_id"
+      ],
+      "tableTo": "sources",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_people_primary_source_id_sources_id_fk",
+      "entityType": "fks",
+      "table": "people"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_titans_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "titans"
+    },
+    {
+      "columns": [
+        "titan_id"
+      ],
+      "tableTo": "titans",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_titan_abilities_titan_id_titans_id_fk",
+      "entityType": "fks",
+      "table": "titan_abilities"
+    },
+    {
+      "columns": [
+        "ability_id"
+      ],
+      "tableTo": "abilities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_titan_abilities_ability_id_abilities_id_fk",
+      "entityType": "fks",
+      "table": "titan_abilities"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_families_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "families"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_events_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "events"
+    },
+    {
+      "columns": [
+        "source_id"
+      ],
+      "tableTo": "sources",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_events_source_id_sources_id_fk",
+      "entityType": "fks",
+      "table": "events"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_locations_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "locations"
+    },
+    {
+      "columns": [
+        "parent_location_id"
+      ],
+      "tableTo": "locations",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_locations_parent_location_id_locations_id_fk",
+      "entityType": "fks",
+      "table": "locations"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_factions_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "factions"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_objects_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "objects"
+    },
+    {
+      "columns": [
+        "subject_id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_relationships_subject_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "relationships"
+    },
+    {
+      "columns": [
+        "predicate"
+      ],
+      "tableTo": "relationship_types",
+      "columnsTo": [
+        "slug"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "NO ACTION",
+      "nameExplicit": false,
+      "name": "fk_relationships_predicate_relationship_types_slug_fk",
+      "entityType": "fks",
+      "table": "relationships"
+    },
+    {
+      "columns": [
+        "object_id"
+      ],
+      "tableTo": "entities",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_relationships_object_id_entities_id_fk",
+      "entityType": "fks",
+      "table": "relationships"
+    },
+    {
+      "columns": [
+        "source_id"
+      ],
+      "tableTo": "sources",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_relationships_source_id_sources_id_fk",
+      "entityType": "fks",
+      "table": "relationships"
+    },
+    {
+      "columns": [
+        "titan_id"
+      ],
+      "tableTo": "titans",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_titan_holders_titan_id_titans_id_fk",
+      "entityType": "fks",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        "person_id"
+      ],
+      "tableTo": "people",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_titan_holders_person_id_people_id_fk",
+      "entityType": "fks",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        "predecessor_person_id"
+      ],
+      "tableTo": "people",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_titan_holders_predecessor_person_id_people_id_fk",
+      "entityType": "fks",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        "successor_person_id"
+      ],
+      "tableTo": "people",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_titan_holders_successor_person_id_people_id_fk",
+      "entityType": "fks",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        "source_id"
+      ],
+      "tableTo": "sources",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "SET NULL",
+      "nameExplicit": false,
+      "name": "fk_titan_holders_source_id_sources_id_fk",
+      "entityType": "fks",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        "titan_id",
+        "ability_id"
+      ],
+      "nameExplicit": false,
+      "name": "titan_abilities_pk",
+      "entityType": "pks",
+      "table": "titan_abilities"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "entities_pk",
+      "table": "entities",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "aliases_pk",
+      "table": "aliases",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "media_pk",
+      "table": "media",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "media_links_pk",
+      "table": "media_links",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "sources_pk",
+      "table": "sources",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "slug"
+      ],
+      "nameExplicit": false,
+      "name": "relationship_types_pk",
+      "table": "relationship_types",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "people_pk",
+      "table": "people",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "titans_pk",
+      "table": "titans",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "abilities_pk",
+      "table": "abilities",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "families_pk",
+      "table": "families",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "events_pk",
+      "table": "events",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "locations_pk",
+      "table": "locations",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "factions_pk",
+      "table": "factions",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "objects_pk",
+      "table": "objects",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "relationships_pk",
+      "table": "relationships",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "titan_holders_pk",
+      "table": "titan_holders",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        {
+          "value": "entity_type",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_entities_type",
+      "entityType": "indexes",
+      "table": "entities"
+    },
+    {
+      "columns": [
+        {
+          "value": "entity_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_aliases_entity",
+      "entityType": "indexes",
+      "table": "aliases"
+    },
+    {
+      "columns": [
+        {
+          "value": "alias",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_aliases_alias",
+      "entityType": "indexes",
+      "table": "aliases"
+    },
+    {
+      "columns": [
+        {
+          "value": "status",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_people_status",
+      "entityType": "indexes",
+      "table": "people"
+    },
+    {
+      "columns": [
+        {
+          "value": "birth_year_start",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_people_birth_year",
+      "entityType": "indexes",
+      "table": "people"
+    },
+    {
+      "columns": [
+        {
+          "value": "titan_class",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_titans_class",
+      "entityType": "indexes",
+      "table": "titans"
+    },
+    {
+      "columns": [
+        {
+          "value": "year_start",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_events_year",
+      "entityType": "indexes",
+      "table": "events"
+    },
+    {
+      "columns": [
+        {
+          "value": "parent_location_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_locations_parent",
+      "entityType": "indexes",
+      "table": "locations"
+    },
+    {
+      "columns": [
+        {
+          "value": "subject_id",
+          "isExpression": false
+        },
+        {
+          "value": "predicate",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_rel_subject",
+      "entityType": "indexes",
+      "table": "relationships"
+    },
+    {
+      "columns": [
+        {
+          "value": "object_id",
+          "isExpression": false
+        },
+        {
+          "value": "predicate",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_rel_object",
+      "entityType": "indexes",
+      "table": "relationships"
+    },
+    {
+      "columns": [
+        {
+          "value": "predicate",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_rel_predicate",
+      "entityType": "indexes",
+      "table": "relationships"
+    },
+    {
+      "columns": [
+        {
+          "value": "titan_id",
+          "isExpression": false
+        },
+        {
+          "value": "holder_order",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_titan_holders_titan_order",
+      "entityType": "indexes",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        {
+          "value": "person_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "idx_titan_holders_person",
+      "entityType": "indexes",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        {
+          "value": "titan_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "where": "\"titan_holders\".\"is_current\" = 1",
+      "origin": "manual",
+      "name": "idx_titan_holders_one_current",
+      "entityType": "indexes",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        "entity_id",
+        "media_id"
+      ],
+      "nameExplicit": true,
+      "name": "uq_media_links_entity_media",
+      "entityType": "uniques",
+      "table": "media_links"
+    },
+    {
+      "columns": [
+        "subject_id",
+        "predicate",
+        "object_id",
+        "qualifier"
+      ],
+      "nameExplicit": true,
+      "name": "uq_relationships_edge",
+      "entityType": "uniques",
+      "table": "relationships"
+    },
+    {
+      "columns": [
+        "titan_id",
+        "person_id",
+        "holder_order"
+      ],
+      "nameExplicit": true,
+      "name": "uq_titan_holders_titan_person_order",
+      "entityType": "uniques",
+      "table": "titan_holders"
+    },
+    {
+      "columns": [
+        "slug"
+      ],
+      "nameExplicit": false,
+      "name": "people_slug_unique",
+      "entityType": "uniques",
+      "table": "people"
+    },
+    {
+      "columns": [
+        "slug"
+      ],
+      "nameExplicit": false,
+      "name": "titans_slug_unique",
+      "entityType": "uniques",
+      "table": "titans"
+    },
+    {
+      "columns": [
+        "name"
+      ],
+      "nameExplicit": false,
+      "name": "abilities_name_unique",
+      "entityType": "uniques",
+      "table": "abilities"
+    },
+    {
+      "columns": [
+        "slug"
+      ],
+      "nameExplicit": false,
+      "name": "families_slug_unique",
+      "entityType": "uniques",
+      "table": "families"
+    },
+    {
+      "columns": [
+        "slug"
+      ],
+      "nameExplicit": false,
+      "name": "events_slug_unique",
+      "entityType": "uniques",
+      "table": "events"
+    },
+    {
+      "columns": [
+        "slug"
+      ],
+      "nameExplicit": false,
+      "name": "locations_slug_unique",
+      "entityType": "uniques",
+      "table": "locations"
+    },
+    {
+      "columns": [
+        "slug"
+      ],
+      "nameExplicit": false,
+      "name": "factions_slug_unique",
+      "entityType": "uniques",
+      "table": "factions"
+    },
+    {
+      "columns": [
+        "slug"
+      ],
+      "nameExplicit": false,
+      "name": "objects_slug_unique",
+      "entityType": "uniques",
+      "table": "objects"
+    },
+    {
+      "value": "\"entity_type\" IN ('person','titan','event','location','faction','object','family')",
+      "name": "chk_entities_entity_type",
+      "entityType": "checks",
+      "table": "entities"
+    },
+    {
+      "value": "\"alias_type\" IN ('nickname','title','epithet','japanese_name','romanization','alternate_name')",
+      "name": "chk_aliases_alias_type",
+      "entityType": "checks",
+      "table": "aliases"
+    },
+    {
+      "value": "\"media_type\" IN ('image','video')",
+      "name": "chk_media_media_type",
+      "entityType": "checks",
+      "table": "media"
+    },
+    {
+      "value": "\"source_type\" IN ('manga','anime','anime-original','guidebook','character-book','official-material','interview','other')",
+      "name": "chk_sources_source_type",
+      "entityType": "checks",
+      "table": "sources"
+    },
+    {
+      "value": "\"category\" IN ('family','social','political','faction','location','historical','ownership')",
+      "name": "chk_relationship_types_category",
+      "entityType": "checks",
+      "table": "relationship_types"
+    },
+    {
+      "value": "\"gender\" IN ('male','female','unknown')",
+      "name": "chk_people_gender",
+      "entityType": "checks",
+      "table": "people"
+    },
+    {
+      "value": "\"species\" IN ('human','pure_titan','unknown')",
+      "name": "chk_people_species",
+      "entityType": "checks",
+      "table": "people"
+    },
+    {
+      "value": "\"status\" IN ('alive','deceased','unknown')",
+      "name": "chk_people_status",
+      "entityType": "checks",
+      "table": "people"
+    },
+    {
+      "value": "\"titan_class\" IN ('nine_titans','pure_titan','abnormal_titan','named_titan')",
+      "name": "chk_titans_titan_class",
+      "entityType": "checks",
+      "table": "titans"
+    },
+    {
+      "value": "\"category\" IN ('titan_power','combat_skill','other')",
+      "name": "chk_abilities_category",
+      "entityType": "checks",
+      "table": "abilities"
+    },
+    {
+      "value": "\"event_type\" IN ('war','battle','expedition','political','disaster','other')",
+      "name": "chk_events_event_type",
+      "entityType": "checks",
+      "table": "events"
+    },
+    {
+      "value": "\"location_type\" IN ('nation','region','city','district','wall','island','landmark','other')",
+      "name": "chk_locations_location_type",
+      "entityType": "checks",
+      "table": "locations"
+    },
+    {
+      "value": "\"faction_type\" IN ('military','political','nation','militia','other')",
+      "name": "chk_factions_faction_type",
+      "entityType": "checks",
+      "table": "factions"
+    },
+    {
+      "value": "\"object_type\" IN ('equipment','artifact','weapon','document','other')",
+      "name": "chk_objects_object_type",
+      "entityType": "checks",
+      "table": "objects"
+    },
+    {
+      "value": "\"subject_type\" IN ('person','titan','event','location','faction','object','family')",
+      "name": "chk_relationships_subject_type",
+      "entityType": "checks",
+      "table": "relationships"
+    },
+    {
+      "value": "\"object_type\" IN ('person','titan','event','location','faction','object','family')",
+      "name": "chk_relationships_object_type",
+      "entityType": "checks",
+      "table": "relationships"
+    },
+    {
+      "value": "\"inheritance_method\" IN ('combat','death_bite','injection','birth','unknown','other')",
+      "name": "chk_titan_holders_inheritance_method",
+      "entityType": "checks",
+      "table": "titan_holders"
+    }
+  ],
+  "renames": []
+}

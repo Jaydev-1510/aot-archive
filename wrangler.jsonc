@@ -23,7 +23,8 @@
 		{
 			"binding": "DB",
 			"database_name": "aot-archive",
-			"database_id": "071f0c5f-cf6e-4ffb-af55-53ea4d6a33a6"
+			"database_id": "071f0c5f-cf6e-4ffb-af55-53ea4d6a33a6",
+			"migrations_dir": "./migrations"
 		}
 	]
 }
