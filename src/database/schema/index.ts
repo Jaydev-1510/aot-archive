@@ -12,3 +12,4 @@ export * from "./objects";
 export * from "./relationships";
 export * from "./titan-holders";
 export * from "./search";
+export * from "./shared";
