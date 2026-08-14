@@ -10,21 +10,24 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-types": "wrangler types"
+    "generate-types": "wrangler types",
+    "seed:validate": "bun scripts/seed/validate.ts",
+    "seed": "bun scripts/seed/seed.ts",
+    "seed:dry-run": "bun scripts/seed/seed.ts --dry-run"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/cloudflare": "^14.2.1",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.2.1",
+    "astro": "^7.2.2",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^1.0.0-rc.5-ab785fc",
     "tailwindcss": "^4.3.3",
     "typescript": "6.0.3",
-    "wrangler": "^4.122.0"
+    "wrangler": "^4.123.0"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.52.0",
+    "@cloudflare/vite-plugin": "^1.52.1",
     "drizzle-kit": "^1.0.0-rc.5-ab785fc",
     "tsx": "^4.23.12"
   }
