@@ -1,0 +1,322 @@
+import { personId, familyId } from "../../ids";
+import type { SeedDataset } from "../../types";
+
+export const dataset: SeedDataset = {
+  relationships: [
+    // Parentage (parent-of)
+    {
+      subject: personId("grisha_yeager"),
+      predicate: "parent-of",
+      object: personId("eren_yeager"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("carla_yeager"),
+      predicate: "parent-of",
+      object: personId("eren_yeager"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("grisha_yeager"),
+      predicate: "parent-of",
+      object: personId("zeke_yeager"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("dina_fritz"),
+      predicate: "parent-of",
+      object: personId("zeke_yeager"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("rod_reiss"),
+      predicate: "parent-of",
+      object: personId("historia_reiss"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("rod_reiss"),
+      predicate: "parent-of",
+      object: personId("frieda_reiss"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("kuchel_ackerman"),
+      predicate: "parent-of",
+      object: personId("levi_ackerman"),
+      provenance: { source: "aot_manga" }
+    },
+    
+    // Spousal (spouse-of)
+    {
+      subject: personId("grisha_yeager"),
+      predicate: "spouse-of",
+      object: personId("carla_yeager"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("grisha_yeager"),
+      predicate: "spouse-of",
+      object: personId("dina_fritz"),
+      provenance: { source: "aot_manga" }
+    },
+
+    // Sibling (sibling-of)
+    {
+      subject: personId("grisha_yeager"),
+      predicate: "sibling-of",
+      object: personId("faye_yeager"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("eren_yeager"),
+      predicate: "sibling-of",
+      object: personId("zeke_yeager"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("porco_galliard"),
+      predicate: "sibling-of",
+      object: personId("marcel_galliard"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("falco_grice"),
+      predicate: "sibling-of",
+      object: personId("colt_grice"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("rod_reiss"),
+      predicate: "sibling-of",
+      object: personId("uri_reiss"),
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("historia_reiss"),
+      predicate: "sibling-of",
+      object: personId("frieda_reiss"),
+      provenance: { source: "aot_manga" }
+    },
+
+    // Adopted (adopted-parent-of)
+    {
+      subject: personId("grisha_yeager"),
+      predicate: "adopted-parent-of",
+      object: personId("mikasa_ackerman"),
+      provenance: { source: "aot_manga" }
+    },
+
+    // Family Membership (member-of)
+    {
+      subject: personId("grisha_yeager"),
+      predicate: "member-of",
+      object: familyId("yeager_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("eren_yeager"),
+      predicate: "member-of",
+      object: familyId("yeager_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("zeke_yeager"),
+      predicate: "member-of",
+      object: familyId("yeager_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("carla_yeager"),
+      predicate: "member-of",
+      object: familyId("yeager_family"),
+      qualifier: "marriage",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("mikasa_ackerman"),
+      predicate: "member-of",
+      object: familyId("yeager_family"),
+      qualifier: "adopted",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("mikasa_ackerman"),
+      predicate: "member-of",
+      object: familyId("ackerman_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("levi_ackerman"),
+      predicate: "member-of",
+      object: familyId("ackerman_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("kenny_ackerman"),
+      predicate: "member-of",
+      object: familyId("ackerman_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("kuchel_ackerman"),
+      predicate: "member-of",
+      object: familyId("ackerman_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("historia_reiss"),
+      predicate: "member-of",
+      object: familyId("reiss_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("frieda_reiss"),
+      predicate: "member-of",
+      object: familyId("reiss_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("rod_reiss"),
+      predicate: "member-of",
+      object: familyId("reiss_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("uri_reiss"),
+      predicate: "member-of",
+      object: familyId("reiss_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("karl_fritz"),
+      predicate: "member-of",
+      object: familyId("fritz_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("ymir_fritz"),
+      predicate: "member-of",
+      object: familyId("fritz_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("dina_fritz"),
+      predicate: "member-of",
+      object: familyId("fritz_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("reiner_braun"),
+      predicate: "member-of",
+      object: familyId("braun_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("gabi_braun"),
+      predicate: "member-of",
+      object: familyId("braun_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("annie_leonhart"),
+      predicate: "member-of",
+      object: familyId("leonhart_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("armin_arlert"),
+      predicate: "member-of",
+      object: familyId("arlert_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("sasha_blouse"),
+      predicate: "member-of",
+      object: familyId("braus_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("connie_springer"),
+      predicate: "member-of",
+      object: familyId("springer_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("jean_kirstein"),
+      predicate: "member-of",
+      object: familyId("kirstein_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("marcel_galliard"),
+      predicate: "member-of",
+      object: familyId("galliard_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("porco_galliard"),
+      predicate: "member-of",
+      object: familyId("galliard_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("falco_grice"),
+      predicate: "member-of",
+      object: familyId("grice_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("colt_grice"),
+      predicate: "member-of",
+      object: familyId("grice_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("willy_tybur"),
+      predicate: "member-of",
+      object: familyId("tybur_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("lara_tybur"),
+      predicate: "member-of",
+      object: familyId("tybur_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    },
+    {
+      subject: personId("faye_yeager"),
+      predicate: "member-of",
+      object: familyId("yeager_family"),
+      qualifier: "birth",
+      provenance: { source: "aot_manga" }
+    }
+  ]
+};
