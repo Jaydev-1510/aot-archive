@@ -8,9 +8,22 @@ import type { SeedDataset } from "../types";
 import { buildUpdateThenInsert, buildUpsertOnConflict, raw } from "./sql";
 import { mediaIdSubquery } from "./identity";
 
-type EntityArrayKey = "people" | "titans" | "events" | "locations" | "factions" | "objects" | "families";
+type EntityArrayKey =
+  | "people"
+  | "titans"
+  | "events"
+  | "locations"
+  | "factions"
+  | "objects"
+  | "families";
 const ENTITY_ARRAY_KEYS: EntityArrayKey[] = [
-  "people", "titans", "events", "locations", "factions", "objects", "families",
+  "people",
+  "titans",
+  "events",
+  "locations",
+  "factions",
+  "objects",
+  "families",
 ];
 
 /**
@@ -26,7 +39,12 @@ export function buildAliasStatements(dataset: SeedDataset): string[] {
     for (const record of records) {
       const { id, aliases } = record as {
         id: string;
-        aliases?: Array<{ alias: string; aliasType: string; language?: string; notes?: string }>;
+        aliases?: Array<{
+          alias: string;
+          aliasType: string;
+          language?: string;
+          notes?: string;
+        }>;
       };
       for (const a of aliases ?? []) {
         statements.push(
@@ -52,14 +70,23 @@ export function buildMediaLinkStatements(dataset: SeedDataset): string[] {
     for (const record of records) {
       const { id, media } = record as {
         id: string;
-        media?: Array<{ mediaKey: string; isPrimary?: boolean; displayOrder?: number }>;
+        media?: Array<{
+          mediaKey: string;
+          isPrimary?: boolean;
+          displayOrder?: number;
+        }>;
       };
       for (const link of media ?? []) {
         statements.push(
           buildUpsertOnConflict(
             "media_links",
             ["entity_id", "media_id", "is_primary", "display_order"],
-            [id, raw(mediaIdSubquery(link.mediaKey)), link.isPrimary ?? false, link.displayOrder],
+            [
+              id,
+              raw(mediaIdSubquery(link.mediaKey)),
+              link.isPrimary ?? false,
+              link.displayOrder,
+            ],
             ["entity_id", "media_id"],
             ["is_primary", "display_order"],
           ),

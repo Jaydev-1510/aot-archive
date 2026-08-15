@@ -9,7 +9,9 @@ import { DEFAULT_ABILITY_CATEGORY } from "./defaults";
  * guaranteeing every slug exists before phase 2 sets inverse_slug from
  * the seed data.
  */
-export function buildRelationshipTypeStatements(types: SeedRelationshipType[]): string[] {
+export function buildRelationshipTypeStatements(
+  types: SeedRelationshipType[],
+): string[] {
   const statements: string[] = [];
 
   for (const t of types) {

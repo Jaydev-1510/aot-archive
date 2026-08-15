@@ -10,7 +10,8 @@ export const dataset: SeedDataset = {
       chronology: {
         datePrecision: "era",
       },
-      summary: "Ymir Fritz gains the power of the Titans, becoming the Founding Titan. This event occurred approximately 2,000 years before the main story, altering the course of world history.",
+      summary:
+        "Ymir Fritz gains the power of the Titans, becoming the Founding Titan. This event occurred approximately 2,000 years before the main story, altering the course of world history.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -21,7 +22,8 @@ export const dataset: SeedDataset = {
         yearStart: 743,
         datePrecision: "circa",
       },
-      summary: "A devastating conflict among the Eldian noble families holding the Nine Titans. The war ended the Eldian Empire and led to the rise of Marley.",
+      summary:
+        "A devastating conflict among the Eldian noble families holding the Nine Titans. The war ended the Eldian Empire and led to the rise of Marley.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -32,7 +34,8 @@ export const dataset: SeedDataset = {
         yearStart: 743,
         datePrecision: "circa",
       },
-      summary: "King Karl Fritz relocates a portion of Eldians to Paradis Island. Using the Founding Titan, he raises the three Walls—Maria, Rose, and Sheena—and alters the memories of the populace.",
+      summary:
+        "King Karl Fritz relocates a portion of Eldians to Paradis Island. Using the Founding Titan, he raises the three Walls—Maria, Rose, and Sheena—and alters the memories of the populace.",
       provenance: { source: "aot_manga" },
     },
   ],

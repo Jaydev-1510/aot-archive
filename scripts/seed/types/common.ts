@@ -17,7 +17,11 @@
  * untouched.
  */
 
-import type { AliasType, CanonStatus, DatePrecision } from "../../../src/database/schema";
+import type {
+  AliasType,
+  CanonStatus,
+  DatePrecision,
+} from "../../../src/database/schema";
 // NOTE: adjust this import to wherever your `src/database/` barrel
 // re-exports the enum value arrays (entityTypeValues, canonStatusValues,
 // etc.) from schema/index.ts — see the Phase 9 handoff for why those

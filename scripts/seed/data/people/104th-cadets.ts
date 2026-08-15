@@ -10,7 +10,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "alive",
-      summary: "Graduate of the 104th Training Corps who later joined the Survey Corps.",
+      summary:
+        "Graduate of the 104th Training Corps who later joined the Survey Corps.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -20,7 +21,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "alive",
-      summary: "Graduate of the 104th Training Corps hailing from Ragako village; joined the Survey Corps.",
+      summary:
+        "Graduate of the 104th Training Corps hailing from Ragako village; joined the Survey Corps.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -30,10 +32,9 @@ export const dataset: SeedDataset = {
       gender: "female",
       species: "human",
       status: "deceased",
-      summary: "Graduate of the 104th Training Corps from Dauper village, renowned for her archery and massive appetite.",
-      aliases: [
-        { alias: "Potato Girl", aliasType: "nickname" }
-      ],
+      summary:
+        "Graduate of the 104th Training Corps from Dauper village, renowned for her archery and massive appetite.",
+      aliases: [{ alias: "Potato Girl", aliasType: "nickname" }],
       provenance: { source: "aot_manga" },
     },
     {
@@ -43,10 +44,9 @@ export const dataset: SeedDataset = {
       gender: "female",
       species: "human",
       status: "alive",
-      summary: "The illegitimate and youngest child of Rod Reiss, later crowned Queen of the Walls.",
-      aliases: [
-        { alias: "Christa Lenz", aliasType: "alternate_name" }
-      ],
+      summary:
+        "The illegitimate and youngest child of Rod Reiss, later crowned Queen of the Walls.",
+      aliases: [{ alias: "Christa Lenz", aliasType: "alternate_name" }],
       provenance: { source: "aot_manga" },
     },
     {
@@ -56,7 +56,8 @@ export const dataset: SeedDataset = {
       gender: "female",
       species: "human",
       status: "deceased",
-      summary: "Graduate of the 104th Training Corps and former holder of the Jaw Titan. A close companion of Historia Reiss.",
+      summary:
+        "Graduate of the 104th Training Corps and former holder of the Jaw Titan. A close companion of Historia Reiss.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -66,7 +67,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "alive",
-      summary: "Marleyan Warrior and holder of the Armored Titan who infiltrated Paradis Island.",
+      summary:
+        "Marleyan Warrior and holder of the Armored Titan who infiltrated Paradis Island.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -96,7 +98,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "Graduate of the 104th Training Corps who died during the battle of Trost District.",
+      summary:
+        "Graduate of the 104th Training Corps who died during the battle of Trost District.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -106,8 +109,9 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "A recruit in the Survey Corps who survived the charge in Shiganshina and later became a leader of the Yeagerists.",
+      summary:
+        "A recruit in the Survey Corps who survived the charge in Shiganshina and later became a leader of the Yeagerists.",
       provenance: { source: "aot_manga" },
-    }
+    },
   ],
 };

@@ -18,6 +18,6 @@ INNER JOIN (
   UNION ALL SELECT id, name, summary FROM events
   UNION ALL SELECT id, name, description AS summary FROM locations
   UNION ALL SELECT id, name, description AS summary FROM factions
-) AS record ON record.id = entities.id;`
+) AS record ON record.id = entities.id;`,
   ];
 }

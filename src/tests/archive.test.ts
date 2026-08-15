@@ -19,7 +19,7 @@ import {
   getSpouses,
   getSiblings,
   getEventParticipation,
-  getFactionMemberships
+  getFactionMemberships,
 } from "../database/queries";
 import { validateDataset } from "../../scripts/seed/validation/validate-dataset";
 import type { SeedDataset } from "../../scripts/seed/types";
@@ -29,18 +29,29 @@ let db: any;
 
 // Helper to find and mock the local sqlite file in wrangler local D1 state
 async function findSqliteFile(): Promise<string> {
-  const dir = path.join(process.cwd(), ".wrangler", "state", "v3", "d1", "miniflare-D1DatabaseObject");
+  const dir = path.join(
+    process.cwd(),
+    ".wrangler",
+    "state",
+    "v3",
+    "d1",
+    "miniflare-D1DatabaseObject",
+  );
   const files = await fs.readdir(dir);
-  const sqliteFile = files.find((f) => f.endsWith(".sqlite") && f !== "metadata.sqlite");
+  const sqliteFile = files.find(
+    (f) => f.endsWith(".sqlite") && f !== "metadata.sqlite",
+  );
   if (!sqliteFile) {
-    throw new Error("No SQLite file found in wrangler local D1 state directory. Please run migrations first.");
+    throw new Error(
+      "No SQLite file found in wrangler local D1 state directory. Please run migrations first.",
+    );
   }
   return path.join(dir, sqliteFile);
 }
 
 function mockD1(sqlitePath: string): any {
   const sqliteDb = new Database(sqlitePath);
-  
+
   const prepare = (sql: string) => {
     return {
       bind(...args: any[]) {
@@ -58,9 +69,9 @@ function mockD1(sqlitePath: string): any {
           async raw() {
             const stmt = sqliteDb.prepare(sql);
             return stmt.values(...args);
-          }
+          },
         };
-      }
+      },
     };
   };
 
@@ -76,7 +87,7 @@ function mockD1(sqlitePath: string): any {
     async exec(sql: string) {
       sqliteDb.run(sql);
       return { count: 0, duration: 0 };
-    }
+    },
   };
 }
 
@@ -103,7 +114,9 @@ describe("DATABASE / REPOSITORY", () => {
   test("person details & aliases lookup", async () => {
     const detail = await getPersonDetail(db, "eren_yeager");
     expect(detail).not.toBeNull();
-    expect(detail!.aliases.some(a => a.alias === "Suicidal Blockhead")).toBe(true);
+    expect(detail!.aliases.some((a) => a.alias === "Suicidal Blockhead")).toBe(
+      true,
+    );
   });
 
   test("Titan lookup & class", async () => {
@@ -116,9 +129,9 @@ describe("DATABASE / REPOSITORY", () => {
   test("Titan holders ordering", async () => {
     const holders = await getTitanHolders(db, "attack_titan");
     expect(holders.length).toBeGreaterThanOrEqual(3); // Eren, Grisha, Eren Kruger
-    
+
     // Validate order: Eren Kruger -> Grisha -> Eren Yeager
-    const names = holders.map(h => h.person.id);
+    const names = holders.map((h) => h.person.id);
     const krugerIdx = names.indexOf("eren_kruger");
     const grishaIdx = names.indexOf("grisha_yeager");
     const erenIdx = names.indexOf("eren_yeager");
@@ -132,7 +145,7 @@ describe("DATABASE / REPOSITORY", () => {
     expect(rels.length).toBeGreaterThan(0);
 
     // Verify parentage inverse is resolved correctly (Eren should have an incoming parent-of edge resolved as child-of)
-    const fatherRel = rels.find(r => r.relatedEntity.id === "grisha_yeager");
+    const fatherRel = rels.find((r) => r.relatedEntity.id === "grisha_yeager");
     expect(fatherRel).toBeDefined();
     expect(fatherRel!.predicate).toBe("child-of");
     expect(fatherRel!.direction).toBe("incoming");
@@ -141,7 +154,7 @@ describe("DATABASE / REPOSITORY", () => {
   test("parents helper function", async () => {
     const parents = await getParents(db, "eren_yeager");
     expect(parents.length).toBe(2);
-    const parentIds = parents.map(p => p.relatedEntity.id);
+    const parentIds = parents.map((p) => p.relatedEntity.id);
     expect(parentIds).toContain("grisha_yeager");
     expect(parentIds).toContain("carla_yeager");
   });
@@ -149,7 +162,7 @@ describe("DATABASE / REPOSITORY", () => {
   test("children helper function", async () => {
     const children = await getChildren(db, "grisha_yeager");
     expect(children.length).toBe(2);
-    const childIds = children.map(c => c.relatedEntity.id);
+    const childIds = children.map((c) => c.relatedEntity.id);
     expect(childIds).toContain("eren_yeager");
     expect(childIds).toContain("zeke_yeager");
   });
@@ -163,7 +176,7 @@ describe("DATABASE / REPOSITORY", () => {
   test("spouses helper function", async () => {
     const spouses = await getSpouses(db, "grisha_yeager");
     expect(spouses.length).toBe(2); // Carla Yeager and Dina Fritz
-    const spouseIds = spouses.map(s => s.relatedEntity.id);
+    const spouseIds = spouses.map((s) => s.relatedEntity.id);
     expect(spouseIds).toContain("carla_yeager");
     expect(spouseIds).toContain("dina_fritz");
   });
@@ -171,7 +184,7 @@ describe("DATABASE / REPOSITORY", () => {
   test("faction membership queries", async () => {
     const memberships = await getFactionMemberships(db, "eren_yeager");
     expect(memberships.length).toBe(2);
-    const factionIds = memberships.map(m => m.relatedEntity.id);
+    const factionIds = memberships.map((m) => m.relatedEntity.id);
     expect(factionIds).toContain("survey_corps");
     expect(factionIds).toContain("training_corps");
   });
@@ -179,7 +192,7 @@ describe("DATABASE / REPOSITORY", () => {
   test("event participation queries", async () => {
     const events = await getEventParticipation(db, "eren_yeager");
     expect(events.length).toBeGreaterThanOrEqual(4);
-    const eventIds = events.map(e => e.relatedEntity.id);
+    const eventIds = events.map((e) => e.relatedEntity.id);
     expect(eventIds).toContain("fall_of_shiganshina");
     expect(eventIds).toContain("battle_of_trost");
   });
@@ -211,22 +224,24 @@ describe("GRAPH QUERY LAYER", () => {
     expect(graph.edges.length).toBeGreaterThan(0);
 
     // Check root node exists
-    const rootNode = graph.nodes.find(n => n.id === "eren_yeager");
+    const rootNode = graph.nodes.find((n) => n.id === "eren_yeager");
     expect(rootNode).toBeDefined();
     expect(rootNode!.label).toBe("Eren Yeager");
 
     // Check parents exist in nodes
-    expect(graph.nodes.find(n => n.id === "grisha_yeager")).toBeDefined();
-    expect(graph.nodes.find(n => n.id === "carla_yeager")).toBeDefined();
+    expect(graph.nodes.find((n) => n.id === "grisha_yeager")).toBeDefined();
+    expect(graph.nodes.find((n) => n.id === "carla_yeager")).toBeDefined();
 
     // Check sibling Zeke exists in nodes
-    expect(graph.nodes.find(n => n.id === "zeke_yeager")).toBeDefined();
+    expect(graph.nodes.find((n) => n.id === "zeke_yeager")).toBeDefined();
 
     // Check Fritz and Reiss family royal references
-    expect(graph.nodes.find(n => n.id === "yeager_family")).toBeDefined();
+    expect(graph.nodes.find((n) => n.id === "yeager_family")).toBeDefined();
 
     // Check edge parent-of exists
-    const parentEdge = graph.edges.find(e => e.source === "grisha_yeager" && e.target === "eren_yeager");
+    const parentEdge = graph.edges.find(
+      (e) => e.source === "grisha_yeager" && e.target === "eren_yeager",
+    );
     expect(parentEdge).toBeDefined();
     expect(parentEdge!.label).toBe("parent-of");
   });
@@ -237,20 +252,24 @@ describe("GRAPH QUERY LAYER", () => {
     expect(graph.edges.length).toBeGreaterThan(0);
 
     // Titan node exists
-    const titanNode = graph.nodes.find(n => n.id === "attack_titan");
+    const titanNode = graph.nodes.find((n) => n.id === "attack_titan");
     expect(titanNode).toBeDefined();
     expect(titanNode!.type).toBe("titan");
 
     // Shifter nodes exist
-    expect(graph.nodes.find(n => n.id === "eren_yeager")).toBeDefined();
-    expect(graph.nodes.find(n => n.id === "grisha_yeager")).toBeDefined();
-    expect(graph.nodes.find(n => n.id === "eren_kruger")).toBeDefined();
+    expect(graph.nodes.find((n) => n.id === "eren_yeager")).toBeDefined();
+    expect(graph.nodes.find((n) => n.id === "grisha_yeager")).toBeDefined();
+    expect(graph.nodes.find((n) => n.id === "eren_kruger")).toBeDefined();
 
     // succession edges exist (predecessor -> successor)
-    const krgToGri = graph.edges.find(e => e.source === "eren_kruger" && e.target === "grisha_yeager");
+    const krgToGri = graph.edges.find(
+      (e) => e.source === "eren_kruger" && e.target === "grisha_yeager",
+    );
     expect(krgToGri).toBeDefined();
 
-    const griToEre = graph.edges.find(e => e.source === "grisha_yeager" && e.target === "eren_yeager");
+    const griToEre = graph.edges.find(
+      (e) => e.source === "grisha_yeager" && e.target === "eren_yeager",
+    );
     expect(griToEre).toBeDefined();
   });
 });
@@ -264,9 +283,21 @@ describe("SEED AND VALIDATION", () => {
   test("validation detects duplicate IDs", () => {
     const dataset: SeedDataset = {
       people: [
-        { id: personId("eren_yeager"), name: "Eren Yeager", gender: "male", species: "human", status: "deceased" },
-        { id: personId("eren_yeager"), name: "Eren Duplicate", gender: "male", species: "human", status: "deceased" }
-      ]
+        {
+          id: personId("eren_yeager"),
+          name: "Eren Yeager",
+          gender: "male",
+          species: "human",
+          status: "deceased",
+        },
+        {
+          id: personId("eren_yeager"),
+          name: "Eren Duplicate",
+          gender: "male",
+          species: "human",
+          status: "deceased",
+        },
+      ],
     };
     const errors = validateDataset(dataset);
     expect(errors.length).toBeGreaterThan(0);
@@ -277,15 +308,29 @@ describe("SEED AND VALIDATION", () => {
   test("validation detects invalid references", () => {
     const dataset: SeedDataset = {
       people: [
-        { id: personId("eren_yeager"), name: "Eren Yeager", gender: "male", species: "human", status: "deceased" }
+        {
+          id: personId("eren_yeager"),
+          name: "Eren Yeager",
+          gender: "male",
+          species: "human",
+          status: "deceased",
+        },
       ],
       relationships: [
-        { subject: personId("eren_yeager"), predicate: "parent-of", object: personId("nonexistent_child") }
-      ]
+        {
+          subject: personId("eren_yeager"),
+          predicate: "parent-of",
+          object: personId("nonexistent_child"),
+        },
+      ],
     };
     const errors = validateDataset(dataset);
     expect(errors.length).toBeGreaterThan(0);
-    expect(errors.some(e => e.message.includes("object \"nonexistent_child\" does not exist"))).toBe(true);
+    expect(
+      errors.some((e) =>
+        e.message.includes('object "nonexistent_child" does not exist'),
+      ),
+    ).toBe(true);
   });
 });
 
@@ -293,14 +338,14 @@ describe("SEARCH ARCHIVE", () => {
   test("search for Eren", async () => {
     const results = await searchArchive(db, "Eren");
     expect(results.length).toBeGreaterThan(0);
-    const ids = results.map(r => r.entityId);
+    const ids = results.map((r) => r.entityId);
     expect(ids).toContain("eren_yeager");
   });
 
   test("search for Yeager", async () => {
     const results = await searchArchive(db, "Yeager");
     expect(results.length).toBeGreaterThan(0);
-    const ids = results.map(r => r.entityId);
+    const ids = results.map((r) => r.entityId);
     expect(ids).toContain("eren_yeager");
     expect(ids).toContain("grisha_yeager");
   });

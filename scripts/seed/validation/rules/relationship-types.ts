@@ -11,8 +11,13 @@
 import type { SeedDataset } from "../../types";
 import type { ValidationError } from "../errors";
 
-export function validateRelationshipTypes(dataset: SeedDataset, errors: ValidationError[]): void {
-  const declaredSlugs = new Set((dataset.relationshipTypes ?? []).map((rt) => rt.slug));
+export function validateRelationshipTypes(
+  dataset: SeedDataset,
+  errors: ValidationError[],
+): void {
+  const declaredSlugs = new Set(
+    (dataset.relationshipTypes ?? []).map((rt) => rt.slug),
+  );
 
   (dataset.relationshipTypes ?? []).forEach((rt, index) => {
     if (rt.inverseSlug !== undefined && !declaredSlugs.has(rt.inverseSlug)) {

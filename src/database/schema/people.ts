@@ -9,7 +9,13 @@
  */
 
 import { sql } from "drizzle-orm";
-import { check, index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  check,
+  index,
+  integer,
+  sqliteTable,
+  text,
+} from "drizzle-orm/sqlite-core";
 import { entities } from "./entities";
 import { sources } from "./provenance";
 import { canonStatusColumn, datePrecisionColumn } from "./shared";
@@ -33,8 +39,12 @@ export const people = sqliteTable(
     slug: text("slug").notNull().unique(),
     japaneseName: text("japanese_name"),
     gender: text("gender", { enum: genderValues }).notNull().default("unknown"),
-    species: text("species", { enum: speciesValues }).notNull().default("human"),
-    status: text("status", { enum: lifeStatusValues }).notNull().default("unknown"),
+    species: text("species", { enum: speciesValues })
+      .notNull()
+      .default("human"),
+    status: text("status", { enum: lifeStatusValues })
+      .notNull()
+      .default("unknown"),
 
     // In-universe year numbers — see Phase 6 of the architecture doc.
     // Deliberately plain INTEGER, not a "date" type: SQLite/D1 has none,
@@ -57,7 +67,10 @@ export const people = sqliteTable(
   (table) => [
     index("idx_people_status").on(table.status),
     index("idx_people_birth_year").on(table.birthYearStart),
-    check("chk_people_gender", sql`${table.gender} IN ('male','female','unknown')`),
+    check(
+      "chk_people_gender",
+      sql`${table.gender} IN ('male','female','unknown')`,
+    ),
     check(
       "chk_people_species",
       sql`${table.species} IN ('human','pure_titan','unknown')`,

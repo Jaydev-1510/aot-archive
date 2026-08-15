@@ -19,7 +19,9 @@ function parseArgs(argv: string[]) {
   const dryRun = argv.includes("--dry-run");
   const target: D1Target = argv.includes("--remote") ? "remote" : "local";
   const dbArg = argv.find((a) => a.startsWith("--db="));
-  const databaseName = dbArg ? dbArg.slice("--db=".length) : process.env.AOT_D1_DATABASE;
+  const databaseName = dbArg
+    ? dbArg.slice("--db=".length)
+    : process.env.AOT_D1_DATABASE;
   return { dryRun, target, databaseName };
 }
 
@@ -35,12 +37,16 @@ async function main(): Promise<void> {
   const { dryRun, target, databaseName } = parseArgs(process.argv.slice(2));
 
   if (!databaseName) {
-    console.error("No database name given. Pass --db=<name> or set AOT_D1_DATABASE.");
+    console.error(
+      "No database name given. Pass --db=<name> or set AOT_D1_DATABASE.",
+    );
     process.exit(1);
   }
 
   if (target === "remote") {
-    console.log(`\u26a0\ufe0f  Target: REMOTE database "${databaseName}" — this WILL modify production data${dryRun ? " if not for --dry-run" : ""}.`);
+    console.log(
+      `\u26a0\ufe0f  Target: REMOTE database "${databaseName}" — this WILL modify production data${dryRun ? " if not for --dry-run" : ""}.`,
+    );
   } else {
     console.log(`Target: local database "${databaseName}".`);
   }
@@ -48,13 +54,17 @@ async function main(): Promise<void> {
   console.log("Loading seed dataset...");
   const { dataset, fileCount } = await loadSeedDataset();
   if (fileCount === 0) {
-    console.log("(no files found under scripts/seed/data/ — nothing to ingest)");
+    console.log(
+      "(no files found under scripts/seed/data/ — nothing to ingest)",
+    );
   }
 
   console.log("Validating...");
   const errors = validateDataset(dataset);
   if (errors.length > 0) {
-    console.error(`\u2717 Validation failed (${errors.length} error${errors.length === 1 ? "" : "s"}) — aborting before any database access.`);
+    console.error(
+      `\u2717 Validation failed (${errors.length} error${errors.length === 1 ? "" : "s"}) — aborting before any database access.`,
+    );
     printValidationErrors(errors);
     process.exit(1);
   }
@@ -63,9 +73,12 @@ async function main(): Promise<void> {
   const plan = buildIngestionPlan(dataset);
   console.log("\nPlan:");
   for (const [phase, count] of Object.entries(plan.phaseCounts)) {
-    if (count > 0) console.log(`  ${phase}: ${count} statement${count === 1 ? "" : "s"}`);
+    if (count > 0)
+      console.log(`  ${phase}: ${count} statement${count === 1 ? "" : "s"}`);
   }
-  console.log(`  total: ${plan.statements.length} statement${plan.statements.length === 1 ? "" : "s"}`);
+  console.log(
+    `  total: ${plan.statements.length} statement${plan.statements.length === 1 ? "" : "s"}`,
+  );
 
   if (dryRun) {
     console.log("\n\u2713 Dry run complete — no database was modified.");
@@ -83,19 +96,37 @@ async function main(): Promise<void> {
   console.log("\u2713 Ingestion complete.");
 
   console.log("\nVerifying resulting state...");
-  const tables = ["entities", "people", "titans", "relationships", "titan_holders", "sources", "abilities", "media"];
+  const tables = [
+    "entities",
+    "people",
+    "titans",
+    "relationships",
+    "titan_holders",
+    "sources",
+    "abilities",
+    "media",
+  ];
   for (const table of tables) {
-    const rows = await queryJson<{ n: number }>(databaseName, target, `SELECT COUNT(*) as n FROM ${table}`);
+    const rows = await queryJson<{ n: number }>(
+      databaseName,
+      target,
+      `SELECT COUNT(*) as n FROM ${table}`,
+    );
     console.log(`  ${table}: ${rows[0]?.n ?? 0}`);
   }
 
-  const orphanCurrentHolders = await queryJson<{ titan_id: string; current_count: number }>(
+  const orphanCurrentHolders = await queryJson<{
+    titan_id: string;
+    current_count: number;
+  }>(
     databaseName,
     target,
     "SELECT titan_id, COUNT(*) as current_count FROM titan_holders WHERE is_current = 1 GROUP BY titan_id HAVING COUNT(*) > 1",
   );
   if (orphanCurrentHolders.length > 0) {
-    console.error("\u2717 VERIFICATION FAILURE: multiple current holders found for a titan (this should be impossible):");
+    console.error(
+      "\u2717 VERIFICATION FAILURE: multiple current holders found for a titan (this should be impossible):",
+    );
     console.error(orphanCurrentHolders);
     process.exit(1);
   }

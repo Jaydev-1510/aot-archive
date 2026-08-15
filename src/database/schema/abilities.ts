@@ -17,7 +17,11 @@ import {
 } from "drizzle-orm/sqlite-core";
 import { titans } from "./titans";
 
-export const abilityCategoryValues = ["titan_power", "combat_skill", "other"] as const;
+export const abilityCategoryValues = [
+  "titan_power",
+  "combat_skill",
+  "other",
+] as const;
 export type AbilityCategory = (typeof abilityCategoryValues)[number];
 
 export const abilities = sqliteTable(

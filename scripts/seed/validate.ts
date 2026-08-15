@@ -65,7 +65,9 @@ async function main(): Promise<void> {
   const { dataset, fileCount } = await loadSeedDataset();
 
   if (fileCount === 0) {
-    console.log(`(no files found under scripts/seed/data/ — validating an empty dataset)`);
+    console.log(
+      `(no files found under scripts/seed/data/ — validating an empty dataset)`,
+    );
   }
   console.log(`\u2713 Loaded seed dataset (${countRecords(dataset)})`);
 
@@ -81,7 +83,9 @@ async function main(): Promise<void> {
     console.log("\u2713 Dataset validation passed");
     process.exit(0);
   } else {
-    console.error(`\u2717 Dataset validation failed (${errors.length} error${errors.length === 1 ? "" : "s"})`);
+    console.error(
+      `\u2717 Dataset validation failed (${errors.length} error${errors.length === 1 ? "" : "s"})`,
+    );
     printReport(errors);
     process.exit(1);
   }

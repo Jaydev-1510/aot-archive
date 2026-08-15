@@ -10,13 +10,7 @@
 import type { SeedDataset } from "../types";
 
 export type EntityKind =
-  | "person"
-  | "titan"
-  | "event"
-  | "location"
-  | "faction"
-  | "object"
-  | "family";
+  "person" | "titan" | "event" | "location" | "faction" | "object" | "family";
 
 export interface ValidationContext {
   /** raw stable-id string -> the kind it was declared as. */
@@ -24,14 +18,18 @@ export interface ValidationContext {
   sourceKeys: Set<string>;
   abilityNames: Set<string>;
   mediaKeys: Set<string>;
-  relationshipTypeBySlug: Map<string, { slug: string; inverseSlug?: string; isSymmetric?: boolean }>;
+  relationshipTypeBySlug: Map<
+    string,
+    { slug: string; inverseSlug?: string; isSymmetric?: boolean }
+  >;
   /** (titanId, personId) -> holderOrder, for titan_holders ordering cross-checks. Only present when holderOrder was given. */
   titanHolderOrderByTitanAndPerson: Map<string, number>;
 }
 
 export function buildContext(dataset: SeedDataset): ValidationContext {
   const entityKindById = new Map<string, EntityKind>();
-  const register = (id: string, kind: EntityKind) => entityKindById.set(id, kind);
+  const register = (id: string, kind: EntityKind) =>
+    entityKindById.set(id, kind);
 
   for (const p of dataset.people ?? []) register(p.id, "person");
   for (const t of dataset.titans ?? []) register(t.id, "titan");
@@ -56,7 +54,10 @@ export function buildContext(dataset: SeedDataset): ValidationContext {
   const titanHolderOrderByTitanAndPerson = new Map<string, number>();
   for (const h of dataset.titanHolders ?? []) {
     if (h.holderOrder !== undefined) {
-      titanHolderOrderByTitanAndPerson.set(`${h.titan}::${h.person}`, h.holderOrder);
+      titanHolderOrderByTitanAndPerson.set(
+        `${h.titan}::${h.person}`,
+        h.holderOrder,
+      );
     }
   }
 

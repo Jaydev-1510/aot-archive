@@ -20,7 +20,14 @@ import type { SeedDataset } from "../../types";
 import type { ValidationContext } from "../context";
 import type { ValidationError } from "../errors";
 
-type EntityArrayKey = "people" | "titans" | "events" | "locations" | "factions" | "objects" | "families";
+type EntityArrayKey =
+  | "people"
+  | "titans"
+  | "events"
+  | "locations"
+  | "factions"
+  | "objects"
+  | "families";
 
 const ENTITY_ARRAY_KEYS: EntityArrayKey[] = [
   "people",
@@ -65,7 +72,11 @@ export function validateEntities(
             `(${prior.key}[${prior.index}]) and "${ARRAY_KEY_TO_KIND[key]}" (${key}[${index}]) — ` +
             `entities.id is a single shared primary key across all entity kinds; each id may ` +
             `belong to exactly one kind.`,
-          details: { id, firstKind: ARRAY_KEY_TO_KIND[prior.key], secondKind: ARRAY_KEY_TO_KIND[key] },
+          details: {
+            id,
+            firstKind: ARRAY_KEY_TO_KIND[prior.key],
+            secondKind: ARRAY_KEY_TO_KIND[key],
+          },
         });
       } else if (!prior) {
         firstSeenAt.set(id, { key, index });

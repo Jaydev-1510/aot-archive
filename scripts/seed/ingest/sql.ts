@@ -44,7 +44,8 @@
  * not on any value being fed back into the generator.
  */
 
-export type SqlExpr = { raw: string } | string | number | boolean | null | undefined;
+export type SqlExpr =
+  { raw: string } | string | number | boolean | null | undefined;
 
 /** Wrap a raw SQL fragment (e.g. a correlated subquery) so it's emitted verbatim, not quoted. */
 export function raw(sql: string): { raw: string } {
@@ -64,7 +65,8 @@ export function sqlValue(v: SqlExpr): string {
   if (v === null || v === undefined) return "NULL";
   if (typeof v === "boolean") return v ? "1" : "0";
   if (typeof v === "number") {
-    if (!Number.isFinite(v)) throw new Error(`Refusing to emit non-finite numeric SQL value: ${v}`);
+    if (!Number.isFinite(v))
+      throw new Error(`Refusing to emit non-finite numeric SQL value: ${v}`);
     return String(v);
   }
   return sqlString(v);

@@ -21,7 +21,8 @@ export const dataset: SeedDataset = {
       period: { yearEnd: 845, datePrecision: "exact" },
       inheritanceMethod: "injection",
       source: "aot_manga",
-      notes: "Inherited from Eren Kruger, later passed to his son Eren during the fall of Shiganshina.",
+      notes:
+        "Inherited from Eren Kruger, later passed to his son Eren during the fall of Shiganshina.",
     },
     {
       titan: titanId("attack_titan"),
@@ -76,7 +77,8 @@ export const dataset: SeedDataset = {
       isCurrent: false,
       inheritanceMethod: "combat",
       source: "aot_manga",
-      notes: "Stole the Founding Titan from Frieda Reiss by defeating and eating her.",
+      notes:
+        "Stole the Founding Titan from Frieda Reiss by defeating and eating her.",
     },
     {
       titan: titanId("founding_titan"),

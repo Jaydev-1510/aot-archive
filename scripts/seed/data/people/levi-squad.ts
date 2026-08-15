@@ -10,7 +10,8 @@ export const dataset: SeedDataset = {
       gender: "female",
       species: "human",
       status: "deceased",
-      summary: "A handpicked soldier in the Survey Corps' Special Operations Squad under Captain Levi.",
+      summary:
+        "A handpicked soldier in the Survey Corps' Special Operations Squad under Captain Levi.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -20,7 +21,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "An elite soldier of the Survey Corps' Special Operations Squad, known for boasting and frequently biting his tongue.",
+      summary:
+        "An elite soldier of the Survey Corps' Special Operations Squad, known for boasting and frequently biting his tongue.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -30,7 +32,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "The second-in-command of the Survey Corps' Special Operations Squad.",
+      summary:
+        "The second-in-command of the Survey Corps' Special Operations Squad.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -40,7 +43,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "A stern and experienced member of the Survey Corps' Special Operations Squad.",
+      summary:
+        "A stern and experienced member of the Survey Corps' Special Operations Squad.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -50,8 +54,9 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "The executive officer of the Survey Corps' Fourth Squad, acting as Hange Zoë's assistant.",
+      summary:
+        "The executive officer of the Survey Corps' Fourth Squad, acting as Hange Zoë's assistant.",
       provenance: { source: "aot_manga" },
-    }
+    },
   ],
 };

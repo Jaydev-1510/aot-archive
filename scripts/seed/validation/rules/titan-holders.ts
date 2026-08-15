@@ -19,10 +19,24 @@ export function validateTitanHolders(
     checkKind(holder.titan, "titan", "titan", identifier, context, errors);
     checkKind(holder.person, "person", "person", identifier, context, errors);
     if (holder.predecessor !== undefined) {
-      checkKind(holder.predecessor, "predecessor", "person", identifier, context, errors);
+      checkKind(
+        holder.predecessor,
+        "predecessor",
+        "person",
+        identifier,
+        context,
+        errors,
+      );
     }
     if (holder.successor !== undefined) {
-      checkKind(holder.successor, "successor", "person", identifier, context, errors);
+      checkKind(
+        holder.successor,
+        "successor",
+        "person",
+        identifier,
+        context,
+        errors,
+      );
     }
 
     if (holder.holderOrder !== undefined) {
@@ -43,7 +57,10 @@ export function validateTitanHolders(
       const predecessorOrder = context.titanHolderOrderByTitanAndPerson.get(
         `${holder.titan}::${holder.predecessor}`,
       );
-      if (predecessorOrder !== undefined && predecessorOrder >= holder.holderOrder) {
+      if (
+        predecessorOrder !== undefined &&
+        predecessorOrder >= holder.holderOrder
+      ) {
         errors.push({
           section: "titanHolders",
           identifier,
@@ -54,8 +71,13 @@ export function validateTitanHolders(
       }
     }
     if (holder.holderOrder !== undefined && holder.successor !== undefined) {
-      const successorOrder = context.titanHolderOrderByTitanAndPerson.get(`${holder.titan}::${holder.successor}`);
-      if (successorOrder !== undefined && successorOrder <= holder.holderOrder) {
+      const successorOrder = context.titanHolderOrderByTitanAndPerson.get(
+        `${holder.titan}::${holder.successor}`,
+      );
+      if (
+        successorOrder !== undefined &&
+        successorOrder <= holder.holderOrder
+      ) {
         errors.push({
           section: "titanHolders",
           identifier,

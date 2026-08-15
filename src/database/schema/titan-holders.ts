@@ -55,9 +55,12 @@ export const titanHolders = sqliteTable(
 
     holderOrder: integer("holder_order"), // NULL = unknown position in the chain
 
-    predecessorPersonId: text("predecessor_person_id").references(() => people.id, {
-      onDelete: "set null",
-    }),
+    predecessorPersonId: text("predecessor_person_id").references(
+      () => people.id,
+      {
+        onDelete: "set null",
+      },
+    ),
     successorPersonId: text("successor_person_id").references(() => people.id, {
       onDelete: "set null",
     }),
@@ -66,8 +69,12 @@ export const titanHolders = sqliteTable(
     periodEndYear: integer("period_end_year"),
     datePrecision: datePrecisionColumn("date_precision"),
 
-    isCurrent: integer("is_current", { mode: "boolean" }).notNull().default(false),
-    inheritanceMethod: text("inheritance_method", { enum: inheritanceMethodValues }),
+    isCurrent: integer("is_current", { mode: "boolean" })
+      .notNull()
+      .default(false),
+    inheritanceMethod: text("inheritance_method", {
+      enum: inheritanceMethodValues,
+    }),
 
     canonStatus: canonStatusColumn(),
     sourceId: integer("source_id").references(() => sources.id, {

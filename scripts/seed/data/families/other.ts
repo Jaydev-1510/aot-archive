@@ -19,7 +19,8 @@ export const dataset: SeedDataset = {
       id: familyId("springer_family"),
       name: "Springer Family",
       isRoyalBloodline: false,
-      description: "A family residing in Ragako Village within Wall Rose on Paradis Island.",
+      description:
+        "A family residing in Ragako Village within Wall Rose on Paradis Island.",
     },
     {
       id: familyId("braus_family"),
@@ -37,7 +38,8 @@ export const dataset: SeedDataset = {
       id: familyId("grice_family"),
       name: "Grice Family",
       isRoyalBloodline: false,
-      description: "An Eldian family in Marley known for involvement with the Eldian Restorationists.",
+      description:
+        "An Eldian family in Marley known for involvement with the Eldian Restorationists.",
     },
     {
       id: familyId("galliard_family"),
@@ -50,6 +52,6 @@ export const dataset: SeedDataset = {
       name: "Kirstein Family",
       isRoyalBloodline: false,
       description: "A family residing in the Trost District on Paradis Island.",
-    }
+    },
   ],
 };

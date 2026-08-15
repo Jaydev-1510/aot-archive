@@ -3,7 +3,13 @@
  */
 
 import { sql } from "drizzle-orm";
-import { check, index, integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import {
+  check,
+  index,
+  integer,
+  sqliteTable,
+  text,
+} from "drizzle-orm/sqlite-core";
 import { entities } from "./entities";
 import { sources } from "./provenance";
 import { canonStatusColumn, datePrecisionColumn } from "./shared";

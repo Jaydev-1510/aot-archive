@@ -32,7 +32,10 @@ function checkRange(
   }
 }
 
-export function validateDates(dataset: SeedDataset, errors: ValidationError[]): void {
+export function validateDates(
+  dataset: SeedDataset,
+  errors: ValidationError[],
+): void {
   (dataset.people ?? []).forEach((p, i) => {
     checkRange(p.birth, `people[${i}] (${p.id}) birth`, errors);
     checkRange(p.death, `people[${i}] (${p.id}) death`, errors);
@@ -43,10 +46,18 @@ export function validateDates(dataset: SeedDataset, errors: ValidationError[]): 
   });
 
   (dataset.relationships ?? []).forEach((r, i) => {
-    checkRange(r, `relationships[${i}] (${r.subject} ${r.predicate} ${r.object})`, errors);
+    checkRange(
+      r,
+      `relationships[${i}] (${r.subject} ${r.predicate} ${r.object})`,
+      errors,
+    );
   });
 
   (dataset.titanHolders ?? []).forEach((h, i) => {
-    checkRange(h.period, `titanHolders[${i}] (${h.titan} <- ${h.person})`, errors);
+    checkRange(
+      h.period,
+      `titanHolders[${i}] (${h.titan} <- ${h.person})`,
+      errors,
+    );
   });
 }

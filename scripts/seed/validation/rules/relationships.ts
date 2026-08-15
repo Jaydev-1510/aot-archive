@@ -50,7 +50,11 @@ export function validateRelationships(
         section: "relationships",
         identifier,
         message: `subject "${rel.subject}" does not exist.`,
-        details: { subject: rel.subject, predicate: rel.predicate, object: rel.object },
+        details: {
+          subject: rel.subject,
+          predicate: rel.predicate,
+          object: rel.object,
+        },
       });
     }
 
@@ -60,7 +64,11 @@ export function validateRelationships(
         section: "relationships",
         identifier,
         message: `object "${rel.object}" does not exist.`,
-        details: { subject: rel.subject, predicate: rel.predicate, object: rel.object },
+        details: {
+          subject: rel.subject,
+          predicate: rel.predicate,
+          object: rel.object,
+        },
       });
     }
 
@@ -74,13 +82,23 @@ export function validateRelationships(
     }
 
     if (subjectKind !== undefined && objectKind !== undefined) {
-      checkKindRestrictions(rel, subjectKind, objectKind, identifier, context, errors);
+      checkKindRestrictions(
+        rel,
+        subjectKind,
+        objectKind,
+        identifier,
+        context,
+        errors,
+      );
     }
 
     // Semantic duplicate detection — see file header re: NULL qualifier.
-    const edgeKey = [rel.subject, rel.predicate, rel.object, rel.qualifier ?? NULL_QUALIFIER_SENTINEL].join(
-      "\u0001",
-    );
+    const edgeKey = [
+      rel.subject,
+      rel.predicate,
+      rel.object,
+      rel.qualifier ?? NULL_QUALIFIER_SENTINEL,
+    ].join("\u0001");
     const priorIndex = seenEdges.get(edgeKey);
     if (priorIndex !== undefined) {
       errors.push({
@@ -99,7 +117,9 @@ export function validateRelationships(
 
 // Extension point — see file header. Intentionally a no-op today.
 function checkKindRestrictions(
-  _rel: SeedDataset["relationships"] extends (infer R)[] | undefined ? R : never,
+  _rel: SeedDataset["relationships"] extends (infer R)[] | undefined
+    ? R
+    : never,
   _subjectKind: string,
   _objectKind: string,
   _identifier: string,

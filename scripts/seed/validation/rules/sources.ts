@@ -7,12 +7,19 @@
 import type { SeedDataset } from "../../types";
 import type { ValidationError } from "../errors";
 
-export function validateSources(dataset: SeedDataset, errors: ValidationError[]): void {
+export function validateSources(
+  dataset: SeedDataset,
+  errors: ValidationError[],
+): void {
   (dataset.sources ?? []).forEach((source, index) => {
     const identifier = `sources[${index}] (${source.key})`;
 
     if (source.title.trim().length === 0) {
-      errors.push({ section: "sources", identifier, message: "title must not be empty." });
+      errors.push({
+        section: "sources",
+        identifier,
+        message: "title must not be empty.",
+      });
     }
 
     for (const field of ["chapter", "episode", "volume", "page"] as const) {

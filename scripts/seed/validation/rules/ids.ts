@@ -19,7 +19,14 @@ import type { SeedDataset } from "../../types";
 import { STABLE_ID_PATTERN } from "../../ids";
 import type { ValidationError } from "../errors";
 
-type EntityArrayKey = "people" | "titans" | "events" | "locations" | "factions" | "objects" | "families";
+type EntityArrayKey =
+  | "people"
+  | "titans"
+  | "events"
+  | "locations"
+  | "factions"
+  | "objects"
+  | "families";
 
 const ENTITY_ARRAY_KEYS: EntityArrayKey[] = [
   "people",
@@ -31,7 +38,10 @@ const ENTITY_ARRAY_KEYS: EntityArrayKey[] = [
   "families",
 ];
 
-export function validateIds(dataset: SeedDataset, errors: ValidationError[]): void {
+export function validateIds(
+  dataset: SeedDataset,
+  errors: ValidationError[],
+): void {
   for (const key of ENTITY_ARRAY_KEYS) {
     const records = dataset[key] ?? [];
     const seen = new Map<string, number>(); // id -> first index seen
@@ -60,9 +70,19 @@ export function validateIds(dataset: SeedDataset, errors: ValidationError[]): vo
   }
 
   checkDuplicateKeys(dataset.sources ?? [], (s) => s.key, "sources", errors);
-  checkDuplicateKeys(dataset.abilities ?? [], (a) => a.name, "abilities", errors);
+  checkDuplicateKeys(
+    dataset.abilities ?? [],
+    (a) => a.name,
+    "abilities",
+    errors,
+  );
   checkDuplicateKeys(dataset.media ?? [], (m) => m.key, "media", errors);
-  checkDuplicateKeys(dataset.relationshipTypes ?? [], (rt) => rt.slug, "relationshipTypes", errors);
+  checkDuplicateKeys(
+    dataset.relationshipTypes ?? [],
+    (rt) => rt.slug,
+    "relationshipTypes",
+    errors,
+  );
 }
 
 function checkDuplicateKeys<T>(

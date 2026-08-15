@@ -11,7 +11,14 @@ import type { SeedDataset } from "../../types";
 import type { ValidationContext } from "../context";
 import type { ValidationError } from "../errors";
 
-type EntityArrayKey = "people" | "titans" | "events" | "locations" | "factions" | "objects" | "families";
+type EntityArrayKey =
+  | "people"
+  | "titans"
+  | "events"
+  | "locations"
+  | "factions"
+  | "objects"
+  | "families";
 
 const ENTITY_ARRAY_KEYS: EntityArrayKey[] = [
   "people",
@@ -29,7 +36,10 @@ export function validateMedia(
   errors: ValidationError[],
 ): void {
   (dataset.media ?? []).forEach((mediaItem, index) => {
-    if (mediaItem.source !== undefined && !context.sourceKeys.has(mediaItem.source)) {
+    if (
+      mediaItem.source !== undefined &&
+      !context.sourceKeys.has(mediaItem.source)
+    ) {
       errors.push({
         section: "media",
         identifier: `media[${index}] (${mediaItem.key})`,
@@ -43,7 +53,11 @@ export function validateMedia(
     records.forEach((record, recordIndex) => {
       const { id, media } = record as {
         id: string;
-        media?: Array<{ mediaKey: string; isPrimary?: boolean; displayOrder?: number }>;
+        media?: Array<{
+          mediaKey: string;
+          isPrimary?: boolean;
+          displayOrder?: number;
+        }>;
       };
       if (!media || media.length === 0) return;
 
@@ -69,7 +83,10 @@ export function validateMedia(
           seenMediaKeys.add(link.mediaKey);
         }
 
-        if (link.displayOrder !== undefined && (!Number.isInteger(link.displayOrder) || link.displayOrder < 0)) {
+        if (
+          link.displayOrder !== undefined &&
+          (!Number.isInteger(link.displayOrder) || link.displayOrder < 0)
+        ) {
           errors.push({
             section: "media",
             identifier,

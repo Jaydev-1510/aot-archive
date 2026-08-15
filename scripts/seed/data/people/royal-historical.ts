@@ -10,10 +10,9 @@ export const dataset: SeedDataset = {
       gender: "female",
       species: "human",
       status: "deceased",
-      summary: "The first person to obtain the power of the Titans, known as the Progenitor.",
-      aliases: [
-        { alias: "Founder Ymir", aliasType: "title" }
-      ],
+      summary:
+        "The first person to obtain the power of the Titans, known as the Progenitor.",
+      aliases: [{ alias: "Founder Ymir", aliasType: "title" }],
       provenance: { source: "aot_manga" },
     },
     {
@@ -23,7 +22,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "The 145th King of the Eldian Empire who relocated his people to Paradis Island and built the Walls.",
+      summary:
+        "The 145th King of the Eldian Empire who relocated his people to Paradis Island and built the Walls.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -33,7 +33,8 @@ export const dataset: SeedDataset = {
       gender: "female",
       species: "human",
       status: "deceased",
-      summary: "The eldest daughter of Rod Reiss and former holder of the Founding Titan, killed by Grisha Yeager.",
+      summary:
+        "The eldest daughter of Rod Reiss and former holder of the Founding Titan, killed by Grisha Yeager.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -53,7 +54,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "The younger brother of Rod Reiss, former holder of the Founding Titan, and close friend of Kenny Ackerman.",
+      summary:
+        "The younger brother of Rod Reiss, former holder of the Founding Titan, and close friend of Kenny Ackerman.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -73,8 +75,9 @@ export const dataset: SeedDataset = {
       gender: "female",
       species: "human",
       status: "deceased",
-      summary: "The younger sister of Grisha Yeager, who was killed by Marleyan officers as a child.",
+      summary:
+        "The younger sister of Grisha Yeager, who was killed by Marleyan officers as a child.",
       provenance: { source: "aot_manga" },
-    }
+    },
   ],
 };

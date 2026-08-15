@@ -9,7 +9,13 @@ export function buildTitanAbilityStatements(titans: SeedTitan[]): string[] {
         buildUpsertOnConflict(
           "titan_abilities",
           ["titan_id", "ability_id", "notes"],
-          [t.id, raw(`(SELECT id FROM abilities WHERE name = ${sqlValue(entry.ability)})`), entry.notes],
+          [
+            t.id,
+            raw(
+              `(SELECT id FROM abilities WHERE name = ${sqlValue(entry.ability)})`,
+            ),
+            entry.notes,
+          ],
           ["titan_id", "ability_id"],
           ["notes"],
         ),

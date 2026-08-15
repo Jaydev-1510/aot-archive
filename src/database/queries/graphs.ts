@@ -1,6 +1,12 @@
 import { eq, or, and } from "drizzle-orm";
 import type { Database } from "../index";
-import { families, people, relationships, relationshipTypes, titans } from "../schema";
+import {
+  families,
+  people,
+  relationships,
+  relationshipTypes,
+  titans,
+} from "../schema";
 import { getRelationshipsForEntity } from "./relationships";
 import { getTitanHolders } from "./titans";
 import type { EntityId, GraphResult, GraphNode, GraphEdge } from "./types";
@@ -14,7 +20,11 @@ export async function getBloodlineGraph(
   rootPersonId: EntityId,
 ): Promise<GraphResult> {
   // 1. Resolve root person first
-  const rootPerson = await db.select().from(people).where(eq(people.id, rootPersonId)).limit(1);
+  const rootPerson = await db
+    .select()
+    .from(people)
+    .where(eq(people.id, rootPersonId))
+    .limit(1);
   if (rootPerson.length === 0) {
     return { nodes: [], edges: [] };
   }
@@ -26,12 +36,18 @@ export async function getBloodlineGraph(
       relType: relationshipTypes,
     })
     .from(relationships)
-    .innerJoin(relationshipTypes, eq(relationships.predicate, relationshipTypes.slug))
+    .innerJoin(
+      relationshipTypes,
+      eq(relationships.predicate, relationshipTypes.slug),
+    )
     .where(
       or(
         eq(relationshipTypes.category, "family"),
-        and(eq(relationships.predicate, "member-of"), eq(relationships.objectType, "family"))
-      )
+        and(
+          eq(relationships.predicate, "member-of"),
+          eq(relationships.objectType, "family"),
+        ),
+      ),
     );
 
   // Build helper maps of family relationships
@@ -39,7 +55,12 @@ export async function getBloodlineGraph(
   const childToParents = new Map<string, string[]>();
   const siblingsMap = new Map<string, string[]>();
   const spousesMap = new Map<string, string[]>();
-  const edgesList: Array<{ subject: string; object: string; predicate: string; qualifier?: string | null }> = [];
+  const edgesList: Array<{
+    subject: string;
+    object: string;
+    predicate: string;
+    qualifier?: string | null;
+  }> = [];
 
   for (const row of familyEdges) {
     const rel = row.relationship;
@@ -48,7 +69,12 @@ export async function getBloodlineGraph(
     const obj = rel.objectId;
     const qual = rel.qualifier;
 
-    edgesList.push({ subject: subj, object: obj, predicate: pred, qualifier: qual });
+    edgesList.push({
+      subject: subj,
+      object: obj,
+      predicate: pred,
+      qualifier: qual,
+    });
 
     if (pred === "parent-of" || pred === "adopted-parent-of") {
       if (!parentToChildren.has(subj)) parentToChildren.set(subj, []);
@@ -147,7 +173,12 @@ export async function getBloodlineGraph(
 
   // Collect all families connected to the people in the graph
   const allFamiliesInGraph = new Set<string>();
-  const memberOfEdges: Array<{ subject: string; object: string; predicate: string; qualifier?: string | null }> = [];
+  const memberOfEdges: Array<{
+    subject: string;
+    object: string;
+    predicate: string;
+    qualifier?: string | null;
+  }> = [];
 
   for (const row of familyEdges) {
     const rel = row.relationship;
@@ -169,7 +200,9 @@ export async function getBloodlineGraph(
     const familiesRecords = await db
       .select()
       .from(families)
-      .where(or(...Array.from(allFamiliesInGraph).map((id) => eq(families.id, id))));
+      .where(
+        or(...Array.from(allFamiliesInGraph).map((id) => eq(families.id, id))),
+      );
 
     for (const family of familiesRecords) {
       nodesMap.set(family.id, {
@@ -198,7 +231,10 @@ export async function getBloodlineGraph(
 
   // Collect all family edges connecting people who are in the graph
   for (const edge of edgesList) {
-    if (allPeopleInGraph.has(edge.subject) && allPeopleInGraph.has(edge.object)) {
+    if (
+      allPeopleInGraph.has(edge.subject) &&
+      allPeopleInGraph.has(edge.object)
+    ) {
       const edgeId = `${edge.subject}::${edge.predicate}::${edge.object}`;
       const reverseEdgeId = `${edge.object}::${edge.predicate}::${edge.subject}`;
 
@@ -231,7 +267,11 @@ export async function getTitanInheritanceGraph(
   db: Database,
   titanId: EntityId,
 ): Promise<GraphResult> {
-  const titanRecord = await db.select().from(titans).where(eq(titans.id, titanId)).limit(1);
+  const titanRecord = await db
+    .select()
+    .from(titans)
+    .where(eq(titans.id, titanId))
+    .limit(1);
   if (titanRecord.length === 0) {
     return { nodes: [], edges: [] };
   }

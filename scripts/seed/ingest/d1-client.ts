@@ -27,8 +27,16 @@ export type D1Target = "local" | "remote";
  * Falls back to `npx wrangler` only if no local binary is found, so this
  * still works in an environment where wrangler is installed globally.
  */
-async function resolveWranglerCommand(): Promise<{ command: string; baseArgs: string[] }> {
-  const localBin = path.join(process.cwd(), "node_modules", ".bin", process.platform === "win32" ? "wrangler.cmd" : "wrangler");
+async function resolveWranglerCommand(): Promise<{
+  command: string;
+  baseArgs: string[];
+}> {
+  const localBin = path.join(
+    process.cwd(),
+    "node_modules",
+    ".bin",
+    process.platform === "win32" ? "wrangler.cmd" : "wrangler",
+  );
   try {
     await fs.access(localBin);
     return { command: localBin, baseArgs: [] };
@@ -37,10 +45,15 @@ async function resolveWranglerCommand(): Promise<{ command: string; baseArgs: st
   }
 }
 
-function run(args: string[]): Promise<{ stdout: string; stderr: string; code: number }> {
+function run(
+  args: string[],
+): Promise<{ stdout: string; stderr: string; code: number }> {
   return new Promise(async (resolve, reject) => {
     const { command, baseArgs } = await resolveWranglerCommand();
-    const child = spawn(command, [...baseArgs, ...args], { shell: false, cwd: process.cwd() });
+    const child = spawn(command, [...baseArgs, ...args], {
+      shell: false,
+      cwd: process.cwd(),
+    });
     let stdout = "";
     let stderr = "";
     child.stdout.on("data", (d) => (stdout += d.toString()));
@@ -51,15 +64,31 @@ function run(args: string[]): Promise<{ stdout: string; stderr: string; code: nu
 }
 
 /** Executes a whole SQL file against the target database. Throws on failure. */
-export async function runSqlFile(databaseName: string, target: D1Target, sql: string): Promise<void> {
-  const tmpFile = path.join(await fs.mkdtemp(path.join(os.tmpdir(), "aot-seed-")), "ingest.sql");
+export async function runSqlFile(
+  databaseName: string,
+  target: D1Target,
+  sql: string,
+): Promise<void> {
+  const tmpFile = path.join(
+    await fs.mkdtemp(path.join(os.tmpdir(), "aot-seed-")),
+    "ingest.sql",
+  );
   await fs.writeFile(tmpFile, sql, "utf8");
 
-  const args = ["d1", "execute", databaseName, `--${target}`, `--file=${tmpFile}`, "--yes"];
+  const args = [
+    "d1",
+    "execute",
+    databaseName,
+    `--${target}`,
+    `--file=${tmpFile}`,
+    "--yes",
+  ];
   const result = await run(args);
 
   if (result.code !== 0) {
-    throw new Error(`wrangler d1 execute failed (exit ${result.code}):\n${result.stderr || result.stdout}`);
+    throw new Error(
+      `wrangler d1 execute failed (exit ${result.code}):\n${result.stderr || result.stdout}`,
+    );
   }
 }
 
@@ -69,11 +98,20 @@ export async function queryJson<T = Record<string, unknown>>(
   target: D1Target,
   sql: string,
 ): Promise<T[]> {
-  const args = ["d1", "execute", databaseName, `--${target}`, `--command=${sql}`, "--json"];
+  const args = [
+    "d1",
+    "execute",
+    databaseName,
+    `--${target}`,
+    `--command=${sql}`,
+    "--json",
+  ];
   const result = await run(args);
 
   if (result.code !== 0) {
-    throw new Error(`wrangler d1 execute (query) failed (exit ${result.code}):\n${result.stderr || result.stdout}`);
+    throw new Error(
+      `wrangler d1 execute (query) failed (exit ${result.code}):\n${result.stderr || result.stdout}`,
+    );
   }
 
   const parsed = JSON.parse(result.stdout) as Array<{ results: T[] }>;

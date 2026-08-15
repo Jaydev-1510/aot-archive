@@ -14,13 +14,37 @@
 
 import type { SeedSource, SeedMedia } from "../types";
 import { sqlValue } from "./sql";
-import { registerSources, registerMedia, sourceIdentityWhere, sourceIdSubquery, mediaIdentityWhere } from "./identity";
+import {
+  registerSources,
+  registerMedia,
+  sourceIdentityWhere,
+  sourceIdSubquery,
+  mediaIdentityWhere,
+} from "./identity";
 
 export function buildSourceStatements(sources: SeedSource[]): string[] {
   registerSources(sources);
   return sources.map((s) => {
-    const cols = ["title", "source_type", "chapter", "episode", "volume", "page", "url", "notes"];
-    const vals = [s.title, s.sourceType, s.chapter, s.episode, s.volume, s.page, s.url, s.notes].map(sqlValue);
+    const cols = [
+      "title",
+      "source_type",
+      "chapter",
+      "episode",
+      "volume",
+      "page",
+      "url",
+      "notes",
+    ];
+    const vals = [
+      s.title,
+      s.sourceType,
+      s.chapter,
+      s.episode,
+      s.volume,
+      s.page,
+      s.url,
+      s.notes,
+    ].map(sqlValue);
     return `INSERT INTO sources (${cols.join(", ")}) SELECT ${vals.join(", ")} WHERE NOT EXISTS (SELECT 1 FROM sources WHERE ${sourceIdentityWhere(s.key)});`;
   });
 }

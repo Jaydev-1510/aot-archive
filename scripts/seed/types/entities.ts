@@ -31,7 +31,11 @@ import type {
   FactionId,
   ObjectId,
 } from "../ids";
-import type { SeedChronology, SeedEntityCommon, SeedProvenance } from "./common";
+import type {
+  SeedChronology,
+  SeedEntityCommon,
+  SeedProvenance,
+} from "./common";
 
 // People
 export interface SeedPerson extends SeedEntityCommon {

@@ -10,10 +10,11 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "alive",
-      summary: "Captain of the Special Operations Squad within the Survey Corps, known as humanity's strongest soldier.",
+      summary:
+        "Captain of the Special Operations Squad within the Survey Corps, known as humanity's strongest soldier.",
       aliases: [
         { alias: "Captain Levi", aliasType: "title" },
-        { alias: "Humanity's Strongest Soldier", aliasType: "epithet" }
+        { alias: "Humanity's Strongest Soldier", aliasType: "epithet" },
       ],
       provenance: { source: "aot_manga" },
     },
@@ -24,7 +25,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "The 13th Commander of the Survey Corps, a brilliant tactician who led many expeditions outside the walls.",
+      summary:
+        "The 13th Commander of the Survey Corps, a brilliant tactician who led many expeditions outside the walls.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -34,7 +36,8 @@ export const dataset: SeedDataset = {
       gender: "unknown",
       species: "human",
       status: "deceased",
-      summary: "The 14th Commander of the Survey Corps and a titan researcher with an obsessive interest in the creatures.",
+      summary:
+        "The 14th Commander of the Survey Corps and a titan researcher with an obsessive interest in the creatures.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -44,7 +47,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "A Section Commander in the Survey Corps, known for his incredible sense of smell and strength.",
+      summary:
+        "A Section Commander in the Survey Corps, known for his incredible sense of smell and strength.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -54,7 +58,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "The head instructor of the 104th Training Corps and former 12th Commander of the Survey Corps.",
+      summary:
+        "The head instructor of the 104th Training Corps and former 12th Commander of the Survey Corps.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -64,7 +69,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "The former Garrison Regiment Commander of the Southern Territories.",
+      summary:
+        "The former Garrison Regiment Commander of the Southern Territories.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -84,7 +90,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "The Premier of the military, commanding the Survey Corps, Garrison, and Military Police.",
+      summary:
+        "The Premier of the military, commanding the Survey Corps, Garrison, and Military Police.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -94,7 +101,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "A captain in the Garrison who saved Eren and Mikasa during the fall of Shiganshina.",
+      summary:
+        "A captain in the Garrison who saved Eren and Mikasa during the fall of Shiganshina.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -104,10 +112,9 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "A legendary serial killer in the capital who later led the Anti-Personnel Control Squad.",
-      aliases: [
-        { alias: "Kenny the Ripper", aliasType: "nickname" }
-      ],
+      summary:
+        "A legendary serial killer in the capital who later led the Anti-Personnel Control Squad.",
+      aliases: [{ alias: "Kenny the Ripper", aliasType: "nickname" }],
       provenance: { source: "aot_manga" },
     },
     {
@@ -117,8 +124,9 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "An elite soldier in the Garrison Regiment who commanded the operation to seal Trost district.",
+      summary:
+        "An elite soldier in the Garrison Regiment who commanded the operation to seal Trost district.",
       provenance: { source: "aot_manga" },
-    }
+    },
   ],
 };

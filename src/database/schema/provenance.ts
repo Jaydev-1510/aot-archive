@@ -119,8 +119,12 @@ export const mediaLinks = sqliteTable(
     mediaId: integer("media_id")
       .notNull()
       .references(() => media.id, { onDelete: "cascade" }),
-    isPrimary: integer("is_primary", { mode: "boolean" }).notNull().default(false),
+    isPrimary: integer("is_primary", { mode: "boolean" })
+      .notNull()
+      .default(false),
     displayOrder: integer("display_order"),
   },
-  (table) => [unique("uq_media_links_entity_media").on(table.entityId, table.mediaId)],
+  (table) => [
+    unique("uq_media_links_entity_media").on(table.entityId, table.mediaId),
+  ],
 );

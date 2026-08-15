@@ -10,7 +10,8 @@ export const dataset: SeedDataset = {
       gender: "female",
       species: "human",
       status: "alive",
-      summary: "A private in the Military Police Brigade stationed in Stohess District.",
+      summary:
+        "A private in the Military Police Brigade stationed in Stohess District.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -20,7 +21,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "deceased",
-      summary: "A principled soldier who joined the Military Police before transferring to the Survey Corps; killed during the charge against the Beast Titan.",
+      summary:
+        "A principled soldier who joined the Military Police before transferring to the Survey Corps; killed during the charge against the Beast Titan.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -30,7 +32,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "alive",
-      summary: "A Marleyan soldier taken prisoner on Paradis who became a chef, forming a bond with Sasha Blouse.",
+      summary:
+        "A Marleyan soldier taken prisoner on Paradis who became a chef, forming a bond with Sasha Blouse.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -40,7 +43,8 @@ export const dataset: SeedDataset = {
       gender: "male",
       species: "human",
       status: "alive",
-      summary: "A member of the Anti-Marleyan Volunteers who aided Paradis Island with modern technology.",
+      summary:
+        "A member of the Anti-Marleyan Volunteers who aided Paradis Island with modern technology.",
       provenance: { source: "aot_manga" },
     },
     {
@@ -50,8 +54,9 @@ export const dataset: SeedDataset = {
       gender: "female",
       species: "human",
       status: "alive",
-      summary: "The leader of the Anti-Marleyan Volunteers and a devoted follower of Zeke Yeager.",
+      summary:
+        "The leader of the Anti-Marleyan Volunteers and a devoted follower of Zeke Yeager.",
       provenance: { source: "aot_manga" },
-    }
+    },
   ],
 };

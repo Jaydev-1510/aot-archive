@@ -7,7 +7,8 @@ export const dataset: SeedDataset = {
       id: familyId("yeager_family"),
       name: "Yeager Family",
       isRoyalBloodline: false,
-      description: "An Eldian family that originated in Marley, key figures in the conflict over the Founding Titan.",
-    }
+      description:
+        "An Eldian family that originated in Marley, key figures in the conflict over the Founding Titan.",
+    },
   ],
 };

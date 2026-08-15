@@ -36,7 +36,9 @@ export const relationshipTypes = sqliteTable(
     inverseSlug: text("inverse_slug").references(
       (): AnySQLiteColumn => relationshipTypes.slug,
     ),
-    isSymmetric: integer("is_symmetric", { mode: "boolean" }).notNull().default(false),
+    isSymmetric: integer("is_symmetric", { mode: "boolean" })
+      .notNull()
+      .default(false),
     description: text("description"),
   },
   (table) => [

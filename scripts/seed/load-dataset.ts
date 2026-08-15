@@ -17,7 +17,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { mergeSeedDatasets, type SeedDataset } from "./types";
 
-const SEED_DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), "data");
+const SEED_DATA_DIR = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "data",
+);
 
 async function findSeedFiles(dir: string): Promise<string[]> {
   let entries: import("node:fs").Dirent[];
@@ -33,14 +36,21 @@ async function findSeedFiles(dir: string): Promise<string[]> {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       files.push(...(await findSeedFiles(full)));
-    } else if (entry.isFile() && /\.(ts|js)$/.test(entry.name) && !entry.name.startsWith("_")) {
+    } else if (
+      entry.isFile() &&
+      /\.(ts|js)$/.test(entry.name) &&
+      !entry.name.startsWith("_")
+    ) {
       files.push(full);
     }
   }
   return files;
 }
 
-export async function loadSeedDataset(): Promise<{ dataset: SeedDataset; fileCount: number }> {
+export async function loadSeedDataset(): Promise<{
+  dataset: SeedDataset;
+  fileCount: number;
+}> {
   const files = await findSeedFiles(SEED_DATA_DIR);
 
   if (files.length === 0) {

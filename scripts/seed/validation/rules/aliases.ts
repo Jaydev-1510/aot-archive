@@ -14,7 +14,14 @@
 import type { SeedDataset } from "../../types";
 import type { ValidationError } from "../errors";
 
-type EntityArrayKey = "people" | "titans" | "events" | "locations" | "factions" | "objects" | "families";
+type EntityArrayKey =
+  | "people"
+  | "titans"
+  | "events"
+  | "locations"
+  | "factions"
+  | "objects"
+  | "families";
 
 const ENTITY_ARRAY_KEYS: EntityArrayKey[] = [
   "people",
@@ -26,11 +33,21 @@ const ENTITY_ARRAY_KEYS: EntityArrayKey[] = [
   "families",
 ];
 
-export function validateAliases(dataset: SeedDataset, errors: ValidationError[]): void {
+export function validateAliases(
+  dataset: SeedDataset,
+  errors: ValidationError[],
+): void {
   for (const key of ENTITY_ARRAY_KEYS) {
     const records = dataset[key] ?? [];
     records.forEach((record, recordIndex) => {
-      const { id, aliases } = record as { id: string; aliases?: Array<{ alias: string; aliasType: string; language?: string }> };
+      const { id, aliases } = record as {
+        id: string;
+        aliases?: Array<{
+          alias: string;
+          aliasType: string;
+          language?: string;
+        }>;
+      };
       if (!aliases || aliases.length === 0) return;
 
       const seen = new Map<string, number>();
@@ -38,7 +55,11 @@ export function validateAliases(dataset: SeedDataset, errors: ValidationError[])
         const identifier = `${key}[${recordIndex}].aliases[${aliasIndex}] (${id})`;
 
         if (alias.alias.trim().length === 0) {
-          errors.push({ section: "aliases", identifier, message: "alias text must not be empty." });
+          errors.push({
+            section: "aliases",
+            identifier,
+            message: "alias text must not be empty.",
+          });
         }
 
         const dedupeKey = `${alias.alias}\u0001${alias.aliasType}\u0001${alias.language ?? ""}`;

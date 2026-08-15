@@ -7,7 +7,8 @@ export const dataset: SeedDataset = {
       id: locationId("paradis_island"),
       name: "Paradis Island",
       locationType: "island",
-      description: "An island located off the coast of Marley, where Karl Fritz retreated with a large number of Eldians.",
+      description:
+        "An island located off the coast of Marley, where Karl Fritz retreated with a large number of Eldians.",
     },
     {
       id: locationId("wall_maria"),
@@ -21,7 +22,8 @@ export const dataset: SeedDataset = {
       name: "Shiganshina District",
       locationType: "district",
       parentLocation: locationId("wall_maria"),
-      description: "A district located on the southern edge of Wall Maria, the hometown of Eren, Mikasa, and Armin.",
+      description:
+        "A district located on the southern edge of Wall Maria, the hometown of Eren, Mikasa, and Armin.",
     },
     {
       id: locationId("wall_rose"),
@@ -56,14 +58,16 @@ export const dataset: SeedDataset = {
       name: "Ragako Village",
       locationType: "city",
       parentLocation: locationId("wall_rose"),
-      description: "A village located within Wall Rose, the hometown of Connie Springer.",
+      description:
+        "A village located within Wall Rose, the hometown of Connie Springer.",
     },
     {
       id: locationId("wall_sheena"),
       name: "Wall Sheena",
       locationType: "wall",
       parentLocation: locationId("paradis_island"),
-      description: "The innermost wall of the three Walls on Paradis Island, protecting the royal capital.",
+      description:
+        "The innermost wall of the three Walls on Paradis Island, protecting the royal capital.",
     },
     {
       id: locationId("stohess_district"),
@@ -77,7 +81,8 @@ export const dataset: SeedDataset = {
       name: "Mitras",
       locationType: "city",
       parentLocation: locationId("wall_sheena"),
-      description: "The capital city of Paradis Island, located within the center of Wall Sheena.",
+      description:
+        "The capital city of Paradis Island, located within the center of Wall Sheena.",
     },
     {
       id: locationId("orvud_district"),
@@ -91,7 +96,8 @@ export const dataset: SeedDataset = {
       name: "Underground City",
       locationType: "district",
       parentLocation: locationId("wall_sheena"),
-      description: "A massive underground settlement located beneath the capital city of Mitras.",
-    }
+      description:
+        "A massive underground settlement located beneath the capital city of Mitras.",
+    },
   ],
 };

@@ -23,7 +23,9 @@ import { buildUpdateThenInsert, sqlValue } from "./sql";
 import { sourceIdSubquery } from "./identity";
 import { DEFAULT_CANON_STATUS } from "./defaults";
 
-export function buildTitanHolderStatements(holders: SeedTitanHolder[]): string[] {
+export function buildTitanHolderStatements(
+  holders: SeedTitanHolder[],
+): string[] {
   const statements: string[] = [];
 
   const currentByTitan = new Map<string, string>(); // titanId -> personId declared current in THIS run
@@ -41,14 +43,32 @@ export function buildTitanHolderStatements(holders: SeedTitanHolder[]): string[]
       ...buildUpdateThenInsert(
         "titan_holders",
         [
-          "titan_id", "person_id", "holder_order", "predecessor_person_id", "successor_person_id",
-          "period_start_year", "period_end_year", "date_precision", "is_current",
-          "inheritance_method", "canon_status", "source_id", "notes",
+          "titan_id",
+          "person_id",
+          "holder_order",
+          "predecessor_person_id",
+          "successor_person_id",
+          "period_start_year",
+          "period_end_year",
+          "date_precision",
+          "is_current",
+          "inheritance_method",
+          "canon_status",
+          "source_id",
+          "notes",
         ],
         [
-          h.titan, h.person, h.holderOrder ?? null, h.predecessor ?? null, h.successor ?? null,
-          h.period?.yearStart, h.period?.yearEnd, h.period?.datePrecision, h.isCurrent ?? false,
-          h.inheritanceMethod, h.canonStatus ?? DEFAULT_CANON_STATUS,
+          h.titan,
+          h.person,
+          h.holderOrder ?? null,
+          h.predecessor ?? null,
+          h.successor ?? null,
+          h.period?.yearStart,
+          h.period?.yearEnd,
+          h.period?.datePrecision,
+          h.isCurrent ?? false,
+          h.inheritanceMethod,
+          h.canonStatus ?? DEFAULT_CANON_STATUS,
           h.source ? { raw: sourceIdSubquery(h.source) } : null,
           h.notes,
         ],
@@ -56,8 +76,16 @@ export function buildTitanHolderStatements(holders: SeedTitanHolder[]): string[]
         // UNIQUE(titan_id, person_id, holder_order), just made NULL-safe.
         ["titan_id", "person_id", "holder_order"],
         [
-          "predecessor_person_id", "successor_person_id", "period_start_year", "period_end_year",
-          "date_precision", "is_current", "inheritance_method", "canon_status", "source_id", "notes",
+          "predecessor_person_id",
+          "successor_person_id",
+          "period_start_year",
+          "period_end_year",
+          "date_precision",
+          "is_current",
+          "inheritance_method",
+          "canon_status",
+          "source_id",
+          "notes",
         ],
       ),
     );

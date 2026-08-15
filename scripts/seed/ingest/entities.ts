@@ -25,7 +25,12 @@ import type {
   SeedObject,
 } from "../types";
 import { buildUpsertOnConflict, raw, sqlValue } from "./sql";
-import { DEFAULT_GENDER, DEFAULT_SPECIES, DEFAULT_LIFE_STATUS, DEFAULT_CANON_STATUS } from "./defaults";
+import {
+  DEFAULT_GENDER,
+  DEFAULT_SPECIES,
+  DEFAULT_LIFE_STATUS,
+  DEFAULT_CANON_STATUS,
+} from "./defaults";
 import { sourceIdSubquery } from "./identity";
 
 function deriveSlug(id: string, explicitSlug?: string): string {
@@ -33,7 +38,13 @@ function deriveSlug(id: string, explicitSlug?: string): string {
 }
 
 function entityUpsert(id: string, entityType: string): string {
-  return buildUpsertOnConflict("entities", ["id", "entity_type"], [id, entityType], ["id"], ["entity_type"]);
+  return buildUpsertOnConflict(
+    "entities",
+    ["id", "entity_type"],
+    [id, entityType],
+    ["id"],
+    ["entity_type"],
+  );
 }
 
 function sourceRef(seedKey: string | undefined) {
@@ -48,23 +59,61 @@ export function buildPeopleStatements(people: SeedPerson[]): string[] {
       buildUpsertOnConflict(
         "people",
         [
-          "id", "name", "slug", "japanese_name", "gender", "species", "status",
-          "birth_year_start", "birth_year_end", "birth_date_precision",
-          "death_year_start", "death_year_end", "death_date_precision",
-          "summary", "canon_status", "primary_source_id", "notes",
+          "id",
+          "name",
+          "slug",
+          "japanese_name",
+          "gender",
+          "species",
+          "status",
+          "birth_year_start",
+          "birth_year_end",
+          "birth_date_precision",
+          "death_year_start",
+          "death_year_end",
+          "death_date_precision",
+          "summary",
+          "canon_status",
+          "primary_source_id",
+          "notes",
         ],
         [
-          p.id, p.name, deriveSlug(p.id, p.slug), p.japaneseName, p.gender ?? DEFAULT_GENDER, p.species ?? DEFAULT_SPECIES, p.status ?? DEFAULT_LIFE_STATUS,
-          p.birth?.yearStart, p.birth?.yearEnd, p.birth?.datePrecision,
-          p.death?.yearStart, p.death?.yearEnd, p.death?.datePrecision,
-          p.summary, p.provenance?.canonStatus ?? DEFAULT_CANON_STATUS, sourceRef(p.provenance?.source), p.notes,
+          p.id,
+          p.name,
+          deriveSlug(p.id, p.slug),
+          p.japaneseName,
+          p.gender ?? DEFAULT_GENDER,
+          p.species ?? DEFAULT_SPECIES,
+          p.status ?? DEFAULT_LIFE_STATUS,
+          p.birth?.yearStart,
+          p.birth?.yearEnd,
+          p.birth?.datePrecision,
+          p.death?.yearStart,
+          p.death?.yearEnd,
+          p.death?.datePrecision,
+          p.summary,
+          p.provenance?.canonStatus ?? DEFAULT_CANON_STATUS,
+          sourceRef(p.provenance?.source),
+          p.notes,
         ],
         ["id"],
         [
-          "name", "slug", "japanese_name", "gender", "species", "status",
-          "birth_year_start", "birth_year_end", "birth_date_precision",
-          "death_year_start", "death_year_end", "death_date_precision",
-          "summary", "canon_status", "primary_source_id", "notes",
+          "name",
+          "slug",
+          "japanese_name",
+          "gender",
+          "species",
+          "status",
+          "birth_year_start",
+          "birth_year_end",
+          "birth_date_precision",
+          "death_year_start",
+          "death_year_end",
+          "death_date_precision",
+          "summary",
+          "canon_status",
+          "primary_source_id",
+          "notes",
         ],
       ),
     );
@@ -79,8 +128,24 @@ export function buildTitanStatements(titans: SeedTitan[]): string[] {
     statements.push(
       buildUpsertOnConflict(
         "titans",
-        ["id", "name", "slug", "titan_class", "description", "canon_status", "notes"],
-        [t.id, t.name, deriveSlug(t.id, t.slug), t.titanClass, t.description, t.provenance?.canonStatus ?? DEFAULT_CANON_STATUS, t.notes],
+        [
+          "id",
+          "name",
+          "slug",
+          "titan_class",
+          "description",
+          "canon_status",
+          "notes",
+        ],
+        [
+          t.id,
+          t.name,
+          deriveSlug(t.id, t.slug),
+          t.titanClass,
+          t.description,
+          t.provenance?.canonStatus ?? DEFAULT_CANON_STATUS,
+          t.notes,
+        ],
         ["id"],
         ["name", "slug", "titan_class", "description", "canon_status", "notes"],
       ),
@@ -97,7 +162,14 @@ export function buildFamilyStatements(families: SeedFamily[]): string[] {
       buildUpsertOnConflict(
         "families",
         ["id", "name", "slug", "is_royal_bloodline", "description", "notes"],
-        [f.id, f.name, deriveSlug(f.id, f.slug), f.isRoyalBloodline ?? false, f.description, f.notes],
+        [
+          f.id,
+          f.name,
+          deriveSlug(f.id, f.slug),
+          f.isRoyalBloodline ?? false,
+          f.description,
+          f.notes,
+        ],
         ["id"],
         ["name", "slug", "is_royal_bloodline", "description", "notes"],
       ),
@@ -114,18 +186,43 @@ export function buildEventStatements(events: SeedEvent[]): string[] {
       buildUpsertOnConflict(
         "events",
         [
-          "id", "name", "slug", "event_type", "year_start", "year_end", "date_precision",
-          "summary", "canon_status", "source_id", "notes",
+          "id",
+          "name",
+          "slug",
+          "event_type",
+          "year_start",
+          "year_end",
+          "date_precision",
+          "summary",
+          "canon_status",
+          "source_id",
+          "notes",
         ],
         [
-          e.id, e.name, deriveSlug(e.id, e.slug), e.eventType,
-          e.chronology?.yearStart, e.chronology?.yearEnd, e.chronology?.datePrecision,
-          e.summary, e.provenance?.canonStatus ?? DEFAULT_CANON_STATUS, sourceRef(e.provenance?.source), e.notes,
+          e.id,
+          e.name,
+          deriveSlug(e.id, e.slug),
+          e.eventType,
+          e.chronology?.yearStart,
+          e.chronology?.yearEnd,
+          e.chronology?.datePrecision,
+          e.summary,
+          e.provenance?.canonStatus ?? DEFAULT_CANON_STATUS,
+          sourceRef(e.provenance?.source),
+          e.notes,
         ],
         ["id"],
         [
-          "name", "slug", "event_type", "year_start", "year_end", "date_precision",
-          "summary", "canon_status", "source_id", "notes",
+          "name",
+          "slug",
+          "event_type",
+          "year_start",
+          "year_end",
+          "date_precision",
+          "summary",
+          "canon_status",
+          "source_id",
+          "notes",
         ],
       ),
     );
@@ -141,10 +238,35 @@ export function buildLocationStatements(locations: SeedLocation[]): string[] {
     statements.push(
       buildUpsertOnConflict(
         "locations",
-        ["id", "name", "slug", "location_type", "parent_location_id", "description", "canon_status", "notes"],
-        [l.id, l.name, deriveSlug(l.id, l.slug), l.locationType, null, l.description, l.provenance?.canonStatus ?? DEFAULT_CANON_STATUS, l.notes],
+        [
+          "id",
+          "name",
+          "slug",
+          "location_type",
+          "parent_location_id",
+          "description",
+          "canon_status",
+          "notes",
+        ],
+        [
+          l.id,
+          l.name,
+          deriveSlug(l.id, l.slug),
+          l.locationType,
+          null,
+          l.description,
+          l.provenance?.canonStatus ?? DEFAULT_CANON_STATUS,
+          l.notes,
+        ],
         ["id"],
-        ["name", "slug", "location_type", "description", "canon_status", "notes"], // parent_location_id excluded — see phase 2
+        [
+          "name",
+          "slug",
+          "location_type",
+          "description",
+          "canon_status",
+          "notes",
+        ], // parent_location_id excluded — see phase 2
       ),
     );
   }
@@ -166,10 +288,33 @@ export function buildFactionStatements(factions: SeedFaction[]): string[] {
     statements.push(
       buildUpsertOnConflict(
         "factions",
-        ["id", "name", "slug", "faction_type", "description", "canon_status", "notes"],
-        [f.id, f.name, deriveSlug(f.id, f.slug), f.factionType, f.description, f.provenance?.canonStatus ?? DEFAULT_CANON_STATUS, f.notes],
+        [
+          "id",
+          "name",
+          "slug",
+          "faction_type",
+          "description",
+          "canon_status",
+          "notes",
+        ],
+        [
+          f.id,
+          f.name,
+          deriveSlug(f.id, f.slug),
+          f.factionType,
+          f.description,
+          f.provenance?.canonStatus ?? DEFAULT_CANON_STATUS,
+          f.notes,
+        ],
         ["id"],
-        ["name", "slug", "faction_type", "description", "canon_status", "notes"],
+        [
+          "name",
+          "slug",
+          "faction_type",
+          "description",
+          "canon_status",
+          "notes",
+        ],
       ),
     );
   }
@@ -183,8 +328,24 @@ export function buildObjectStatements(objects: SeedObject[]): string[] {
     statements.push(
       buildUpsertOnConflict(
         "objects",
-        ["id", "name", "slug", "object_type", "description", "canon_status", "notes"],
-        [o.id, o.name, deriveSlug(o.id, o.slug), o.objectType, o.description, o.provenance?.canonStatus ?? DEFAULT_CANON_STATUS, o.notes],
+        [
+          "id",
+          "name",
+          "slug",
+          "object_type",
+          "description",
+          "canon_status",
+          "notes",
+        ],
+        [
+          o.id,
+          o.name,
+          deriveSlug(o.id, o.slug),
+          o.objectType,
+          o.description,
+          o.provenance?.canonStatus ?? DEFAULT_CANON_STATUS,
+          o.notes,
+        ],
         ["id"],
         ["name", "slug", "object_type", "description", "canon_status", "notes"],
       ),

@@ -88,13 +88,7 @@ export const familyId = makeIdFactory("family");
  * kinds. Runtime kind resolution happens in the seed runner (next phase).
  */
 export type EntityStableId =
-  | PersonId
-  | TitanId
-  | EventId
-  | LocationId
-  | FactionId
-  | ObjectId
-  | FamilyId;
+  PersonId | TitanId | EventId | LocationId | FactionId | ObjectId | FamilyId;
 
 export const ENTITY_ID_FACTORIES = {
   person: personId,

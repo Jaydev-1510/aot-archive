@@ -5,7 +5,11 @@
  * keys are never written to D1 themselves.
  */
 
-import type { SourceType, AbilityCategory, MediaType } from "../../../src/database/schema";
+import type {
+  SourceType,
+  AbilityCategory,
+  MediaType,
+} from "../../../src/database/schema";
 import type { SourceSeedKey, MediaSeedKey } from "../ids";
 
 // sources

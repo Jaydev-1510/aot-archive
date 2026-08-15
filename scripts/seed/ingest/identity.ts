@@ -28,7 +28,9 @@ export function registerMedia(media: SeedMedia[]): void {
 export function sourceIdentityWhere(seedKey: string): string {
   const source = sourcesByKey.get(seedKey);
   if (!source) {
-    throw new Error(`Unknown source seed key "${seedKey}" — this should have been caught by validation.`);
+    throw new Error(
+      `Unknown source seed key "${seedKey}" — this should have been caught by validation.`,
+    );
   }
   return [
     `title IS ${sqlValue(source.title)}`,
@@ -49,7 +51,9 @@ export function sourceIdSubquery(seedKey: string): string {
 export function mediaIdentityWhere(seedKey: string): string {
   const item = mediaByKey.get(seedKey);
   if (!item) {
-    throw new Error(`Unknown media seed key "${seedKey}" — this should have been caught by validation.`);
+    throw new Error(
+      `Unknown media seed key "${seedKey}" — this should have been caught by validation.`,
+    );
   }
   return `url IS ${sqlValue(item.url)}`;
 }

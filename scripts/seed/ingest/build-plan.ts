@@ -28,7 +28,10 @@
 
 import type { SeedDataset } from "../types";
 import { buildSourceStatements, buildMediaStatements } from "./provenance";
-import { buildRelationshipTypeStatements, buildAbilityStatements } from "./relationship-types";
+import {
+  buildRelationshipTypeStatements,
+  buildAbilityStatements,
+} from "./relationship-types";
 import {
   buildPeopleStatements,
   buildTitanStatements,
@@ -39,7 +42,10 @@ import {
   buildObjectStatements,
 } from "./entities";
 import { buildTitanAbilityStatements } from "./titan-abilities";
-import { buildAliasStatements, buildMediaLinkStatements } from "./aliases-and-media-links";
+import {
+  buildAliasStatements,
+  buildMediaLinkStatements,
+} from "./aliases-and-media-links";
 import { buildRelationshipStatements } from "./relationships";
 import { buildTitanHolderStatements } from "./titan-holders";
 import { buildSearchIndexStatements } from "./search-index";
@@ -53,7 +59,10 @@ export interface IngestionPlan {
 export function buildIngestionPlan(dataset: SeedDataset): IngestionPlan {
   const phases: Array<[string, string[]]> = [
     ["sources", buildSourceStatements(dataset.sources ?? [])],
-    ["relationshipTypes", buildRelationshipTypeStatements(dataset.relationshipTypes ?? [])],
+    [
+      "relationshipTypes",
+      buildRelationshipTypeStatements(dataset.relationshipTypes ?? []),
+    ],
     ["abilities", buildAbilityStatements(dataset.abilities ?? [])],
     ["people", buildPeopleStatements(dataset.people ?? [])],
     ["titans", buildTitanStatements(dataset.titans ?? [])],

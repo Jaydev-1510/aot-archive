@@ -7,7 +7,8 @@ export const dataset: SeedDataset = {
       id: locationId("hizuru"),
       name: "Hizuru",
       locationType: "nation",
-      description: "An eastern nation across the sea that was historically allied with the Eldian Empire.",
-    }
+      description:
+        "An eastern nation across the sea that was historically allied with the Eldian Empire.",
+    },
   ],
 };
