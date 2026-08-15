@@ -27,11 +27,12 @@ export interface SeedRelationshipType {
 }
 
 // relationships — the generic edge table
-export interface SeedRelationship extends SeedChronology, SeedProvenance {
+export interface SeedRelationship extends SeedChronology {
   subject: EntityStableId;
   /** Must match a `slug` declared in the relationship_types seed collection. */
   predicate: string;
   object: EntityStableId;
   /** role/rank/title on this specific edge, e.g. 'king', 'commander', 'marriage'. */
   qualifier?: string;
+  provenance?: SeedProvenance;
 }

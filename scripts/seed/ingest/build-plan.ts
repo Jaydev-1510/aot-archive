@@ -42,6 +42,7 @@ import { buildTitanAbilityStatements } from "./titan-abilities";
 import { buildAliasStatements, buildMediaLinkStatements } from "./aliases-and-media-links";
 import { buildRelationshipStatements } from "./relationships";
 import { buildTitanHolderStatements } from "./titan-holders";
+import { buildSearchIndexStatements } from "./search-index";
 
 export interface IngestionPlan {
   statements: string[];
@@ -67,6 +68,7 @@ export function buildIngestionPlan(dataset: SeedDataset): IngestionPlan {
     ["mediaLinks", buildMediaLinkStatements(dataset)],
     ["relationships", buildRelationshipStatements(dataset.relationships ?? [])],
     ["titanHolders", buildTitanHolderStatements(dataset.titanHolders ?? [])],
+    ["searchIndex", buildSearchIndexStatements()],
   ];
 
   const statements: string[] = [];

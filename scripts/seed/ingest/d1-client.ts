@@ -17,9 +17,30 @@ import path from "node:path";
 
 export type D1Target = "local" | "remote";
 
+/**
+ * Resolve the project's own pinned `wrangler` binary directly rather than
+ * relying on `npx wrangler` to find it. `npx` will fall back to fetching
+ * an arbitrary version from the registry if it can't resolve one locally
+ * (e.g. a fresh checkout before `npm install`, or a CI cache miss) —
+ * silently running a different, unpinned wrangler version against your
+ * D1 database is exactly the kind of surprise this tool shouldn't risk.
+ * Falls back to `npx wrangler` only if no local binary is found, so this
+ * still works in an environment where wrangler is installed globally.
+ */
+async function resolveWranglerCommand(): Promise<{ command: string; baseArgs: string[] }> {
+  const localBin = path.join(process.cwd(), "node_modules", ".bin", process.platform === "win32" ? "wrangler.cmd" : "wrangler");
+  try {
+    await fs.access(localBin);
+    return { command: localBin, baseArgs: [] };
+  } catch {
+    return { command: "npx", baseArgs: ["wrangler"] };
+  }
+}
+
 function run(args: string[]): Promise<{ stdout: string; stderr: string; code: number }> {
-  return new Promise((resolve, reject) => {
-    const child = spawn("npx", ["wrangler", ...args], { shell: false });
+  return new Promise(async (resolve, reject) => {
+    const { command, baseArgs } = await resolveWranglerCommand();
+    const child = spawn(command, [...baseArgs, ...args], { shell: false, cwd: process.cwd() });
     let stdout = "";
     let stderr = "";
     child.stdout.on("data", (d) => (stdout += d.toString()));
