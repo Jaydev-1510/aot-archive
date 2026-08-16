@@ -17,6 +17,8 @@ export const dataset: SeedDataset = {
       aliases: [
         { alias: "Attack Titan", aliasType: "title" },
         { alias: "Suicidal Blockhead", aliasType: "nickname" },
+        { alias: "Founding Titan", aliasType: "title" },
+        { alias: "Coordinate", aliasType: "title" },
       ],
       provenance: { source: "aot_manga" },
     },
@@ -74,6 +76,10 @@ export const dataset: SeedDataset = {
       status: "deceased",
       summary:
         "Son of Grisha Yeager and Dina Fritz, half-brother of Eren Yeager, and holder of the Beast Titan.",
+      aliases: [
+        { alias: "Beast Titan", aliasType: "title" },
+        { alias: "War Chief", aliasType: "title" },
+      ],
       provenance: { source: "aot_manga" },
     },
     {

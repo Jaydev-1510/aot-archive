@@ -13,6 +13,15 @@ export const dataset: SeedDataset = {
       provenance: { source: "aot_manga" },
     },
     {
+      id: eventId("volunteers_arrival"),
+      name: "Arrival of the Anti-Marleyan Volunteers",
+      eventType: "political",
+      chronology: { yearStart: 851, datePrecision: "exact" },
+      summary:
+        "The Anti-Marleyan Volunteers, led by Yelena under Zeke Yeager's orders, arrive on Paradis Island aboard a Marleyan scouting fleet. They offer modern technology and an alliance against Marley.",
+      provenance: { source: "aot_manga" },
+    },
+    {
       id: eventId("raid_on_liberio"),
       name: "Raid on Liberio",
       eventType: "battle",
@@ -37,6 +46,10 @@ export const dataset: SeedDataset = {
       chronology: { yearStart: 854, datePrecision: "exact" },
       summary:
         "Eren Yeager activates the Founding Titan and unleashes millions of Wall Titans to trample the world outside Paradis Island.",
+      aliases: [
+        { alias: "地鳴らし", aliasType: "japanese_name" },
+        { alias: "Jinarashi", aliasType: "romanization" },
+      ],
       provenance: { source: "aot_manga" },
     },
     {
@@ -46,6 +59,10 @@ export const dataset: SeedDataset = {
       chronology: { yearStart: 854, datePrecision: "exact" },
       summary:
         "The final battle at Fort Salta where the Global Alliance and former members of the Survey Corps unite to stop Eren Yeager and halt the Rumbling.",
+      aliases: [
+        { alias: "天と地の戦い", aliasType: "japanese_name" },
+        { alias: "Ten to Chi no Tatakai", aliasType: "romanization" },
+      ],
       provenance: { source: "aot_manga" },
     },
   ],

@@ -23,7 +23,7 @@ import {
 } from "../database/queries";
 import { validateDataset } from "../../scripts/seed/validation/validate-dataset";
 import type { SeedDataset } from "../../scripts/seed/types";
-import { personId, titanId, familyId } from "../../scripts/seed/ids";
+import { personId } from "../../scripts/seed/ids";
 
 let db: any;
 

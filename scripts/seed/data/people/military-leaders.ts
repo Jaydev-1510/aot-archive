@@ -27,6 +27,7 @@ export const dataset: SeedDataset = {
       status: "deceased",
       summary:
         "The 13th Commander of the Survey Corps, a brilliant tactician who led many expeditions outside the walls.",
+      aliases: [{ alias: "Commander Erwin", aliasType: "title" }],
       provenance: { source: "aot_manga" },
     },
     {

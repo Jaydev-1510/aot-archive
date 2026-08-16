@@ -53,5 +53,12 @@ export const dataset: SeedDataset = {
       isRoyalBloodline: false,
       description: "A family residing in the Trost District on Paradis Island.",
     },
+    {
+      id: familyId("azumabito_family"),
+      name: "Azumabito Family",
+      isRoyalBloodline: true,
+      description:
+        "An aristocratic family and leading clan of the nation of Hizuru.",
+    },
   ],
 };

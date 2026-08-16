@@ -7,7 +7,6 @@ import {
   relationshipTypes,
   titans,
 } from "../schema";
-import { getRelationshipsForEntity } from "./relationships";
 import { getTitanHolders } from "./titans";
 import type { EntityId, GraphResult, GraphNode, GraphEdge } from "./types";
 
@@ -76,13 +75,21 @@ export async function getBloodlineGraph(
       qualifier: qual,
     });
 
-    if (pred === "parent-of" || pred === "adopted-parent-of") {
+    if (
+      pred === "parent-of" ||
+      pred === "adopted-parent-of" ||
+      pred === "ancestor-of"
+    ) {
       if (!parentToChildren.has(subj)) parentToChildren.set(subj, []);
       parentToChildren.get(subj)!.push(obj);
 
       if (!childToParents.has(obj)) childToParents.set(obj, []);
       childToParents.get(obj)!.push(subj);
-    } else if (pred === "child-of" || pred === "adopted-child-of") {
+    } else if (
+      pred === "child-of" ||
+      pred === "adopted-child-of" ||
+      pred === "descendant-of"
+    ) {
       if (!parentToChildren.has(obj)) parentToChildren.set(obj, []);
       parentToChildren.get(obj)!.push(subj);
 

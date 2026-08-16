@@ -46,7 +46,10 @@ export const dataset: SeedDataset = {
       status: "alive",
       summary:
         "The illegitimate and youngest child of Rod Reiss, later crowned Queen of the Walls.",
-      aliases: [{ alias: "Christa Lenz", aliasType: "alternate_name" }],
+      aliases: [
+        { alias: "Christa Lenz", aliasType: "alternate_name" },
+        { alias: "Queen of the Walls", aliasType: "title" },
+      ],
       provenance: { source: "aot_manga" },
     },
     {
@@ -69,6 +72,7 @@ export const dataset: SeedDataset = {
       status: "alive",
       summary:
         "Marleyan Warrior and holder of the Armored Titan who infiltrated Paradis Island.",
+      aliases: [{ alias: "Armored Titan", aliasType: "title" }],
       provenance: { source: "aot_manga" },
     },
     {
@@ -79,6 +83,7 @@ export const dataset: SeedDataset = {
       species: "human",
       status: "deceased",
       summary: "Marleyan Warrior and former holder of the Colossal Titan.",
+      aliases: [{ alias: "Colossal Titan", aliasType: "title" }],
       provenance: { source: "aot_manga" },
     },
     {
@@ -89,6 +94,7 @@ export const dataset: SeedDataset = {
       species: "human",
       status: "alive",
       summary: "Marleyan Warrior and holder of the Female Titan.",
+      aliases: [{ alias: "Female Titan", aliasType: "title" }],
       provenance: { source: "aot_manga" },
     },
     {

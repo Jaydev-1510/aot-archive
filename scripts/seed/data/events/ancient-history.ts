@@ -15,6 +15,17 @@ export const dataset: SeedDataset = {
       provenance: { source: "aot_manga" },
     },
     {
+      id: eventId("ymir_death_and_split"),
+      name: "Death of Ymir Fritz and the Nine Titans",
+      eventType: "other",
+      chronology: {
+        datePrecision: "era",
+      },
+      summary:
+        "Ymir Fritz dies protecting King Fritz, 13 years after gaining her powers. Her power is split into the Nine Titans by her daughters devouring her remains, establishing the Curse of Ymir.",
+      provenance: { source: "aot_manga" },
+    },
+    {
       id: eventId("great_titan_war"),
       name: "Great Titan War",
       eventType: "war",

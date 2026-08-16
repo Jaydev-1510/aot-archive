@@ -28,6 +28,20 @@ export const dataset: SeedDataset = {
       description: "Sibling of a person",
     },
     {
+      slug: "ancestor-of",
+      category: "family",
+      inverseSlug: "descendant-of",
+      description:
+        "Ancestor of a person, used when exact intermediate generations are unknown",
+    },
+    {
+      slug: "descendant-of",
+      category: "family",
+      inverseSlug: "ancestor-of",
+      description:
+        "Descendant of a person, used when exact intermediate generations are unknown",
+    },
+    {
       slug: "adopted-parent-of",
       category: "family",
       inverseSlug: "adopted-child-of",
@@ -142,6 +156,18 @@ export const dataset: SeedDataset = {
       description: "Event having a participant",
     },
     {
+      slug: "involved-in",
+      category: "historical",
+      inverseSlug: "involved-faction",
+      description: "Faction or organization involved in an event",
+    },
+    {
+      slug: "involved-faction",
+      category: "historical",
+      inverseSlug: "involved-in",
+      description: "Event involving a faction",
+    },
+    {
       slug: "caused",
       category: "historical",
       inverseSlug: "caused-by",
@@ -192,6 +218,32 @@ export const dataset: SeedDataset = {
       category: "political",
       inverseSlug: "rules",
       description: "Ruled by a person or faction",
+    },
+
+    // Objects
+    {
+      slug: "possesses",
+      category: "ownership",
+      inverseSlug: "possessed-by",
+      description: "Possesses or owns an object/artifact",
+    },
+    {
+      slug: "possessed-by",
+      category: "ownership",
+      inverseSlug: "possesses",
+      description: "Object possessed or owned by a person/faction",
+    },
+    {
+      slug: "uses",
+      category: "ownership",
+      inverseSlug: "used-by",
+      description: "Uses an object or weapon",
+    },
+    {
+      slug: "used-by",
+      category: "ownership",
+      inverseSlug: "uses",
+      description: "Object or weapon used by a person/faction",
     },
   ],
 };

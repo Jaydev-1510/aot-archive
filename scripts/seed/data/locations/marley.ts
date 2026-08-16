@@ -34,5 +34,12 @@ export const dataset: SeedDataset = {
       description:
         "A Marleyan military base and research facility in the southern mountains, site of the final battle.",
     },
+    {
+      id: locationId("fort_slava"),
+      name: "Fort Slava",
+      locationType: "landmark",
+      description:
+        "A fortress belonging to the Mid-East Allied Forces, located on a peninsula. Its capture marked the end of the Marley Mid-East War.",
+    },
   ],
 };

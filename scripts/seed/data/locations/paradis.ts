@@ -99,5 +99,29 @@ export const dataset: SeedDataset = {
       description:
         "A massive underground settlement located beneath the capital city of Mitras.",
     },
+    {
+      id: locationId("dauper_village"),
+      name: "Dauper Village",
+      locationType: "city",
+      parentLocation: locationId("wall_rose"),
+      description:
+        "A small hunting village situated in the southern mountains of Wall Rose, hometown of Sasha Blouse.",
+    },
+    {
+      id: locationId("reiss_chapel"),
+      name: "Reiss Underground Chapel",
+      locationType: "landmark",
+      parentLocation: locationId("wall_rose"),
+      description:
+        "A massive underground cavern made of glowing crystals beneath a modest chapel on the Reiss family estate. The traditional site of the Founding Titan inheritance ritual.",
+    },
+    {
+      id: locationId("forest_of_giant_trees"),
+      name: "Forest of Giant Trees",
+      locationType: "region",
+      parentLocation: locationId("wall_maria"),
+      description:
+        "A forest containing trees over 80 meters tall. Located within Wall Maria, it served as a critical location during the 57th Expedition.",
+    },
   ],
 };
