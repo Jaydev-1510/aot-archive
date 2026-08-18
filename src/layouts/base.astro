@@ -1,0 +1,22 @@
+---
+import { Font } from "astro:assets";
+import "@/styles/global.css";
+import Navbar from "@/components/navbar.astro";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <Font cssVariable="--font-titan" />
+    <Font cssVariable="--font-shippori" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Attack on Titan Archive</title>
+  </head>
+  <body class="min-h-dvh">
+    <Navbar />
+    <slot />
+  </body>
+</html>
