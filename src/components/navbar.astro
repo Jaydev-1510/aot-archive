@@ -1,0 +1,540 @@
+---
+import SurveyCorpsLogo from "@/assets/images/SurveyCorpsLogo.svg";
+
+const currentPath = Astro.url.pathname;
+
+const primaryNav = [
+  { href: "/archive", label: "Archive", number: "01" },
+  { href: "/people", label: "People", number: "02" },
+  { href: "/titans", label: "Titans", number: "03" },
+];
+
+const historyItems = [
+  { href: "/timeline", label: "Timeline" },
+  { href: "/events", label: "Events" },
+  { href: "/bloodlines", label: "Bloodlines" },
+];
+
+const worldItems = [
+  { href: "/locations", label: "Locations" },
+  { href: "/factions", label: "Factions" },
+  { href: "/objects", label: "Objects" },
+  { href: "/abilities", label: "Abilities" },
+];
+
+function isActive(href: string) {
+  return (
+    (currentPath.startsWith(href) && href !== "/") ||
+    (href === "/archive" && currentPath === "/archive")
+  );
+}
+---
+
+<nav
+  id="global-nav"
+  aria-label="Primary Navigation"
+  class="group/nav fixed inset-x-0 top-0 z-70 flex -translate-y-20 items-center justify-between border-b border-transparent px-5 py-4 transition-all duration-500 sm:px-8"
+>
+  <div
+    class="bg-archive-950/95 border-archive-800/50 shadow-heavy pointer-events-none absolute inset-0 border-b opacity-0 backdrop-blur-lg transition-opacity duration-500"
+    id="nav-bg"
+  >
+  </div>
+
+  <div class="relative z-10 flex items-center">
+    <a
+      href="/"
+      aria-label="Home - Survey Corps Archives"
+      class="group focus-visible:ring-brass-600/50 flex items-center gap-4 rounded-sm focus:outline-none focus-visible:ring-2"
+    >
+      <div
+        class="border-archive-700/60 bg-archive-900/40 shadow-inset group-hover:border-archive-600 group-hover:bg-archive-800/60 relative flex h-10 w-10 items-center justify-center border transition-colors duration-300"
+      >
+        <div
+          class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03)_0%,transparent_100%)]"
+        >
+        </div>
+        <img
+          src={SurveyCorpsLogo.src}
+          alt=""
+          aria-hidden="true"
+          class="h-9 w-9 opacity-60 transition-opacity duration-300 group-hover:opacity-100"
+        />
+      </div>
+      <div class="flex flex-col justify-center">
+        <span
+          class="text-archive-500 group-hover:text-paper-300 font-serif text-2xl leading-none transition-colors"
+        >
+          AoT Archives
+        </span>
+      </div>
+    </a>
+  </div>
+
+  <div class="relative z-10 hidden items-center gap-2 lg:flex">
+    {
+      primaryNav.map((item) => (
+        <a
+          href={item.href}
+          aria-current={isActive(item.href) ? "page" : undefined}
+          class={`group focus-visible:ring-brass-600/50 relative flex items-baseline gap-2 rounded-sm px-4 py-2 transition-colors focus:outline-none focus-visible:ring-2 ${
+            isActive(item.href)
+              ? "text-paper-50"
+              : "text-paper-300 hover:text-paper-100"
+          }`}
+        >
+          <span class="text-archive-500 group-hover:text-brass-600 font-mono text-xs tracking-widest transition-colors">
+            {item.number}
+          </span>
+          <span class="tracking-military text-[11px] font-medium uppercase">
+            {item.label}
+          </span>
+          {isActive(item.href) && (
+            <span class="bg-brass-600/50 absolute right-4 bottom-0 left-4 h-px" />
+          )}
+        </a>
+      ))
+    }
+
+    <div class="group/dropdown relative px-2">
+      <button
+        type="button"
+        class="group focus-visible:ring-brass-600/50 text-paper-300 hover:text-paper-100 relative flex items-baseline gap-2 rounded-sm px-4 py-2 transition-colors focus:outline-none focus-visible:ring-2"
+        aria-expanded="false"
+      >
+        <span
+          class="text-archive-500 group-hover:text-brass-600/70 font-mono text-xs tracking-widest transition-colors"
+        >
+          04
+        </span>
+        <span class="tracking-military text-[11px] font-medium uppercase">
+          History
+        </span>
+      </button>
+
+      <div
+        class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 translate-y-2 pt-4 opacity-0 transition-all duration-300 group-hover/dropdown:pointer-events-auto group-hover/dropdown:translate-y-0 group-hover/dropdown:opacity-100 motion-reduce:transition-none"
+      >
+        <div
+          class="border-archive-800 bg-archive-950 shadow-heavy before:bg-brass-600/50 relative w-56 border p-2 before:absolute before:-top-px before:left-1/2 before:h-px before:w-8 before:-translate-x-1/2"
+        >
+          <div
+            class="tracking-classified text-archive-500 mb-2 px-3 pt-2 text-xs uppercase"
+          >
+            Timeline Records
+          </div>
+          <div class="flex flex-col gap-0.5">
+            {
+              historyItems.map((item) => (
+                <a
+                  href={item.href}
+                  class="tracking-military text-paper-300 hover:text-paper-50 hover:bg-archive-900/50 focus-visible:ring-brass-600/50 rounded-sm px-3 py-2 text-[11px] uppercase transition-colors focus:outline-none focus-visible:ring-1"
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group/dropdown relative px-2">
+      <button
+        type="button"
+        class="group focus-visible:ring-brass-600/50 text-paper-300 hover:text-paper-100 relative flex items-baseline gap-2 rounded-sm px-4 py-2 transition-colors focus:outline-none focus-visible:ring-2"
+        aria-expanded="false"
+      >
+        <span
+          class="text-archive-500 group-hover:text-brass-600/70 font-mono text-xs tracking-widest transition-colors"
+        >
+          05
+        </span>
+        <span class="tracking-military text-xs font-medium uppercase">
+          World
+        </span>
+      </button>
+
+      <div
+        class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 translate-y-2 pt-4 opacity-0 transition-all duration-300 group-hover/dropdown:pointer-events-auto group-hover/dropdown:translate-y-0 group-hover/dropdown:opacity-100 motion-reduce:transition-none"
+      >
+        <div
+          class="border-archive-800 bg-archive-950 shadow-heavy before:bg-brass-600/50 relative w-48 border p-2 before:absolute before:-top-px before:left-1/2 before:h-px before:w-8 before:-translate-x-1/2"
+        >
+          <div
+            class="tracking-classified text-archive-500 mb-2 px-3 pt-2 text-xs uppercase"
+          >
+            Entities Index
+          </div>
+          <div class="flex flex-col gap-0.5">
+            {
+              worldItems.map((item) => (
+                <a
+                  href={item.href}
+                  class="tracking-military text-paper-300 hover:text-paper-50 hover:bg-archive-900/50 focus-visible:ring-brass-600/50 rounded-sm px-3 py-2 text-[11px] uppercase transition-colors focus:outline-none focus-visible:ring-1"
+                >
+                  {item.label}
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative z-10 flex items-center gap-4 sm:gap-6">
+    <button
+      id="search-trigger"
+      type="button"
+      class="group text-paper-300 hover:text-paper-100 focus-visible:ring-brass-600/50 flex items-center gap-3 rounded-sm transition-colors focus:outline-none focus-visible:ring-2"
+      aria-label="Open Search"
+      aria-haspopup="dialog"
+    >
+      <span class="hidden items-center gap-2 md:flex">
+        <span class="tracking-classified text-[10px] uppercase">Search</span>
+        <kbd
+          class="border-archive-700 bg-archive-900/50 text-archive-500 group-hover:text-paper-300 group-hover:border-archive-600 rounded-[2px] border px-1.5 py-0.5 font-mono text-sm transition-colors"
+          >⌘K</kbd
+        >
+      </span>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="opacity-80 transition-opacity group-hover:opacity-100"
+        ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"
+        ></path></svg
+      >
+    </button>
+
+    <div class="bg-archive-800 hidden h-4 w-px lg:block" aria-hidden="true">
+    </div>
+
+    <button
+      id="mobile-menu-trigger"
+      type="button"
+      class="text-paper-300 hover:text-paper-100 focus-visible:ring-brass-600/50 rounded-sm p-1 transition-colors focus:outline-none focus-visible:ring-2 lg:hidden"
+      aria-label="Open Mobile Menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="lucide lucide-menu-icon lucide-menu"
+        ><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"
+        ></path></svg
+      >
+    </button>
+  </div>
+</nav>
+
+<div
+  id="search-dialog"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Search Archive"
+  class="pointer-events-none fixed inset-0 z-100 flex items-start justify-center px-4 pt-[15vh] opacity-0 transition-opacity duration-300"
+>
+  <div
+    class="bg-archive-black/80 absolute inset-0 backdrop-blur-sm transition-opacity"
+    id="search-backdrop"
+  >
+  </div>
+
+  <div
+    class="bg-archive-950 border-archive-800 shadow-heavy relative w-full max-w-2xl scale-200 transform border opacity-0 transition-all duration-200"
+    id="search-panel"
+  >
+    <div
+      class="via-brass-600/50 absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent"
+    >
+    </div>
+
+    <div class="border-archive-800/50 flex items-center border-b px-6 py-4">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="text-archive-500 mr-4"
+        ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"
+        ></path></svg
+      >
+      <input
+        type="text"
+        id="search-input"
+        class="text-paper-50 placeholder:text-archive-600 flex-1 border-none bg-transparent font-sans text-lg focus:outline-none"
+        placeholder="Query archive index..."
+        autocomplete="off"
+      />
+      <button
+        id="search-close"
+        class="text-archive-500 hover:text-paper-100 tracking-classified border-archive-800 focus-visible:ring-brass-600/50 rounded-sm border px-2 py-1 text-[10px] uppercase transition-colors focus:outline-none focus-visible:ring-2"
+      >
+        Esc
+      </button>
+    </div>
+
+    <div class="min-h-75 px-6 py-8">
+      <div
+        class="text-archive-500 mt-8 flex h-full flex-col items-center justify-center space-y-4 text-center"
+      >
+        <div
+          class="border-archive-800 flex h-12 w-12 items-center justify-center rounded-full border opacity-50"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            ><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"
+            ></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M3 15h6"
+            ></path><path d="M3 18h6"></path><path d="m14 15-4 4"></path></svg
+          >
+        </div>
+        <p class="tracking-military text-xs font-bold uppercase">
+          FTS5 Search module disconnected
+        </p>
+        <p class="text-archive-600 max-w-xs text-sm">
+          Full-text search backend is not yet exposed.
+        </p>
+      </div>
+    </div>
+
+    <div
+      class="bg-archive-900/50 border-archive-800/50 flex items-center justify-between border-t px-6 py-3"
+    >
+      <span class="tracking-classified text-archive-500 text-[9px] uppercase"
+        >Intelligence Index</span
+      >
+      <span class="tracking-classified text-archive-500 text-[9px] uppercase"
+        >Classified Access</span
+      >
+    </div>
+  </div>
+</div>
+
+<div
+  id="mobile-menu"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Mobile Navigation"
+  class="bg-archive-950 pointer-events-none fixed inset-0 z-60 opacity-0 transition-opacity duration-300 lg:hidden"
+>
+  <div
+    class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.02)_0%,transparent_60%)]"
+  >
+  </div>
+
+  <div class="flex h-full flex-col overflow-y-auto px-6 pt-24 pb-8">
+    <div class="border-archive-800/50 mb-10 border-b pb-6">
+      <p
+        class="tracking-classified text-archive-500 mb-4 text-[10px] uppercase"
+      >
+        Primary Index
+      </p>
+      <div class="flex flex-col gap-3">
+        {
+          primaryNav.map((item) => (
+            <a
+              href={item.href}
+              class="group text-paper-300 hover:text-paper-50 flex items-baseline gap-4 font-serif text-2xl transition-colors"
+            >
+              <span class="text-archive-600 group-hover:text-brass-600/70 font-mono text-xs tracking-widest transition-colors">
+                {item.number}
+              </span>
+              <span>{item.label}</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="mb-auto grid grid-cols-2 gap-8">
+      <div>
+        <p
+          class="tracking-classified text-archive-500 mb-4 text-[10px] uppercase"
+        >
+          History
+        </p>
+        <div class="flex flex-col gap-4">
+          {
+            historyItems.map((item) => (
+              <a
+                href={item.href}
+                class="tracking-military text-paper-300 hover:text-paper-100 text-[11px] uppercase transition-colors"
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      <div>
+        <p
+          class="tracking-classified text-archive-500 mb-4 text-[10px] uppercase"
+        >
+          World
+        </p>
+        <div class="flex flex-col gap-4">
+          {
+            worldItems.map((item) => (
+              <a
+                href={item.href}
+                class="tracking-military text-paper-300 hover:text-paper-100 text-[11px] uppercase transition-colors"
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="border-archive-800/50 flex items-center justify-between border-t pt-8"
+    >
+      <span
+        class="tracking-classified text-archive-500 text-xs uppercase transition-colors duration-700 hover:text-zinc-200"
+        >Survey Corps Records</span
+      >
+    </div>
+  </div>
+</div>
+
+<script>
+  const nav = document.getElementById("global-nav");
+  const navBg = document.getElementById("nav-bg");
+  const searchTrigger = document.getElementById("search-trigger");
+  const searchDialog = document.getElementById("search-dialog");
+  const searchBackdrop = document.getElementById("search-backdrop");
+  const searchPanel = document.getElementById("search-panel");
+  const searchInput = document.getElementById("search-input");
+  const searchClose = document.getElementById("search-close");
+  const mobileMenuTrigger = document.getElementById("mobile-menu-trigger");
+  const mobileMenu = document.getElementById("mobile-menu");
+
+  let isSearchOpen = false;
+  let isMobileMenuOpen = false;
+  const isHomepage = window.location.pathname === "/";
+
+  if (isHomepage && !localStorage.getItem("aot-intro-seen")) {
+    nav?.classList.add("opacity-0", "pointer-events-none");
+    document.addEventListener("archive-sequence-complete", () => {
+      nav?.classList.remove("opacity-0", "pointer-events-none");
+    });
+  }
+  document.addEventListener("archive-sequence-complete", () => {
+    nav?.classList.remove("-translate-y-20");
+  });
+
+  function handleScroll() {
+    if (window.scrollY > 20) {
+      navBg?.classList.remove("opacity-0");
+      navBg?.classList.add("opacity-90");
+      nav?.classList.add("backdrop-blur-sm");
+    } else {
+      navBg?.classList.remove("opacity-90");
+      navBg?.classList.add("opacity-0");
+      nav?.classList.remove("backdrop-blur-sm");
+    }
+  }
+
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  handleScroll();
+
+  function openSearch() {
+    isSearchOpen = true;
+    searchDialog?.classList.remove("opacity-0", "pointer-events-none");
+    searchPanel?.classList.remove("scale-200");
+    searchPanel?.classList.remove("opacity-0");
+    setTimeout(() => searchInput?.focus(), 50);
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeSearch() {
+    isSearchOpen = false;
+    searchDialog?.classList.add("opacity-0", "pointer-events-none");
+    searchPanel?.classList.add("scale-200");
+    searchPanel?.classList.add("opacity-0");
+    document.body.style.overflow = "";
+  }
+
+  searchTrigger?.addEventListener("click", openSearch);
+  searchClose?.addEventListener("click", closeSearch);
+  searchBackdrop?.addEventListener("click", closeSearch);
+
+  document.addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      e.preventDefault();
+      isSearchOpen ? closeSearch() : openSearch();
+    }
+    if (
+      e.key === "/" &&
+      !isSearchOpen &&
+      document.activeElement?.tagName !== "INPUT"
+    ) {
+      e.preventDefault();
+      openSearch();
+    }
+    if (e.key === "Escape") {
+      if (isSearchOpen) closeSearch();
+      if (isMobileMenuOpen) closeMobileMenu();
+    }
+  });
+
+  function toggleMobileMenu() {
+    isMobileMenuOpen = !isMobileMenuOpen;
+    if (isMobileMenuOpen) {
+      mobileMenu?.classList.remove("opacity-0", "pointer-events-none");
+      mobileMenuTrigger?.setAttribute("aria-expanded", "true");
+
+      if (mobileMenuTrigger) {
+        mobileMenuTrigger.innerHTML =
+          '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
+      }
+      document.body.style.overflow = "hidden";
+    } else {
+      closeMobileMenu();
+    }
+  }
+
+  function closeMobileMenu() {
+    isMobileMenuOpen = false;
+    mobileMenu?.classList.add("opacity-0", "pointer-events-none");
+    mobileMenuTrigger?.setAttribute("aria-expanded", "false");
+
+    if (mobileMenuTrigger) {
+      mobileMenuTrigger.innerHTML =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>';
+    }
+    document.body.style.overflow = "";
+  }
+
+  mobileMenuTrigger?.addEventListener("click", toggleMobileMenu);
+</script>
