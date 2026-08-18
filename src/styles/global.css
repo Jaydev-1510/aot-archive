@@ -1,1 +1,110 @@
 @import "tailwindcss";
+
+@theme {
+  --font-serif: var(--font-titan);
+  --font-sans: var(--font-shippori);
+
+  --color-archive-black: #080808;
+  --color-archive-950: #0c0c0b;
+  --color-archive-900: #111110;
+  --color-archive-850: #171715;
+  --color-archive-800: #1d1d1a;
+  --color-archive-700: #292925;
+  --color-archive-600: #3a3a34;
+  --color-archive-500: #55554b;
+
+  --color-paper-50: #f4f1e8;
+  --color-paper-100: #e8e4d8;
+  --color-paper-200: #d2cdbd;
+  --color-paper-300: #b8b1a0;
+
+  --color-survey-950: #101612;
+  --color-survey-900: #182019;
+  --color-survey-800: #253126;
+  --color-survey-700: #344534;
+  --color-survey-600: #4b6049;
+  --color-survey-500: #637a5f;
+
+  --color-blood-950: #210c0c;
+  --color-blood-900: #351010;
+  --color-blood-800: #4a1515;
+  --color-blood-700: #681d1d;
+  --color-blood-600: #8b2929;
+  --color-blood-500: #a83a3a;
+
+  --color-brass-950: #211b0d;
+  --color-brass-900: #332a12;
+  --color-brass-800: #4b3d18;
+  --color-brass-700: #665322;
+  --color-brass-600: #8a702d;
+  --color-brass-500: #ad9141;
+  --color-brass-400: #c4aa62;
+
+  --tracking-archive: 0.08em;
+  --tracking-military: 0.14em;
+  --tracking-classified: 0.22em;
+
+  --shadow-archive: 0 2px 12px rgb(0 0 0 / 0.35);
+  --shadow-heavy: 0 12px 40px rgb(0 0 0 / 0.5);
+  --shadow-inset: inset 0 1px 0 rgb(255 255 255 / 0.025);
+
+  --radius-archive: 2px;
+  --radius-panel: 4px;
+
+  --animate-fade-in: fade-in 180ms ease-out;
+  --animate-slide-up: slide-up 240ms ease-out;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes fade-out {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@layer base {
+  html {
+    background: var(--color-archive-black);
+    color: var(--color-paper-100);
+  }
+
+  body {
+    background:
+      radial-gradient(
+        circle at 50% -20%,
+        rgb(255 255 255 / 0.025),
+        transparent 45%
+      ),
+      var(--color-archive-black);
+
+    color: var(--color-paper-100);
+    font-family: var(--font-sans);
+  }
+
+  ::selection {
+    background: var(--color-brass-700);
+    color: var(--color-paper-50);
+  }
+}

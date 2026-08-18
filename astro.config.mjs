@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from "astro/config";
+import { defineConfig, fontProviders } from "astro/config";
 import cloudflare from "@astrojs/cloudflare";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -10,4 +10,25 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  fonts: [
+    {
+      provider: fontProviders.local(),
+      name: "Titan",
+      cssVariable: "--font-titan",
+      options: {
+        variants: [
+          {
+            src: ["./src/assets/fonts/titan.woff2"],
+            weight: "normal",
+            style: "normal",
+          },
+        ],
+      },
+    },
+    {
+      provider: fontProviders.google(),
+      name: "Shippori Mincho",
+      cssVariable: "--font-shippori",
+    },
+  ],
 });
