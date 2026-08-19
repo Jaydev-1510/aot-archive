@@ -1,10 +1,11 @@
 ---
 import SurveyCorpsLogo from "@/assets/images/surveyCorpsLogo.svg";
+import { Menu, Search } from "@lucide/astro";
 
 const currentPath = Astro.url.pathname;
 
 const primaryNav = [
-  { href: "/archive", label: "Archive", number: "01" },
+  { href: "/search", label: "Search", number: "01" },
   { href: "/people", label: "People", number: "02" },
   { href: "/titans", label: "Titans", number: "03" },
 ];
@@ -36,7 +37,7 @@ function isActive(href: string) {
   class="group/nav fixed inset-x-0 top-0 z-70 flex -translate-y-20 items-center justify-between border-b border-transparent px-5 py-4 transition-all duration-500 sm:px-8"
 >
   <div
-    class="bg-archive-950/95 border-archive-800/50 shadow-heavy pointer-events-none absolute inset-0 border-b opacity-0 backdrop-blur-lg transition-opacity duration-500"
+    class="bg-archive-950/95 border-archive-800/50 shadow-heavy pointer-events-none absolute inset-0 border-b opacity-0 transition-opacity duration-500"
     id="nav-bg"
   >
   </div>
@@ -198,20 +199,10 @@ function isActive(href: string) {
           >⌘K</kbd
         >
       </span>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+      <Search
+        size={16}
         class="opacity-80 transition-opacity group-hover:opacity-100"
-        ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"
-        ></path></svg
-      >
+      />
     </button>
 
     <div class="bg-archive-800 hidden h-4 w-px lg:block" aria-hidden="true">
@@ -225,21 +216,12 @@ function isActive(href: string) {
       aria-expanded="false"
       aria-controls="mobile-menu"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="lucide lucide-menu-icon lucide-menu"
-        ><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"
-        ></path></svg
-      >
+      <Menu />
     </button>
+  </div>
+  <div
+    class="via-brass-600/30 absolute inset-x-0 top-18 h-px bg-linear-to-r from-transparent to-transparent"
+  >
   </div>
 </nav>
 
@@ -266,20 +248,7 @@ function isActive(href: string) {
     </div>
 
     <div class="border-archive-800/50 flex items-center border-b px-6 py-4">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="18"
-        height="18"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="text-archive-500 mr-4"
-        ><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"
-        ></path></svg
-      >
+      <Search class="text-archive-500 mr-4" />
       <input
         type="text"
         id="search-input"
@@ -287,43 +256,49 @@ function isActive(href: string) {
         placeholder="Query archive index..."
         autocomplete="off"
       />
-      <button
+      <kbd
         id="search-close"
-        class="text-archive-500 hover:text-paper-100 tracking-classified border-archive-800 focus-visible:ring-brass-600/50 rounded-sm border px-2 py-1 text-[10px] uppercase transition-colors focus:outline-none focus-visible:ring-2"
+        class="text-archive-500 hover:text-paper-100 tracking-classified border-archive-800 focus-visible:ring-brass-600/50 rounded-sm border px-2 py-1 text-[11px] uppercase transition-colors focus:outline-none focus-visible:ring-2"
       >
         Esc
-      </button>
+      </kbd>
     </div>
 
-    <div class="min-h-75 px-6 py-8">
+    <div
+      class="h-[60vh] max-h-150 overflow-y-auto px-6 py-6"
+      id="search-results-container"
+    >
       <div
+        id="search-empty-state"
         class="text-archive-500 mt-8 flex h-full flex-col items-center justify-center space-y-4 text-center"
       >
+        <Search class="mb-2 opacity-100" />
+        <p class="tracking-military text-[10px] uppercase">Awaiting Query</p>
+      </div>
+      <div
+        id="search-loading-state"
+        class="text-archive-500 mt-8 flex hidden h-full flex-col items-center justify-center space-y-4 text-center"
+      >
         <div
-          class="border-archive-800 flex h-12 w-12 items-center justify-center rounded-full border opacity-50"
+          class="border-archive-700 border-t-archive-500 mb-2 h-4 w-4 animate-spin rounded-full border-2"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            ><path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"
-            ></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M3 15h6"
-            ></path><path d="M3 18h6"></path><path d="m14 15-4 4"></path></svg
-          >
         </div>
-        <p class="tracking-military text-xs font-bold uppercase">
-          FTS5 Search module disconnected
-        </p>
-        <p class="text-archive-600 max-w-xs text-sm">
-          Full-text search backend is not yet exposed.
+        <p class="tracking-military text-[10px] uppercase">
+          Searching Records...
         </p>
       </div>
+      <div
+        id="search-no-results"
+        class="text-archive-500 mt-8 flex hidden h-full flex-col items-center justify-center space-y-4 text-center"
+      >
+        <p class="tracking-military text-[10px] uppercase">No Records Found</p>
+      </div>
+      <ul
+        id="search-results-list"
+        class="flex hidden flex-col gap-1"
+        role="listbox"
+      >
+      </ul>
     </div>
 
     <div
@@ -426,7 +401,7 @@ function isActive(href: string) {
     </div>
   </div>
 </div>
-
+<!-- line not found -->
 <script>
   const nav = document.getElementById("global-nav");
   const navBg = document.getElementById("nav-bg");
@@ -444,24 +419,31 @@ function isActive(href: string) {
   const isHomepage = window.location.pathname === "/";
 
   if (isHomepage && !localStorage.getItem("aot-intro-seen")) {
-    nav?.classList.add("opacity-0", "pointer-events-none");
+    nav?.classList.add("opacity-0", "pointer-events-none", "-translate-y-20");
     document.addEventListener("archive-sequence-complete", () => {
-      nav?.classList.remove("opacity-0", "pointer-events-none");
+      nav?.classList.remove(
+        "opacity-0",
+        "pointer-events-none",
+        "-translate-y-20",
+      );
     });
+  } else {
+    nav?.classList.remove(
+      "opacity-0",
+      "pointer-events-none",
+      "-translate-y-20",
+    );
   }
-  document.addEventListener("archive-sequence-complete", () => {
-    nav?.classList.remove("-translate-y-20");
-  });
 
   function handleScroll() {
     if (window.scrollY > 20) {
       navBg?.classList.remove("opacity-0");
       navBg?.classList.add("opacity-90");
-      nav?.classList.add("backdrop-blur-sm");
+      nav?.classList.add("backdrop-blur-lg");
     } else {
       navBg?.classList.remove("opacity-90");
       navBg?.classList.add("opacity-0");
-      nav?.classList.remove("backdrop-blur-sm");
+      nav?.classList.remove("backdrop-blur-lg");
     }
   }
 
@@ -537,4 +519,139 @@ function isActive(href: string) {
   }
 
   mobileMenuTrigger?.addEventListener("click", toggleMobileMenu);
+
+  const searchResultsList = document.getElementById("search-results-list");
+  const searchEmptyState = document.getElementById("search-empty-state");
+  const searchLoadingState = document.getElementById("search-loading-state");
+  const searchNoResults = document.getElementById("search-no-results");
+  let searchTimeout: ReturnType<typeof setTimeout> | null = null;
+  let currentSelectedIndex = -1;
+
+  function updateSearchUI(state: string) {
+    searchEmptyState?.classList.add("hidden");
+    searchLoadingState?.classList.add("hidden");
+    searchNoResults?.classList.add("hidden");
+    searchResultsList?.classList.add("hidden");
+
+    if (state === "empty") searchEmptyState?.classList.remove("hidden");
+    else if (state === "loading")
+      searchLoadingState?.classList.remove("hidden");
+    else if (state === "no-results")
+      searchNoResults?.classList.remove("hidden");
+    else if (state === "results") searchResultsList?.classList.remove("hidden");
+  }
+
+  function getEntityRoute(type: string, id: string) {
+    switch (type) {
+      case "person":
+        return `/people/${id}`;
+      case "titan":
+        return `/titans/${id}`;
+      case "event":
+        return `/events/${id}`;
+      case "location":
+        return `/locations/${id}`;
+      case "faction":
+        return `/factions/${id}`;
+      default:
+        return `/${type}s/${id}`;
+    }
+  }
+
+  async function performSearch(query: string) {
+    if (!query.trim()) {
+      updateSearchUI("empty");
+      if (searchResultsList) searchResultsList.innerHTML = "";
+      return;
+    }
+
+    updateSearchUI("loading");
+    try {
+      const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      if (!res.ok) throw new Error("Search failed");
+      const data = (await res.json()) as { results: any[] };
+      const results = data.results || [];
+
+      if (results.length === 0) {
+        updateSearchUI("no-results");
+        if (searchResultsList) searchResultsList.innerHTML = "";
+      } else {
+        currentSelectedIndex = -1;
+        if (searchResultsList) {
+          searchResultsList.innerHTML = results
+            .map(
+              (result: any) => `
+            <li role="option" aria-selected="false" class="search-result-item group flex items-center justify-between p-3 border border-transparent hover:border-archive-700/50 hover:bg-archive-900/40 rounded-sm cursor-pointer transition-colors" data-href="${getEntityRoute(result.entityType, result.entityId)}">
+              <span class="font-serif text-2xl text-paper-200 group-hover:text-paper-50 transition-colors pointer-events-none">${result.name}</span>
+              <span class="text-[9px] tracking-classified uppercase text-archive-500 group-hover:text-paper-300 transition-colors pointer-events-none">${result.entityType}</span>
+            </li>
+          `,
+            )
+            .join("");
+        }
+        updateSearchUI("results");
+      }
+    } catch (e) {
+      console.error(e);
+      updateSearchUI("no-results");
+    }
+  }
+
+  searchInput?.addEventListener("input", (e) => {
+    if (searchTimeout) clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      performSearch((e.target as HTMLInputElement).value);
+    }, 250);
+  });
+
+  searchInput?.addEventListener("keydown", (e) => {
+    const input = searchInput as HTMLInputElement;
+    if (e.key === "Enter" && input.value.trim() !== "") {
+      if (currentSelectedIndex >= 0) {
+        const selected = searchResultsList?.children[
+          currentSelectedIndex
+        ] as HTMLElement;
+        if (selected) window.location.href = selected.dataset.href as string;
+      } else {
+        window.location.href = `/search?q=${encodeURIComponent(input.value)}`;
+      }
+    }
+
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      const items = searchResultsList?.children;
+      if (!items || items.length === 0) return;
+
+      if (currentSelectedIndex >= 0) {
+        items[currentSelectedIndex].classList.remove(
+          "bg-archive-900/60",
+          "border-archive-700",
+        );
+        items[currentSelectedIndex].setAttribute("aria-selected", "false");
+      }
+
+      if (e.key === "ArrowDown") {
+        currentSelectedIndex = (currentSelectedIndex + 1) % items.length;
+      } else {
+        currentSelectedIndex =
+          (currentSelectedIndex - 1 + items.length) % items.length;
+      }
+
+      items[currentSelectedIndex].classList.add(
+        "bg-archive-900/60",
+        "border-archive-700",
+      );
+      items[currentSelectedIndex].setAttribute("aria-selected", "true");
+      items[currentSelectedIndex].scrollIntoView({ block: "nearest" });
+    }
+  });
+
+  searchResultsList?.addEventListener("click", (e) => {
+    const item = (e.target as HTMLElement).closest(
+      ".search-result-item",
+    ) as HTMLElement | null;
+    if (item && item.dataset.href) {
+      window.location.href = item.dataset.href;
+    }
+  });
 </script>
