@@ -1,0 +1,153 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { searchArchive } from "@/database/queries/search";
+import { Search } from "@lucide/astro";
+
+const query = Astro.url.searchParams.get("q") || "";
+let results: any[] = [];
+let error = null;
+
+if (query.trim().length > 0) {
+  try {
+    if (env && env.DB) {
+      const db = createDb(env.DB);
+      results = await searchArchive(db, query, 50);
+    } else {
+      error = "Search unavailable: Database binding missing.";
+    }
+  } catch (err) {
+    console.error("Search error:", err);
+    error = "An error occurred while searching the archive.";
+  }
+}
+
+const groupedResults = results.reduce(
+  (acc, result) => {
+    if (!acc[result.entityType]) acc[result.entityType] = [];
+    acc[result.entityType].push(result);
+    return acc;
+  },
+  {} as Record<string, typeof results>,
+);
+
+const typesOrder = ["person", "titan", "event", "location", "faction"];
+
+function getEntityRoute(type: string, id: string) {
+  switch (type) {
+    case "person":
+      return `/people/${id}`;
+    case "titan":
+      return `/titans/${id}`;
+    case "event":
+      return `/events/${id}`;
+    case "location":
+      return `/locations/${id}`;
+    case "faction":
+      return `/factions/${id}`;
+    default:
+      return `/${type}s/${id}`;
+  }
+}
+---
+
+<BaseLayout>
+  <main class="fade-in mx-auto min-h-dvh max-w-4xl px-6 pt-32 pb-24">
+    <header class="border-archive-800/50 mb-12 flex-col pb-8">
+      <h1
+        class="text-paper-200 animate-fade-in mb-10 text-center font-serif text-8xl"
+      >
+        Archive Search
+      </h1>
+      <div
+        class="via-brass-600/50 inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent"
+      >
+      </div>
+      <form action="/search" method="get" class="relative">
+        <Search
+          size={20}
+          class="text-archive-500 absolute top-1/2 left-4 -translate-y-1/2"
+        />
+        <input
+          type="text"
+          name="q"
+          value={query}
+          placeholder="Query archive index..."
+          class="bg-archive-900/50 border-archive-800 text-paper-50 focus:border-brass-600/50 w-full rounded-sm border px-12 py-4 font-sans text-lg transition-colors focus:outline-none"
+          autofocus
+        />
+        <button
+          type="submit"
+          class="tracking-classified text-archive-500 hover:text-paper-100 absolute top-1/2 right-4 -translate-y-1/2 text-xs uppercase transition-colors"
+        >
+          Search
+        </button>
+      </form>
+      <div
+        class="via-brass-600/50 inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent"
+      >
+      </div>
+      <div
+        class="via-brass-600/30 absolute inset-x-0 mt-8 h-px bg-linear-to-r from-transparent to-transparent"
+      >
+      </div>
+    </header>
+
+    {
+      query && !error && results.length === 0 && (
+        <div class="py-20 text-center">
+          <p class="text-archive-500 font-serif text-sm">
+            No records found matching "{query}"
+          </p>
+        </div>
+      )
+    }
+
+    {
+      error && (
+        <div class="text-blood-500 py-20 text-center">
+          <p>{error}</p>
+        </div>
+      )
+    }
+
+    {
+      results.length > 0 && (
+        <div class="space-y-12">
+          {typesOrder.map(
+            (type) =>
+              groupedResults[type]?.length > 0 && (
+                <section>
+                  <h2 class="tracking-classified text-archive-500 text-md mb-4 uppercase">
+                    {type}s
+                  </h2>
+                  <div class="via-brass-600/30 inset-x-0 h-px bg-linear-to-r from-transparent to-transparent" />
+                  <ul class="flex flex-col gap-2">
+                    {groupedResults[type].map((result: any) => (
+                      <li>
+                        <a
+                          href={getEntityRoute(
+                            result.entityType,
+                            result.entityId,
+                          )}
+                          class="group border-archive-800/30 bg-archive-900/20 hover:bg-archive-800/50 hover:border-archive-700 focus:ring-brass-600/50 flex items-center gap-4 rounded-sm border p-4 transition-colors focus:ring-1 focus:outline-none"
+                        >
+                          <span class="text-paper-100 group-hover:text-paper-50 font-serif text-3xl transition-colors">
+                            {result.name}
+                          </span>
+                          <span class="tracking-military text-archive-500 group-hover:text-paper-300 text-[11px] uppercase transition-colors">
+                            {result.entityType}
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ),
+          )}
+        </div>
+      )
+    }
+  </main>
+</BaseLayout>
