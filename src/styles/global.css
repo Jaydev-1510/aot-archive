@@ -51,7 +51,7 @@
   --radius-archive: 2px;
   --radius-panel: 4px;
 
-  --animate-fade-in: fade-in 180ms ease-out;
+  --animate-fade-in: fade-in 500ms ease-out;
   --animate-slide-up: slide-up 240ms ease-out;
 
   @keyframes fade-in {
@@ -107,4 +107,13 @@
     background: var(--color-brass-700);
     color: var(--color-paper-50);
   }
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.fade-in {
+  opacity: 1;
+  transition: opacity 0.5s ease;
 }
