@@ -335,26 +335,95 @@ describe("SEED AND VALIDATION", () => {
 });
 
 describe("SEARCH ARCHIVE", () => {
-  test("search for Eren", async () => {
+  // Test 1 — Exact full name
+  test("exact full name ranks first", async () => {
+    const results = await searchArchive(db, "Eren Yeager");
+    expect(results.length).toBeGreaterThan(0);
+    expect(results[0].entityId).toBe("eren_yeager");
+  });
+
+  // Test 2 — Prefix
+  test("prefix search ranks properly", async () => {
     const results = await searchArchive(db, "Eren");
     expect(results.length).toBeGreaterThan(0);
     const ids = results.map((r) => r.entityId);
     expect(ids).toContain("eren_yeager");
+    expect(ids).toContain("eren_kruger");
+    const erenIndex = ids.indexOf("eren_yeager");
+    const zekeIndex = ids.indexOf("zeke_yeager");
+    if (zekeIndex !== -1) {
+      expect(erenIndex).toBeLessThan(zekeIndex);
+    }
   });
 
-  test("search for Yeager", async () => {
+  // Test 3 — Surname
+  test("surname matches prioritize strongly relevant canonical names", async () => {
     const results = await searchArchive(db, "Yeager");
     expect(results.length).toBeGreaterThan(0);
     const ids = results.map((r) => r.entityId);
     expect(ids).toContain("eren_yeager");
     expect(ids).toContain("grisha_yeager");
+    expect(ids).toContain("zeke_yeager");
+    expect(ids).toContain("carla_yeager");
   });
 
-  test("search for alias matches", async () => {
-    // Eren has "Attack Titan" alias title
-    const results = await searchArchive(db, "Suicidal Blockhead");
+  // Test 4 — Alias
+  test("alias search functions correctly", async () => {
+    const results = await searchArchive(db, "Shingeki");
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].entityId).toBe("eren_yeager");
+    expect(results.some((r) => r.entityId === "attack_titan")).toBe(true);
+  });
+
+  // Test 5 — Japanese
+  test("japanese text searches function correctly", async () => {
+    const results = await searchArchive(db, "進撃の巨人");
+    expect(results.length).toBeGreaterThan(0);
+    expect(results.some((r) => r.entityId === "attack_titan")).toBe(true);
+  });
+
+  // Test 6 — Multi-token relevance
+  test("multi-token relevance outranks single-token", async () => {
+    const results = await searchArchive(db, "Armored Titan");
+    expect(results.length).toBeGreaterThan(0);
+    expect(results[0].entityId).toBe("armored_titan");
+  });
+
+  // Test 7 — Exact phrase vs token overlap
+  test("exact phrase beats token overlap", async () => {
+    const results = await searchArchive(db, "Eren Yeager");
+    const ids = results.map((r) => r.entityId);
+    const erenIndex = ids.indexOf("eren_yeager");
+    const carlaIndex = ids.indexOf("carla_yeager");
+    if (carlaIndex !== -1) {
+      expect(erenIndex).toBeLessThan(carlaIndex);
+    }
+  });
+
+  // Test 8 — Empty query
+  test("empty query returns empty list safely", async () => {
+    const results = await searchArchive(db, "   ");
+    expect(results.length).toBe(0);
+  });
+
+  // Test 9 — Malformed FTS input
+  test("malformed input handled safely", async () => {
+    const results = await searchArchive(db, '"" OR AND ** // --');
+    expect(Array.isArray(results)).toBe(true);
+  });
+
+  // Test 10 — Result limit
+  test("result limit is respected", async () => {
+    const results = await searchArchive(db, "Titan", 3);
+    expect(results.length).toBeLessThanOrEqual(3);
+  });
+
+  // Additional sanity tests
+  test("entity-type handling check", async () => {
+    const results = await searchArchive(db, "Coordinate");
+    expect(results.length).toBeGreaterThan(0);
+    expect(["titan", "ability", "location", "person"]).toContain(
+      results[0].entityType,
+    );
   });
 
   test("nonexistent search returns empty list", async () => {
