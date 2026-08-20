@@ -1,0 +1,113 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getObjectDetail } from "@/database/queries/entities";
+import EntityDossier, {
+  type DossierMetadataItem,
+  type DossierRelationshipSection,
+} from "@/components/entity/EntityDossier.astro";
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect("/404");
+
+let objectDetail = null;
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  objectDetail = await getObjectDetail(db, id);
+}
+
+if (!objectDetail) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { object, aliases, relationships } = objectDetail;
+
+const mapRel = (r: any) => ({
+  id: r.relatedEntity.id,
+  type: r.relatedEntity.entityType,
+  name: r.relatedEntityName,
+  predicate: r.predicate,
+});
+
+const relationshipSections: DossierRelationshipSection[] = [
+  {
+    title: "Known Wielders & Custodians",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "person")
+      .map(mapRel),
+    layout: "grid",
+  },
+  {
+    title: "Campaigns & Events Used In",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "event")
+      .map(mapRel),
+    layout: "list",
+  },
+  {
+    title: "Associated Regiments & Manufacturers",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "faction")
+      .map(mapRel),
+    layout: "blocks",
+  },
+  {
+    title: "Origin & Storage Locations",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "location")
+      .map(mapRel),
+    layout: "grid",
+  },
+];
+
+const metadata: DossierMetadataItem[] = [];
+
+if (object.objectType) {
+  metadata.push({
+    label: "Material Classification",
+    value: object.objectType,
+    capitalize: true,
+  });
+}
+if (object.canonStatus) {
+  metadata.push({
+    label: "Canon Status",
+    value: object.canonStatus,
+    capitalize: true,
+  });
+}
+
+const breadcrumbs = [
+  { label: "OBJECTS", href: "/objects" },
+  { label: object.name, current: true },
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "IndividualProduct",
+  name: object.name,
+  description:
+    object.description ||
+    `${object.name} technical artifact record in Survey Corps Archives.`,
+};
+---
+
+<EntityDossier
+  id={object.id}
+  type="object"
+  name={object.name}
+  japaneseName={null}
+  status={null}
+  aliases={aliases.map((a) => a.alias)}
+  summary={object.description}
+  metadata={metadata}
+  relationships={relationshipSections}
+  schemaType="article"
+  schemaData={schemaData}
+  breadcrumbs={breadcrumbs}
+  backRoute="/objects"
+  backLabel="RETURN TO OBJECT REPOSITORY"
+/>
