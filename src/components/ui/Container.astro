@@ -1,0 +1,36 @@
+---
+interface Props {
+  size?: "sm" | "md" | "lg" | "xl" | "full";
+  as?: "main" | "div" | "section" | "article";
+  id?: string;
+  class?: string;
+  padTop?: boolean;
+  padBottom?: boolean;
+}
+
+const {
+  size = "lg",
+  as: Component = "div",
+  id,
+  class: className = "",
+  padTop = true,
+  padBottom = true,
+} = Astro.props as Props;
+
+const sizeClasses: Record<string, string> = {
+  sm: "max-w-3xl", // Dossiers
+  md: "max-w-4xl", // Search, timeline
+  lg: "max-w-6xl", // Directory headers
+  xl: "max-w-7xl", // Broad entity grids
+  full: "max-w-full",
+};
+
+const paddingClasses = `${padTop ? "pt-28 sm:pt-32" : ""} ${padBottom ? "pb-24" : ""}`;
+---
+
+<Component
+  id={id}
+  class={`mx-auto w-full px-4 sm:px-6 lg:px-8 font-sans ${sizeClasses[size] || sizeClasses.lg} ${paddingClasses} ${className}`}
+>
+  <slot />
+</Component>

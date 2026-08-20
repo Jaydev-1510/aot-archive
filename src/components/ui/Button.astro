@@ -1,0 +1,64 @@
+---
+interface Props {
+  href?: string;
+  type?: "button" | "submit" | "reset";
+  variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
+  size?: "sm" | "md" | "lg";
+  class?: string;
+  disabled?: boolean;
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  type = "button",
+  variant = "primary",
+  size = "md",
+  class: className = "",
+  disabled = false,
+  ariaLabel,
+} = Astro.props as Props;
+
+const variantClasses: Record<string, string> = {
+  primary:
+    "border-archive-600 bg-paper-100 text-archive-black hover:border-paper-300 hover:bg-paper-50 focus-visible:ring-paper-300 focus-visible:ring-offset-archive-950 font-semibold tracking-military uppercase",
+  secondary:
+    "border-archive-700 bg-archive-900/60 text-paper-200 hover:border-archive-600 hover:bg-archive-800/80 hover:text-paper-50 focus-visible:ring-brass-600/50 tracking-military uppercase",
+  outline:
+    "border-archive-800 bg-transparent text-paper-300 hover:border-brass-600/60 hover:text-paper-100 hover:bg-archive-900/40 focus-visible:ring-brass-600/50 tracking-military uppercase",
+  ghost:
+    "border-transparent bg-transparent text-archive-500 hover:text-paper-100 hover:bg-archive-900/30 focus-visible:ring-brass-600/50 tracking-military uppercase",
+  danger:
+    "border-blood-800/50 bg-blood-950/30 text-blood-500 hover:border-blood-700 hover:bg-blood-900/40 hover:text-blood-400 focus-visible:ring-blood-600/50 tracking-military uppercase",
+};
+
+const sizeClasses: Record<string, string> = {
+  sm: "min-h-[36px] px-3 py-1.5 text-[11px]",
+  md: "min-h-11 px-4 py-2 text-xs",
+  lg: "min-h-[48px] px-6 py-3.5 text-xs sm:text-sm",
+};
+
+const baseClasses =
+  "inline-flex items-center justify-center gap-2 rounded-sm border transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      aria-label={ariaLabel}
+      class={`${baseClasses} ${variantClasses[variant] || variantClasses.primary} ${sizeClasses[size] || sizeClasses.md} ${className}`}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button
+      type={type}
+      disabled={disabled}
+      aria-label={ariaLabel}
+      class={`${baseClasses} ${variantClasses[variant] || variantClasses.primary} ${sizeClasses[size] || sizeClasses.md} ${className}`}
+    >
+      <slot />
+    </button>
+  )
+}

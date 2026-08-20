@@ -1,0 +1,23 @@
+---
+interface Props {
+  label: string;
+  value?: string | number | null;
+  capitalize?: boolean;
+  class?: string;
+}
+
+const { label, value, capitalize = false, class: className = "" } = Astro.props;
+---
+
+<div class={`space-y-1 ${className}`}>
+  <span
+    class="tracking-classified text-archive-500 block text-[10px] font-medium uppercase"
+  >
+    {label}
+  </span>
+  <div
+    class={`text-sm text-paper-200 font-sans ${capitalize ? "capitalize" : ""}`}
+  >
+    {value !== undefined && value !== null ? value : <slot />}
+  </div>
+</div>

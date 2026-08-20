@@ -1,0 +1,59 @@
+---
+interface TabItem {
+  id: string;
+  label: string;
+  count?: number;
+  href?: string;
+  active?: boolean;
+}
+
+interface Props {
+  tabs: TabItem[];
+  class?: string;
+  ariaLabel?: string;
+}
+
+const {
+  tabs,
+  class: className = "",
+  ariaLabel = "Archive sections",
+} = Astro.props;
+---
+
+<nav
+  aria-label={ariaLabel}
+  class={`flex flex-wrap items-center gap-1 border-b border-archive-800/80 pb-px ${className}`}
+>
+  {
+    tabs.map((tab) => (
+      <a
+        href={tab.href || `#${tab.id}`}
+        aria-current={tab.active ? "page" : undefined}
+        class={`group tracking-military focus-visible:ring-brass-600/50 relative flex min-h-11 items-center gap-2 rounded-t-sm border-t border-r border-l px-4 py-2.5 font-sans text-xs uppercase transition-colors focus:outline-none focus-visible:ring-2 ${
+          tab.active
+            ? "border-archive-700 bg-archive-900/60 text-paper-50"
+            : "text-archive-500 hover:text-paper-200 hover:bg-archive-900/20 border-transparent"
+        }`}
+      >
+        <span>{tab.label}</span>
+        {tab.count !== undefined && (
+          <span
+            class={`font-mono text-[10px] ${
+              tab.active
+                ? "text-brass-500"
+                : "text-archive-500 group-hover:text-archive-400"
+            }`}
+          >
+            ({tab.count})
+          </span>
+        )}
+        {tab.active && (
+          <span
+            class="bg-brass-500 absolute inset-x-0 -bottom-px h-px"
+            aria-hidden="true"
+          />
+        )}
+      </a>
+    ))
+  }
+</nav>

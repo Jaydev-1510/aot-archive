@@ -1,0 +1,50 @@
+---
+import Button from "./Button.astro";
+import { ShieldAlert } from "@lucide/astro";
+
+interface Props {
+  code?: string | number;
+  title?: string;
+  message?: string;
+  actionHref?: string;
+  actionLabel?: string;
+  class?: string;
+}
+
+const {
+  code = "404",
+  title = "ARCHIVAL RECORD NOT FOUND",
+  message = "THE REQUESTED DOCUMENT DOES NOT EXIST IN THE CURRENT SURVEY CORPS ARCHIVE.",
+  actionHref = "/",
+  actionLabel = "RETURN TO ARCHIVE",
+  class: className = "",
+} = Astro.props;
+---
+
+<div
+  class={`mx-auto flex max-w-xl flex-col items-center justify-center rounded-sm border border-archive-800/80 bg-archive-950/80 px-6 py-16 text-center shadow-heavy ${className}`}
+  role="alert"
+>
+  <div class="mb-4 flex items-center gap-2">
+    <ShieldAlert class="text-blood-500 h-6 w-6" aria-hidden="true" />
+    <span class="tracking-military text-blood-500 font-mono text-xs uppercase">
+      CLASSIFIED SECURITY NOTICE // CODE {code}
+    </span>
+  </div>
+
+  <h1 class="text-paper-100 mt-4 font-serif text-3xl tracking-wide sm:text-4xl">
+    {title}
+  </h1>
+
+  <p
+    class="text-archive-500 mt-4 max-w-md font-sans text-sm leading-relaxed sm:text-sm"
+  >
+    {message}
+  </p>
+
+  <div class="mt-8">
+    <Button href={actionHref} variant="primary" size="md">
+      {actionLabel}
+    </Button>
+  </div>
+</div>

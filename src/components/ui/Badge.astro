@@ -1,0 +1,48 @@
+---
+interface Props {
+  variant?:
+    | "default"
+    | "classified"
+    | "status"
+    | "brass"
+    | "blood"
+    | "survey"
+    | "outline";
+  size?: "sm" | "md";
+  class?: string;
+  as?: "span" | "div";
+}
+
+const {
+  variant = "default",
+  size = "sm",
+  class: className = "",
+  as: Component = "span",
+} = Astro.props as Props;
+
+const variantClasses: Record<string, string> = {
+  default: "border-archive-800/80 bg-archive-900/60 text-archive-500",
+  classified:
+    "border-archive-700/70 bg-archive-950 text-archive-500 tracking-classified uppercase font-medium",
+  status:
+    "border-archive-700/80 bg-archive-900/40 text-paper-300 tracking-widest uppercase",
+  brass:
+    "border-brass-800/40 bg-brass-950/20 text-brass-400 tracking-military uppercase",
+  blood:
+    "border-blood-800/40 bg-blood-950/20 text-blood-500 tracking-military uppercase",
+  survey:
+    "border-survey-700/40 bg-survey-950/20 text-survey-500 tracking-military uppercase",
+  outline: "border-archive-700 text-paper-300 bg-transparent",
+};
+
+const sizeClasses: Record<string, string> = {
+  sm: "px-2 py-0.5 text-[10px]",
+  md: "px-2.5 py-1 text-xs",
+};
+---
+
+<Component
+  class={`inline-flex items-center justify-center rounded-sm border font-mono transition-colors ${variantClasses[variant] || variantClasses.default} ${sizeClasses[size] || sizeClasses.sm} ${className}`}
+>
+  <slot />
+</Component>

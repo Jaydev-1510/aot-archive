@@ -1,0 +1,47 @@
+---
+interface Props {
+  variant?: "subtle" | "brass" | "dashed" | "labeled";
+  label?: string;
+  class?: string;
+}
+
+const { variant = "subtle", label, class: className = "" } = Astro.props;
+---
+
+{
+  variant === "subtle" && (
+    <div
+      aria-hidden="true"
+      class={`bg-archive-800/60 h-px w-full ${className}`}
+    />
+  )
+}
+{
+  variant === "brass" && (
+    <div
+      aria-hidden="true"
+      class={`via-brass-600/30 h-px w-full bg-linear-to-r from-transparent to-transparent ${className}`}
+    />
+  )
+}
+{
+  variant === "dashed" && (
+    <div
+      aria-hidden="true"
+      class={`border-archive-800/80 w-full border-t border-dashed ${className}`}
+    />
+  )
+}
+{
+  variant === "labeled" && (
+    <div aria-hidden="true" class={`my-6 flex items-center gap-4 ${className}`}>
+      <span class="bg-archive-800/80 h-px flex-1" />
+      {label && (
+        <span class="text-archive-500 text-[9px] font-medium tracking-[0.3em] uppercase">
+          {label}
+        </span>
+      )}
+      <span class="bg-archive-800/80 h-px flex-1" />
+    </div>
+  )
+}

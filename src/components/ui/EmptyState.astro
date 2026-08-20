@@ -1,0 +1,64 @@
+---
+import { Search, FolderX, ShieldAlert } from "@lucide/astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  icon?: "search" | "folder" | "alert" | "none";
+  class?: string;
+}
+
+const {
+  title = "No Records Found",
+  description = "The requested classification query returned zero archival documents.",
+  icon = "search",
+  class: className = "",
+} = Astro.props;
+---
+
+<div
+  class={`flex flex-col items-center justify-center rounded-sm border border-dashed border-archive-800/80 bg-archive-950/40 px-6 py-16 text-center ${className}`}
+  role="status"
+  aria-live="polite"
+>
+  {
+    icon === "search" && (
+      <Search
+        class="text-archive-500 mb-4 h-8 w-8 opacity-60"
+        aria-hidden="true"
+      />
+    )
+  }
+  {
+    icon === "folder" && (
+      <FolderX
+        class="text-archive-500 mb-4 h-8 w-8 opacity-60"
+        aria-hidden="true"
+      />
+    )
+  }
+  {
+    icon === "alert" && (
+      <ShieldAlert
+        class="text-brass-500 mb-4 h-8 w-8 opacity-60"
+        aria-hidden="true"
+      />
+    )
+  }
+
+  <h3 class="text-paper-200 font-serif text-2xl">
+    {title}
+  </h3>
+
+  {
+    description && (
+      <p class="text-archive-500 mt-2 max-w-md text-xs leading-relaxed sm:text-sm">
+        {description}
+      </p>
+    )
+  }
+
+  <div class="mt-6 flex items-center justify-center gap-4">
+    <slot />
+  </div>
+</div>
