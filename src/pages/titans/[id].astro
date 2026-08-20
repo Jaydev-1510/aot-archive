@@ -1,0 +1,212 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getTitanDetail } from "@/database/queries/titans";
+import { getEntityRoute } from "@/utils/routing";
+import EntityDossier, {
+  type DossierMetadataItem,
+  type DossierRelationshipSection,
+} from "@/components/entity/EntityDossier.astro";
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect("/404");
+
+let titanDetail = null;
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  titanDetail = await getTitanDetail(db, id);
+}
+
+if (!titanDetail) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { titan, aliases, abilities, holders, relationships } = titanDetail;
+
+const mapRel = (r: any) => ({
+  id: r.relatedEntity.id,
+  type: r.relatedEntity.entityType,
+  name: r.relatedEntityName,
+  predicate: r.predicate,
+});
+
+const relationshipSections: DossierRelationshipSection[] = [
+  {
+    title: "Historical Event Participation",
+    items: relationships
+      .filter((r) => r.predicate === "participant-in")
+      .map(mapRel),
+    layout: "list",
+  },
+  {
+    title: "Associated Locations",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "location")
+      .map(mapRel),
+    layout: "grid",
+  },
+  {
+    title: "Associated Regiments & Factions",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "faction")
+      .map(mapRel),
+    layout: "blocks",
+  },
+];
+
+const metadata: DossierMetadataItem[] = [
+  {
+    label: "Classification",
+    value: titan.titanClass.replace(/_/g, " "),
+    capitalize: true,
+  },
+];
+
+if (titan.canonStatus) {
+  metadata.push({
+    label: "Canon Status",
+    value: titan.canonStatus,
+    capitalize: true,
+  });
+}
+
+const breadcrumbs = [
+  { label: "TITANS", href: "/titans" },
+  { label: titan.name, current: true },
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: titan.name,
+  description:
+    titan.description ||
+    `${titan.name} classification record in Survey Corps Archives.`,
+};
+---
+
+<EntityDossier
+  id={titan.id}
+  type="titan"
+  name={titan.name}
+  japaneseName={null}
+  status={null}
+  aliases={aliases.map((a) => a.alias)}
+  summary={titan.description}
+  metadata={metadata}
+  relationships={relationshipSections}
+  schemaType="article"
+  schemaData={schemaData}
+  breadcrumbs={breadcrumbs}
+  backRoute="/titans"
+  backLabel="RETURN TO TITAN ARCHIVE"
+>
+  <!-- Abilities Section -->
+  {
+    abilities.length > 0 && (
+      <section>
+        <h2 class="tracking-classified text-archive-500 border-archive-800/80 mb-6 border-b pb-2 font-sans text-xs font-semibold uppercase">
+          Biological & Combat Traits
+        </h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {abilities.map((a) => (
+            <div class="border-archive-800/60 bg-archive-950/60 rounded-sm border p-5">
+              <h3 class="text-paper-100 font-serif text-lg">
+                {a.ability.name}
+              </h3>
+              {a.ability.description && (
+                <p class="text-archive-400 mt-2 font-sans text-xs leading-relaxed">
+                  {a.ability.description}
+                </p>
+              )}
+              {a.notes && (
+                <p class="text-archive-500 mt-2 font-mono text-[10px] italic">
+                  Note: {a.notes}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  <!-- Titan Succession Section -->
+  {
+    holders.length > 0 && (
+      <section>
+        <h2 class="tracking-classified text-archive-500 border-archive-800/80 mb-6 border-b pb-2 font-sans text-xs font-semibold uppercase">
+          Titan Succession & Inheritors
+        </h2>
+        <div class="relative space-y-4">
+          <div
+            class="bg-archive-800/50 absolute top-8 bottom-8 left-8 hidden w-px sm:block"
+            aria-hidden="true"
+          />
+          {holders.map((th) => (
+            <a
+              href={getEntityRoute("person", th.person.id)}
+              class={`group focus-visible:ring-brass-600/50 relative block rounded-sm border p-6 transition-all focus:outline-none focus-visible:ring-2 ${
+                th.holder.isCurrent
+                  ? "border-brass-700/60 bg-brass-950/20 hover:border-brass-600"
+                  : "border-archive-800/60 bg-archive-950/60 hover:border-archive-600 hover:bg-archive-900/40"
+              }`}
+            >
+              <div class="flex items-start gap-6">
+                <div class="text-archive-600 hidden w-8 pt-1 text-center font-serif text-3xl opacity-60 sm:block">
+                  {th.holder.holderOrder
+                    ? String(th.holder.holderOrder).padStart(2, "0")
+                    : "—"}
+                </div>
+                <div class="flex-1">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h3
+                      class={`font-serif text-2xl transition-colors ${
+                        th.holder.isCurrent
+                          ? "text-brass-400"
+                          : "text-paper-100 group-hover:text-brass-400"
+                      }`}
+                    >
+                      {th.person.name}
+                    </h3>
+                    {th.holder.isCurrent && (
+                      <span class="tracking-military text-brass-400 bg-brass-950/60 border-brass-700/40 rounded-xs border px-2 py-0.5 font-mono text-[10px] font-semibold uppercase">
+                        Current Holder
+                      </span>
+                    )}
+                  </div>
+
+                  <div class="text-archive-400 mt-2 space-y-1 font-mono text-xs">
+                    {(th.holder.periodStartYear || th.holder.periodEndYear) && (
+                      <p>
+                        Tenure: Year {th.holder.periodStartYear || "?"} –{" "}
+                        {th.holder.periodEndYear || "?"}
+                      </p>
+                    )}
+                    {th.predecessor && (
+                      <p>
+                        Inherited from:{" "}
+                        <span class="text-paper-200">
+                          {th.predecessor.name}
+                        </span>
+                      </p>
+                    )}
+                    {th.successor && (
+                      <p>
+                        Passed to:{" "}
+                        <span class="text-paper-200">{th.successor.name}</span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+</EntityDossier>

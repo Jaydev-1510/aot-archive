@@ -1,0 +1,80 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getTitans } from "@/database/queries/titans";
+import ArchiveIndex, {
+  type FilterConfig,
+  type SortOption,
+} from "@/components/archive/ArchiveIndex.astro";
+
+const url = new URL(Astro.request.url);
+const q = url.searchParams.get("q") || "";
+const titanClass = url.searchParams.get("class") || "all";
+const sort = (url.searchParams.get("sort") as "name" | "id") || "name";
+const order = (url.searchParams.get("order") as "asc" | "desc") || "asc";
+const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+const pageSize = 48;
+const offset = (page - 1) * pageSize;
+
+let items: any[] = [];
+let total = 0;
+
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  const res = await getTitans(db, {
+    search: q,
+    titanClass: titanClass !== "all" ? titanClass : undefined,
+    sort,
+    order,
+    limit: pageSize,
+    offset,
+  });
+  items = res.items;
+  total = res.total;
+}
+
+const filters: FilterConfig[] = [
+  {
+    key: "class",
+    label: "Titan Class",
+    currentValue: titanClass,
+    options: [
+      { value: "nine_titans", label: "Nine Titans" },
+      { value: "pure_titan", label: "Pure Titan" },
+      { value: "abnormal_titan", label: "Abnormal Titan" },
+      { value: "named_titan", label: "Named Titan" },
+    ],
+  },
+];
+
+const sortOptions: SortOption[] = [
+  { value: "name", label: "Designation Name" },
+  { value: "id", label: "Titan ID" },
+];
+
+const cardItems = items.map((t) => ({
+  id: t.id,
+  type: "titan",
+  name: t.name,
+  subtitle: t.titanClass.replace(/_/g, " ").toUpperCase(),
+  japaneseName: null,
+  status: null,
+  code: t.id.replace("titan/", "").slice(0, 4).toUpperCase(),
+}));
+---
+
+<ArchiveIndex
+  title="Titans"
+  designation="TITAN SPECIMEN & SUCCESSION RECORDS"
+  description="Intelligence records cataloging the Nine Titans, notable abnormal specimens, and biological Titan research data."
+  baseRoute="/titans"
+  items={cardItems}
+  totalCount={total}
+  filters={filters}
+  sortOptions={sortOptions}
+  currentSort={sort}
+  currentOrder={order}
+  currentQuery={q}
+  currentPage={page}
+  pageSize={pageSize}
+/>
