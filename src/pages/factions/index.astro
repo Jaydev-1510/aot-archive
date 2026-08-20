@@ -1,0 +1,82 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getFactions } from "@/database/queries/entities";
+import ArchiveIndex, {
+  type FilterConfig,
+  type SortOption,
+} from "@/components/archive/ArchiveIndex.astro";
+
+const url = new URL(Astro.request.url);
+const q = url.searchParams.get("q") || "";
+const factionType = url.searchParams.get("type") || "all";
+const sort = (url.searchParams.get("sort") as "name" | "type" | "id") || "name";
+const order = (url.searchParams.get("order") as "asc" | "desc") || "asc";
+const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+const pageSize = 48;
+const offset = (page - 1) * pageSize;
+
+let items: any[] = [];
+let total = 0;
+
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  const res = await getFactions(db, {
+    search: q,
+    factionType: factionType !== "all" ? factionType : undefined,
+    sort,
+    order,
+    limit: pageSize,
+    offset,
+  });
+  items = res.items;
+  total = res.total;
+}
+
+const filters: FilterConfig[] = [
+  {
+    key: "type",
+    label: "Faction Type",
+    currentValue: factionType,
+    options: [
+      { value: "military", label: "Military Regiment" },
+      { value: "political", label: "Political Organization" },
+      { value: "nation", label: "National Power" },
+      { value: "militia", label: "Insurgent / Militia" },
+      { value: "other", label: "Other" },
+    ],
+  },
+];
+
+const sortOptions: SortOption[] = [
+  { value: "name", label: "Organization Name" },
+  { value: "type", label: "Faction Type" },
+  { value: "id", label: "Record ID" },
+];
+
+const cardItems = items.map((f) => ({
+  id: f.id,
+  type: "faction",
+  name: f.name,
+  subtitle: (f.factionType || "FACTION").toUpperCase(),
+  japaneseName: null,
+  status: null,
+  code: f.id.replace("faction/", "").slice(0, 4).toUpperCase(),
+}));
+---
+
+<ArchiveIndex
+  title="Factions"
+  designation="MILITARY REGIMENTS & POLITICAL ORGANIZATIONS"
+  description="Intelligence dossiers covering the Military Regiments, national governments, resistance movements, and underground factions."
+  baseRoute="/factions"
+  items={cardItems}
+  totalCount={total}
+  filters={filters}
+  sortOptions={sortOptions}
+  currentSort={sort}
+  currentOrder={order}
+  currentQuery={q}
+  currentPage={page}
+  pageSize={pageSize}
+/>

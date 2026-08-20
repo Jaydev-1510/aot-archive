@@ -1,0 +1,113 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getFactionDetail } from "@/database/queries/entities";
+import EntityDossier, {
+  type DossierMetadataItem,
+  type DossierRelationshipSection,
+} from "@/components/entity/EntityDossier.astro";
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect("/404");
+
+let factionDetail = null;
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  factionDetail = await getFactionDetail(db, id);
+}
+
+if (!factionDetail) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { faction, aliases, relationships } = factionDetail;
+
+const mapRel = (r: any) => ({
+  id: r.relatedEntity.id,
+  type: r.relatedEntity.entityType,
+  name: r.relatedEntityName,
+  predicate: r.predicate,
+});
+
+const relationshipSections: DossierRelationshipSection[] = [
+  {
+    title: "Known Members & Officers",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "person")
+      .map(mapRel),
+    layout: "grid",
+  },
+  {
+    title: "Military Campaigns & Operations",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "event")
+      .map(mapRel),
+    layout: "list",
+  },
+  {
+    title: "Territories & Headquarters",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "location")
+      .map(mapRel),
+    layout: "grid",
+  },
+  {
+    title: "Allied & Opposing Factions",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "faction")
+      .map(mapRel),
+    layout: "blocks",
+  },
+];
+
+const metadata: DossierMetadataItem[] = [];
+
+if (faction.factionType) {
+  metadata.push({
+    label: "Organization Type",
+    value: faction.factionType,
+    capitalize: true,
+  });
+}
+if (faction.canonStatus) {
+  metadata.push({
+    label: "Canon Status",
+    value: faction.canonStatus,
+    capitalize: true,
+  });
+}
+
+const breadcrumbs = [
+  { label: "FACTIONS", href: "/factions" },
+  { label: faction.name, current: true },
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: faction.name,
+  description:
+    faction.description ||
+    `${faction.name} intelligence dossier in Survey Corps Archives.`,
+};
+---
+
+<EntityDossier
+  id={faction.id}
+  type="faction"
+  name={faction.name}
+  japaneseName={null}
+  status={null}
+  aliases={aliases.map((a) => a.alias)}
+  summary={faction.description}
+  metadata={metadata}
+  relationships={relationshipSections}
+  schemaType="profile"
+  schemaData={schemaData}
+  breadcrumbs={breadcrumbs}
+  backRoute="/factions"
+  backLabel="RETURN TO FACTIONS ARCHIVE"
+/>
