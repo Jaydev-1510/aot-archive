@@ -1,0 +1,85 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getLocations } from "@/database/queries/entities";
+import ArchiveIndex, {
+  type FilterConfig,
+  type SortOption,
+} from "@/components/archive/ArchiveIndex.astro";
+
+const url = new URL(Astro.request.url);
+const q = url.searchParams.get("q") || "";
+const locationType = url.searchParams.get("type") || "all";
+const sort = (url.searchParams.get("sort") as "name" | "type" | "id") || "name";
+const order = (url.searchParams.get("order") as "asc" | "desc") || "asc";
+const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+const pageSize = 48;
+const offset = (page - 1) * pageSize;
+
+let items: any[] = [];
+let total = 0;
+
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  const res = await getLocations(db, {
+    search: q,
+    locationType: locationType !== "all" ? locationType : undefined,
+    sort,
+    order,
+    limit: pageSize,
+    offset,
+  });
+  items = res.items;
+  total = res.total;
+}
+
+const filters: FilterConfig[] = [
+  {
+    key: "type",
+    label: "Location Type",
+    currentValue: locationType,
+    options: [
+      { value: "wall", label: "Wall" },
+      { value: "district", label: "District" },
+      { value: "city", label: "City" },
+      { value: "region", label: "Region" },
+      { value: "nation", label: "Nation" },
+      { value: "island", label: "Island" },
+      { value: "landmark", label: "Landmark" },
+      { value: "other", label: "Other" },
+    ],
+  },
+];
+
+const sortOptions: SortOption[] = [
+  { value: "name", label: "Location Name" },
+  { value: "type", label: "Geographic Type" },
+  { value: "id", label: "Record ID" },
+];
+
+const cardItems = items.map((l) => ({
+  id: l.id,
+  type: "location",
+  name: l.name,
+  subtitle: (l.locationType || "LOCATION").toUpperCase(),
+  japaneseName: null,
+  status: null,
+  code: l.id.replace("location/", "").slice(0, 4).toUpperCase(),
+}));
+---
+
+<ArchiveIndex
+  title="Locations"
+  designation="GEOGRAPHICAL SURVEY & TERRITORIAL RECORDS"
+  description="Cartographic and topological surveys across Paradis Island, the Three Walls, and the global mainland territories."
+  baseRoute="/locations"
+  items={cardItems}
+  totalCount={total}
+  filters={filters}
+  sortOptions={sortOptions}
+  currentSort={sort}
+  currentOrder={order}
+  currentQuery={q}
+  currentPage={page}
+  pageSize={pageSize}
+/>

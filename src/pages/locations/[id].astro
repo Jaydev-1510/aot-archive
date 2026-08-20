@@ -1,0 +1,119 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getLocationDetail } from "@/database/queries/entities";
+import EntityDossier, {
+  type DossierMetadataItem,
+  type DossierRelationshipSection,
+} from "@/components/entity/EntityDossier.astro";
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect("/404");
+
+let locationDetail = null;
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  locationDetail = await getLocationDetail(db, id);
+}
+
+if (!locationDetail) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { location, parentLocation, aliases, relationships } = locationDetail;
+
+const mapRel = (r: any) => ({
+  id: r.relatedEntity.id,
+  type: r.relatedEntity.entityType,
+  name: r.relatedEntityName,
+  predicate: r.predicate,
+});
+
+const relationshipSections: DossierRelationshipSection[] = [
+  {
+    title: "Historical Events Occurred Here",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "event")
+      .map(mapRel),
+    layout: "list",
+  },
+  {
+    title: "Associated Personnel & Residents",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "person")
+      .map(mapRel),
+    layout: "grid",
+  },
+  {
+    title: "Associated Regiments & Factions",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "faction")
+      .map(mapRel),
+    layout: "blocks",
+  },
+  {
+    title: "Connected Sub-Regions & Locations",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "location")
+      .map(mapRel),
+    layout: "grid",
+  },
+];
+
+const metadata: DossierMetadataItem[] = [];
+
+if (location.locationType) {
+  metadata.push({
+    label: "Geographic Type",
+    value: location.locationType,
+    capitalize: true,
+  });
+}
+if (parentLocation) {
+  metadata.push({
+    label: "Parent Territory",
+    value: parentLocation.name,
+  });
+}
+if (location.canonStatus) {
+  metadata.push({
+    label: "Canon Status",
+    value: location.canonStatus,
+    capitalize: true,
+  });
+}
+
+const breadcrumbs = [
+  { label: "LOCATIONS", href: "/locations" },
+  { label: location.name, current: true },
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Place",
+  name: location.name,
+  description:
+    location.description ||
+    `${location.name} geographic survey in Survey Corps Archives.`,
+};
+---
+
+<EntityDossier
+  id={location.id}
+  type="location"
+  name={location.name}
+  japaneseName={null}
+  status={null}
+  aliases={aliases.map((a) => a.alias)}
+  summary={location.description}
+  metadata={metadata}
+  relationships={relationshipSections}
+  schemaType="article"
+  schemaData={schemaData}
+  breadcrumbs={breadcrumbs}
+  backRoute="/locations"
+  backLabel="RETURN TO GEOGRAPHICAL SURVEYS"
+/>
