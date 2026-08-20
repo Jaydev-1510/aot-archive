@@ -8,6 +8,7 @@ import {
   getPerson,
   getPersonDetail,
   getTitan,
+  getTitanDetail,
   getTitanHolders,
   getRelationshipsForEntity,
   getTimeline,
@@ -20,6 +21,21 @@ import {
   getSiblings,
   getEventParticipation,
   getFactionMemberships,
+  getPeople,
+  getTitans,
+  getEvents,
+  getLocations,
+  getFactions,
+  getObjects,
+  getAbilities,
+  getFamilies,
+  getArchiveStats,
+  getEventDetail,
+  getLocationDetail,
+  getFactionDetail,
+  getObjectDetail,
+  getFamilyDetail,
+  getAbilityDetail,
 } from "../database/queries";
 import { validateDataset } from "../../scripts/seed/validation/validate-dataset";
 import type { SeedDataset } from "../../scripts/seed/types";
@@ -429,5 +445,309 @@ describe("SEARCH ARCHIVE", () => {
   test("nonexistent search returns empty list", async () => {
     const results = await searchArchive(db, "NonexistentLoreThing");
     expect(results.length).toBe(0);
+  });
+});
+
+describe("PEOPLE PAGE CONTRACT", () => {
+  test("existing person resolves correctly", async () => {
+    const detail = await getPersonDetail(db, "eren_yeager");
+    expect(detail).not.toBeNull();
+    expect(detail?.person.name).toBe("Eren Yeager");
+    expect(detail?.person.japaneseName).toBe("エレン・イェーガー");
+  });
+
+  test("nonexistent person returns null", async () => {
+    const detail = await getPersonDetail(db, "fake_person_123");
+    expect(detail).toBeNull();
+  });
+
+  test("person aliases are returned", async () => {
+    const detail = await getPersonDetail(db, "eren_yeager");
+    expect(detail?.aliases).toBeDefined();
+    expect(detail?.aliases.length).toBeGreaterThan(0);
+    const aliasNames = detail?.aliases.map((a) => a.alias);
+    expect(aliasNames).toContain("Attack Titan");
+  });
+
+  test("family relationships are returned", async () => {
+    const detail = await getPersonDetail(db, "eren_yeager");
+    const family = detail?.relationships.filter((r) =>
+      [
+        "parent-of",
+        "child-of",
+        "sibling-of",
+        "spouse-of",
+        "member-of-family",
+      ].includes(r.predicate),
+    );
+    expect(family?.length).toBeGreaterThan(0);
+    const names = family?.map((f) => f.relatedEntityName);
+    expect(names).toContain("Grisha Yeager");
+    expect(names).toContain("Zeke Yeager");
+  });
+
+  test("titan-holder information is returned", async () => {
+    const detail = await getPersonDetail(db, "eren_yeager");
+    expect(detail?.titanHolders).toBeDefined();
+    expect(detail?.titanHolders.length).toBeGreaterThan(0);
+    const titanNames = detail?.titanHolders.map((t) => t.titan.name);
+    expect(titanNames).toContain("Attack Titan");
+    expect(titanNames).toContain("Founding Titan");
+  });
+
+  test("faction relationships are returned", async () => {
+    const detail = await getPersonDetail(db, "eren_yeager");
+    const factions = detail?.relationships.filter(
+      (r) => r.predicate === "member-of",
+    );
+    expect(factions?.length).toBeGreaterThan(0);
+    const factionNames = factions?.map((f) => f.relatedEntityName);
+    expect(factionNames).toContain("Survey Corps");
+  });
+
+  test("event relationships are returned", async () => {
+    const detail = await getPersonDetail(db, "eren_yeager");
+    const events = detail?.relationships.filter(
+      (r) => r.predicate === "participant-in",
+    );
+    expect(events?.length).toBeGreaterThan(0);
+    const eventNames = events?.map((e) => e.relatedEntityName);
+    expect(eventNames).toContain("Raid on Liberio");
+  });
+
+  test("location relationships are returned", async () => {
+    const detail = await getPersonDetail(db, "eren_yeager");
+    const locations = detail?.relationships.filter((r) =>
+      ["born-at", "died-at", "resided-at", "located-at"].includes(r.predicate),
+    );
+    expect(locations?.length).toBeGreaterThan(0);
+    const locationNames = locations?.map((l) => l.relatedEntityName);
+    expect(locationNames).toContain("Shiganshina District");
+  });
+
+  test("relationship direction is correct", async () => {
+    const detail = await getPersonDetail(db, "eren_yeager");
+    const father = detail?.relationships.find(
+      (r) => r.relatedEntityName === "Grisha Yeager",
+    );
+    expect(father).toBeDefined();
+    expect(father?.direction).toBe("incoming");
+    expect(father?.predicate).toBe("child-of");
+  });
+
+  test("no duplicate related entities appear unexpectedly", async () => {
+    const detail = await getPersonDetail(db, "eren_yeager");
+    const stringified = detail?.relationships.map(
+      (r) => `${r.predicate}:${r.relatedEntity.id}:${r.direction}`,
+    );
+    const uniqueRels = new Set(stringified);
+    expect(stringified?.length).toBe(uniqueRels.size);
+  });
+});
+
+describe("TITAN PAGE CONTRACT", () => {
+  test("existing titan resolves correctly", async () => {
+    const detail = await getTitanDetail(db, "attack_titan");
+    expect(detail).not.toBeNull();
+    expect(detail?.titan.name).toBe("Attack Titan");
+  });
+
+  test("invalid titan returns null", async () => {
+    const detail = await getTitanDetail(db, "invalid_titan_123");
+    expect(detail).toBeNull();
+  });
+
+  test("titan aliases resolve", async () => {
+    const detail = await getTitanDetail(db, "attack_titan");
+    expect(detail?.aliases).toBeDefined();
+  });
+
+  test("titan abilities resolve", async () => {
+    const detail = await getTitanDetail(db, "attack_titan");
+    expect(detail?.abilities).toBeDefined();
+    expect(detail?.abilities.length).toBeGreaterThan(0);
+    const abilityNames = detail?.abilities.map((a: any) => a.ability.name);
+    expect(abilityNames).toContain("Future Memory Inheritance");
+  });
+
+  test("titan holders resolve", async () => {
+    const detail = await getTitanDetail(db, "attack_titan");
+    expect(detail?.holders).toBeDefined();
+    expect(detail?.holders.length).toBeGreaterThan(0);
+    const names = detail?.holders.map((h: any) => h.person.name);
+    expect(names).toContain("Eren Yeager");
+    expect(names).toContain("Grisha Yeager");
+    expect(names).toContain("Eren Kruger");
+  });
+
+  test("current holder is null for extinct titan", async () => {
+    const detail = await getTitanDetail(db, "attack_titan");
+    expect(detail?.currentHolder).toBeNull();
+  });
+
+  test("historical holders are preserved", async () => {
+    const detail = await getTitanDetail(db, "attack_titan");
+    const kruger = detail?.holders.find(
+      (h: any) => h.person.name === "Eren Kruger",
+    );
+    expect(kruger).toBeDefined();
+    expect(kruger?.holder.isCurrent).toBeFalsy();
+  });
+
+  test("succession ordering is correct when supported", async () => {
+    const detail = await getTitanDetail(db, "attack_titan");
+    const kruger = detail?.holders.find(
+      (h: any) => h.person.name === "Eren Kruger",
+    );
+    const grisha = detail?.holders.find(
+      (h: any) => h.person.name === "Grisha Yeager",
+    );
+
+    // Kruger passed to Grisha
+    expect(kruger?.successor?.name).toBe("Grisha Yeager");
+    expect(grisha?.predecessor?.name).toBe("Eren Kruger");
+  });
+});
+
+describe("COLLECTION DIRECTORY QUERIES", () => {
+  test("getPeople returns list and total count", async () => {
+    const res = await getPeople(db, { limit: 10 });
+    expect(res.items.length).toBe(10);
+    expect(res.total).toBeGreaterThan(50);
+  });
+
+  test("getPeople filters by status", async () => {
+    const res = await getPeople(db, { status: "alive" });
+    expect(res.items.length).toBeGreaterThan(0);
+    for (const p of res.items) {
+      expect(p.status).toBe("alive");
+    }
+  });
+
+  test("getPeople search query filters names", async () => {
+    const res = await getPeople(db, { search: "Eren" });
+    expect(res.items.length).toBeGreaterThan(0);
+    expect(res.items.some((p) => p.name.includes("Eren"))).toBe(true);
+  });
+
+  test("getTitans returns all titans and respects class filter", async () => {
+    const res = await getTitans(db, { titanClass: "nine_titans" });
+    expect(res.items.length).toBe(9);
+    for (const t of res.items) {
+      expect(t.titanClass).toBe("nine_titans");
+    }
+  });
+
+  test("getEvents returns chronicle events with sorting", async () => {
+    const res = await getEvents(db, { sort: "year", order: "asc" });
+    expect(res.items.length).toBeGreaterThan(0);
+  });
+
+  test("getLocations returns geographic records", async () => {
+    const res = await getLocations(db, { locationType: "wall" });
+    expect(res.items.length).toBeGreaterThan(0);
+    for (const l of res.items) {
+      expect(l.locationType).toBe("wall");
+    }
+  });
+
+  test("getFactions returns military and political factions", async () => {
+    const res = await getFactions(db);
+    expect(res.items.length).toBeGreaterThan(0);
+  });
+
+  test("getObjects returns military items and equipment", async () => {
+    const res = await getObjects(db);
+    expect(res.items.length).toBeGreaterThan(0);
+  });
+
+  test("getAbilities returns titan and combat traits", async () => {
+    const res = await getAbilities(db);
+    expect(res.items.length).toBeGreaterThan(0);
+  });
+
+  test("getFamilies returns lineage houses", async () => {
+    const res = await getFamilies(db, { isRoyal: true });
+    expect(res.items.length).toBeGreaterThan(0);
+    for (const f of res.items) {
+      expect(f.isRoyalBloodline).toBe(true);
+    }
+  });
+
+  test("getArchiveStats aggregates counts across all entity tables", async () => {
+    const stats = await getArchiveStats(db);
+    expect(stats.people).toBeGreaterThan(0);
+    expect(stats.titans).toBeGreaterThanOrEqual(9);
+    expect(stats.events).toBeGreaterThan(0);
+    expect(stats.locations).toBeGreaterThan(0);
+    expect(stats.factions).toBeGreaterThan(0);
+    expect(stats.objects).toBeGreaterThan(0);
+    expect(stats.abilities).toBeGreaterThan(0);
+    expect(stats.families).toBeGreaterThan(0);
+  });
+});
+
+describe("ENTITY DOSSIER CONTRACTS", () => {
+  test("getEventDetail resolves event with aliases and relationships", async () => {
+    const eventsList = await getEvents(db, { limit: 1 });
+    expect(eventsList.items.length).toBe(1);
+    const detail = await getEventDetail(db, eventsList.items[0].id);
+    expect(detail).not.toBeNull();
+    expect(detail?.event.name).toBe(eventsList.items[0].name);
+    expect(Array.isArray(detail?.relationships)).toBe(true);
+  });
+
+  test("getLocationDetail resolves location with parent and relationships", async () => {
+    const locList = await getLocations(db, { limit: 1 });
+    expect(locList.items.length).toBe(1);
+    const detail = await getLocationDetail(db, locList.items[0].id);
+    expect(detail).not.toBeNull();
+    expect(detail?.location.name).toBe(locList.items[0].name);
+    expect(Array.isArray(detail?.relationships)).toBe(true);
+  });
+
+  test("getFactionDetail resolves faction with relationships", async () => {
+    const factionList = await getFactions(db, { limit: 1 });
+    expect(factionList.items.length).toBe(1);
+    const detail = await getFactionDetail(db, factionList.items[0].id);
+    expect(detail).not.toBeNull();
+    expect(detail?.faction.name).toBe(factionList.items[0].name);
+    expect(Array.isArray(detail?.relationships)).toBe(true);
+  });
+
+  test("getObjectDetail resolves object with relationships", async () => {
+    const objList = await getObjects(db, { limit: 1 });
+    expect(objList.items.length).toBe(1);
+    const detail = await getObjectDetail(db, objList.items[0].id);
+    expect(detail).not.toBeNull();
+    expect(detail?.object.name).toBe(objList.items[0].name);
+    expect(Array.isArray(detail?.relationships)).toBe(true);
+  });
+
+  test("getFamilyDetail resolves family with relationships", async () => {
+    const famList = await getFamilies(db, { limit: 1 });
+    expect(famList.items.length).toBe(1);
+    const detail = await getFamilyDetail(db, famList.items[0].id);
+    expect(detail).not.toBeNull();
+    expect(detail?.family.name).toBe(famList.items[0].name);
+    expect(Array.isArray(detail?.relationships)).toBe(true);
+  });
+
+  test("getAbilityDetail resolves ability and associated titans", async () => {
+    const abList = await getAbilities(db, { limit: 1 });
+    expect(abList.items.length).toBe(1);
+    const detail = await getAbilityDetail(db, abList.items[0].id);
+    expect(detail).not.toBeNull();
+    expect(detail?.ability.name).toBe(abList.items[0].name);
+    expect(Array.isArray(detail?.titans)).toBe(true);
+  });
+
+  test("nonexistent entity detail returns null", async () => {
+    expect(await getEventDetail(db, "event/nonexistent_123")).toBeNull();
+    expect(await getLocationDetail(db, "location/nonexistent_123")).toBeNull();
+    expect(await getFactionDetail(db, "faction/nonexistent_123")).toBeNull();
+    expect(await getObjectDetail(db, "object/nonexistent_123")).toBeNull();
+    expect(await getFamilyDetail(db, "family/nonexistent_123")).toBeNull();
+    expect(await getAbilityDetail(db, 999999)).toBeNull();
   });
 });
