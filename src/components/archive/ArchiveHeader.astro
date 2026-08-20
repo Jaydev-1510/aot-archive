@@ -1,0 +1,55 @@
+---
+import Badge from "../ui/Badge.astro";
+import Divider from "../ui/Divider.astro";
+
+interface Props {
+  title: string;
+  designation?: string;
+  recordCount?: number;
+  recordType?: string;
+  description?: string;
+  class?: string;
+}
+
+const {
+  title,
+  designation,
+  recordCount,
+  recordType = "RECORDS",
+  description,
+  class: className = "",
+} = Astro.props;
+---
+
+<header class={`mb-12 ${className}`}>
+  <div class="flex flex-wrap items-center justify-between gap-4">
+    {
+      designation && (
+        <span class="tracking-classified text-archive-500 font-mono text-xs uppercase">
+          {designation}
+        </span>
+      )
+    }
+    {
+      recordCount !== undefined && (
+        <Badge variant="brass" size="sm">
+          {recordCount} {recordType}
+        </Badge>
+      )
+    }
+  </div>
+
+  <h1 class="text-paper-100 mt-4 font-serif text-4xl sm:text-6xl">
+    {title}
+  </h1>
+
+  {
+    description && (
+      <p class="text-archive-500 mt-3 max-w-2xl font-sans text-sm leading-relaxed sm:text-base">
+        {description}
+      </p>
+    )
+  }
+
+  <Divider variant="brass" class="mt-8" />
+</header>

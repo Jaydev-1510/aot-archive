@@ -1,0 +1,58 @@
+---
+interface StatItem {
+  label: string;
+  value: number | string;
+  href?: string;
+}
+
+interface Props {
+  stats: StatItem[];
+  title?: string;
+  class?: string;
+}
+
+const { stats, title = "ARCHIVE STATUS", class: className = "" } = Astro.props;
+---
+
+<aside
+  aria-label="Archive Statistics"
+  class={`border border-archive-800/80 bg-archive-950/60 p-4 sm:p-6 rounded-sm ${className}`}
+>
+  {
+    title && (
+      <div class="border-archive-800/60 mb-4 flex items-center justify-between border-b pb-3">
+        <span class="tracking-classified text-archive-500 font-mono text-[10px] font-semibold uppercase">
+          {title}
+        </span>
+        <span
+          class="bg-brass-500 h-1.5 w-1.5 animate-pulse rounded-full"
+          aria-hidden="true"
+        />
+      </div>
+    )
+  }
+
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+    {
+      stats.map((stat) => (
+        <div class="space-y-1">
+          <span class="text-paper-100 block font-serif text-2xl font-medium sm:text-3xl">
+            {stat.value}
+          </span>
+          {stat.href ? (
+            <a
+              href={stat.href}
+              class="tracking-military text-archive-500 hover:text-paper-200 focus-visible:ring-brass-600/50 block rounded-xs font-mono text-[10px] uppercase transition-colors focus:outline-none focus-visible:ring-1"
+            >
+              {stat.label}
+            </a>
+          ) : (
+            <span class="tracking-military text-archive-500 block font-mono text-[10px] uppercase">
+              {stat.label}
+            </span>
+          )}
+        </div>
+      ))
+    }
+  </div>
+</aside>

@@ -1,0 +1,397 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import Container from "../ui/Container.astro";
+import ArchiveBreadcrumbs from "./ArchiveBreadcrumbs.astro";
+import ArchiveHeader from "./ArchiveHeader.astro";
+import EntityGrid from "../entity/EntityGrid.astro";
+import EntityCard from "../entity/EntityCard.astro";
+import EmptyState from "../ui/EmptyState.astro";
+import Button from "../ui/Button.astro";
+import {
+  Search,
+  SlidersHorizontal,
+  ArrowUpDown,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from "@lucide/astro";
+
+export interface FilterOption {
+  value: string;
+  label: string;
+}
+
+export interface FilterConfig {
+  key: string;
+  label: string;
+  options: FilterOption[];
+  currentValue?: string;
+}
+
+export interface SortOption {
+  value: string;
+  label: string;
+}
+
+export interface EntityCardItem {
+  id: string;
+  type: string;
+  name: string;
+  subtitle?: string;
+  japaneseName?: string | null;
+  status?: string | null;
+  code?: string;
+  badges?: string[];
+  href?: string;
+}
+
+interface Props {
+  title: string;
+  designation: string;
+  description?: string;
+  breadcrumbs?: Array<{ label: string; href?: string; current?: boolean }>;
+  items: EntityCardItem[];
+  totalCount: number;
+  filters?: FilterConfig[];
+  sortOptions?: SortOption[];
+  currentSort?: string;
+  currentOrder?: "asc" | "desc";
+  currentQuery?: string;
+  currentPage?: number;
+  pageSize?: number;
+  baseRoute: string;
+}
+
+const {
+  title,
+  designation,
+  description,
+  breadcrumbs = [{ label: title, current: true }],
+  items,
+  totalCount,
+  filters = [],
+  sortOptions = [],
+  currentSort,
+  currentOrder = "asc",
+  currentQuery = "",
+  currentPage = 1,
+  pageSize = 50,
+  baseRoute,
+} = Astro.props as Props;
+
+const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
+const startRecord = totalCount === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+const endRecord = Math.min(currentPage * pageSize, totalCount);
+
+// Active filters for tag pills
+const activeFilters = filters
+  .filter(
+    (f) => f.currentValue && f.currentValue !== "all" && f.currentValue !== "",
+  )
+  .map((f) => {
+    const matchedOption = f.options.find((opt) => opt.value === f.currentValue);
+    return {
+      key: f.key,
+      label: f.label,
+      value: f.currentValue,
+      displayValue: matchedOption?.label || f.currentValue,
+    };
+  });
+
+const hasActiveFilters = Boolean(
+  (currentQuery && currentQuery.trim() !== "") ||
+  activeFilters.length > 0 ||
+  (currentSort && currentSort !== sortOptions[0]?.value) ||
+  currentOrder !== "asc",
+);
+
+function getPageUrl(targetPage: number): string {
+  const url = new URL(Astro.url);
+  url.searchParams.set("page", targetPage.toString());
+  return url.pathname + url.search;
+}
+
+function getFilterRemoveUrl(filterKey: string): string {
+  const url = new URL(Astro.url);
+  url.searchParams.delete(filterKey);
+  url.searchParams.set("page", "1");
+  return url.pathname + url.search;
+}
+
+function getQueryRemoveUrl(): string {
+  const url = new URL(Astro.url);
+  url.searchParams.delete("q");
+  url.searchParams.set("page", "1");
+  return url.pathname + url.search;
+}
+---
+
+<BaseLayout
+  title={`${title} Directory — Survey Corps Archives`}
+  description={description ||
+    `Classified ${title.toLowerCase()} records from the Attack on Titan knowledge archive.`}
+>
+  <Container size="xl" as="main" id="main-content">
+    <ArchiveBreadcrumbs items={breadcrumbs} />
+
+    <ArchiveHeader
+      title={title}
+      designation={designation}
+      recordCount={totalCount}
+      recordType="RECORDS"
+      description={description}
+    />
+
+    <!-- Filter & Query Control Bar -->
+    <section
+      aria-label="Search and filter controls"
+      class="border-archive-800/80 bg-archive-950/60 shadow-archive mb-10 rounded-sm border p-4 sm:p-6"
+    >
+      <form action={baseRoute} method="get" role="search" class="space-y-4">
+        <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+          <!-- Text Search Query -->
+          <div class="relative lg:col-span-5">
+            <label for="archive-search-input" class="sr-only"
+              >Search {title}</label
+            >
+            <Search
+              class="text-archive-500 absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
+              aria-hidden="true"
+            />
+            <input
+              type="text"
+              id="archive-search-input"
+              name="q"
+              value={currentQuery}
+              placeholder={`Search ${title.toLowerCase()} records...`}
+              class="border-archive-800 bg-archive-900/40 text-paper-50 placeholder:text-archive-500 focus:border-brass-600/60 focus-visible:ring-brass-600/50 min-h-11 w-full rounded-sm border py-2.5 pr-4 pl-10 font-sans text-sm focus:outline-none focus-visible:ring-2"
+            />
+          </div>
+
+          <!-- Dynamic Filters -->
+          {
+            filters.map((filter) => (
+              <div class="lg:col-span-2">
+                <label for={`filter-${filter.key}`} class="sr-only">
+                  {filter.label}
+                </label>
+                <div class="relative">
+                  <select
+                    id={`filter-${filter.key}`}
+                    name={filter.key}
+                    class="border-archive-800 bg-archive-900/40 tracking-military text-paper-200 focus:border-brass-600/60 focus-visible:ring-brass-600/50 min-h-11 w-full cursor-pointer appearance-none rounded-sm border px-3 py-2.5 font-sans text-xs uppercase focus:outline-none focus-visible:ring-2"
+                  >
+                    <option value="all">{filter.label}: ALL</option>
+                    {filter.options.map((opt) => (
+                      <option
+                        value={opt.value}
+                        selected={filter.currentValue === opt.value}
+                      >
+                        {filter.label}: {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  <SlidersHorizontal
+                    class="text-archive-500 pointer-events-none absolute top-1/2 right-3 h-3.5 w-3.5 -translate-y-1/2 opacity-60"
+                    aria-hidden="true"
+                  />
+                </div>
+              </div>
+            ))
+          }
+
+          <!-- Sorting Controls -->
+          {
+            sortOptions.length > 0 && (
+              <div class="flex items-center gap-2 lg:col-span-3">
+                <div class="relative flex-1">
+                  <label for="sort-select" class="sr-only">
+                    Sort by
+                  </label>
+                  <select
+                    id="sort-select"
+                    name="sort"
+                    class="border-archive-800 bg-archive-900/40 tracking-military text-paper-200 focus:border-brass-600/60 focus-visible:ring-brass-600/50 min-h-11 w-full cursor-pointer appearance-none rounded-sm border px-3 py-2.5 font-sans text-xs uppercase focus:outline-none focus-visible:ring-2"
+                  >
+                    {sortOptions.map((opt) => (
+                      <option
+                        value={opt.value}
+                        selected={currentSort === opt.value}
+                      >
+                        SORT: {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                  <ArrowUpDown
+                    class="text-archive-500 pointer-events-none absolute top-1/2 right-3 h-3.5 w-3.5 -translate-y-1/2 opacity-60"
+                    aria-hidden="true"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  name="order"
+                  value={currentOrder === "asc" ? "desc" : "asc"}
+                  class="border-archive-800 bg-archive-900/40 text-archive-500 hover:border-archive-600 hover:text-paper-100 focus-visible:ring-brass-600/50 flex min-h-11 items-center justify-center rounded-sm border px-3 py-2 font-mono text-xs uppercase focus:outline-none focus-visible:ring-2"
+                  aria-label={`Sort order: currently ${currentOrder.toUpperCase()}, toggle to ${currentOrder === "asc" ? "descending" : "ascending"}`}
+                >
+                  {currentOrder === "asc" ? "ASC ↑" : "DESC ↓"}
+                </button>
+              </div>
+            )
+          }
+
+          <!-- Filter Submit Action -->
+          <div class="flex items-center gap-2 lg:col-span-2">
+            <Button type="submit" variant="primary" size="md" class="w-full">
+              Filter
+            </Button>
+          </div>
+        </div>
+
+        <!-- Active Filter Badges & Reset -->
+        {
+          hasActiveFilters && (
+            <div class="border-archive-800/40 flex flex-wrap items-center gap-2 border-t pt-3">
+              <span class="tracking-classified text-archive-500 font-mono text-[10px] uppercase">
+                Active Criteria:
+              </span>
+              {currentQuery && (
+                <a
+                  href={getQueryRemoveUrl()}
+                  class="group border-brass-800/40 bg-brass-950/20 text-brass-400 hover:border-blood-700 hover:text-blood-400 inline-flex items-center gap-1.5 rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-colors"
+                >
+                  <span>Query: "{currentQuery}"</span>
+                  <X class="h-3 w-3" aria-hidden="true" />
+                </a>
+              )}
+              {activeFilters.map((af) => (
+                <a
+                  href={getFilterRemoveUrl(af.key)}
+                  class="group border-archive-700 bg-archive-900/60 text-paper-300 hover:border-blood-700 hover:text-blood-400 inline-flex items-center gap-1.5 rounded-sm border px-2 py-0.5 font-mono text-[10px] transition-colors"
+                >
+                  <span>
+                    {af.label}: {af.displayValue}
+                  </span>
+                  <X class="h-3 w-3" aria-hidden="true" />
+                </a>
+              ))}
+              <a
+                href={baseRoute}
+                class="tracking-military text-archive-500 hover:text-blood-400 ml-auto font-mono text-[10px] uppercase transition-colors"
+              >
+                Reset All Criteria
+              </a>
+            </div>
+          )
+        }
+      </form>
+    </section>
+
+    <!-- Results Status Bar -->
+    <div
+      class="border-archive-800/40 text-archive-500 mb-6 flex items-center justify-between border-b pb-3 font-mono text-xs"
+      aria-live="polite"
+    >
+      <span>
+        SHOWING <strong class="text-paper-200">{startRecord}–{endRecord}</strong
+        > OF <strong class="text-paper-200">{totalCount}</strong> ARCHIVED RECORDS
+      </span>
+      {
+        totalPages > 1 && (
+          <span class="hidden sm:inline">
+            PAGE {currentPage} OF {totalPages}
+          </span>
+        )
+      }
+    </div>
+
+    <!-- Main Results Grid or Empty State -->
+    {
+      items.length > 0 ? (
+        <EntityGrid columns={4} class="mb-12">
+          {items.map((item) => (
+            <EntityCard
+              id={item.id}
+              type={item.type}
+              name={item.name}
+              subtitle={item.subtitle}
+              japaneseName={item.japaneseName}
+              status={item.status}
+              code={item.code}
+              badges={item.badges}
+              href={item.href}
+            />
+          ))}
+        </EntityGrid>
+      ) : (
+        <EmptyState
+          title={`No ${title} Records Found`}
+          description={
+            hasActiveFilters
+              ? "No classified entries match your current search filters or criteria."
+              : `The ${title.toLowerCase()} repository currently contains zero indexed documents.`
+          }
+          icon="search"
+          class="my-12"
+        >
+          {hasActiveFilters && (
+            <Button href={baseRoute} variant="secondary" size="md">
+              Clear All Filters
+            </Button>
+          )}
+        </EmptyState>
+      )
+    }
+
+    <!-- Pagination Navigation -->
+    {
+      totalPages > 1 && (
+        <nav
+          aria-label="Pagination"
+          class="border-archive-800/80 mt-12 flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row"
+        >
+          <div class="text-archive-500 font-mono text-xs">
+            RECORD SET {currentPage} / {totalPages}
+          </div>
+
+          <div class="flex items-center gap-2">
+            {currentPage > 1 ? (
+              <a
+                href={getPageUrl(currentPage - 1)}
+                class="border-archive-700 bg-archive-900/60 tracking-military text-paper-200 hover:border-archive-600 hover:bg-archive-800/80 hover:text-paper-50 focus-visible:ring-brass-600/50 inline-flex min-h-11 items-center gap-2 rounded-sm border px-4 py-2 font-mono text-xs uppercase transition-colors focus:outline-none focus-visible:ring-2"
+              >
+                <ChevronLeft class="h-4 w-4" aria-hidden="true" />
+                <span>Previous</span>
+              </a>
+            ) : (
+              <span class="border-archive-900 bg-archive-950/40 tracking-military text-archive-600 inline-flex min-h-11 cursor-not-allowed items-center gap-2 rounded-sm border px-4 py-2 font-mono text-xs uppercase opacity-40">
+                <ChevronLeft class="h-4 w-4" aria-hidden="true" />
+                <span>Previous</span>
+              </span>
+            )}
+
+            <span class="text-archive-500 px-3 font-mono text-xs">
+              {currentPage} / {totalPages}
+            </span>
+
+            {currentPage < totalPages ? (
+              <a
+                href={getPageUrl(currentPage + 1)}
+                class="border-archive-700 bg-archive-900/60 tracking-military text-paper-200 hover:border-archive-600 hover:bg-archive-800/80 hover:text-paper-50 focus-visible:ring-brass-600/50 inline-flex min-h-11 items-center gap-2 rounded-sm border px-4 py-2 font-mono text-xs uppercase transition-colors focus:outline-none focus-visible:ring-2"
+              >
+                <span>Next</span>
+                <ChevronRight class="h-4 w-4" aria-hidden="true" />
+              </a>
+            ) : (
+              <span class="border-archive-900 bg-archive-950/40 tracking-military text-archive-600 inline-flex min-h-11 cursor-not-allowed items-center gap-2 rounded-sm border px-4 py-2 font-mono text-xs uppercase opacity-40">
+                <span>Next</span>
+                <ChevronRight class="h-4 w-4" aria-hidden="true" />
+              </span>
+            )}
+          </div>
+        </nav>
+      )
+    }
+  </Container>
+</BaseLayout>
