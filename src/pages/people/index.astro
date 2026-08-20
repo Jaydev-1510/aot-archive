@@ -1,0 +1,109 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getPeople } from "@/database/queries/people";
+import ArchiveIndex, {
+  type FilterConfig,
+  type SortOption,
+} from "@/components/archive/ArchiveIndex.astro";
+
+const url = new URL(Astro.request.url);
+const q = url.searchParams.get("q") || "";
+const status = url.searchParams.get("status") || "all";
+const gender = url.searchParams.get("gender") || "all";
+const species = url.searchParams.get("species") || "all";
+const sort =
+  (url.searchParams.get("sort") as "name" | "birth" | "id") || "name";
+const order = (url.searchParams.get("order") as "asc" | "desc") || "asc";
+const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+const pageSize = 48;
+const offset = (page - 1) * pageSize;
+
+let items: any[] = [];
+let total = 0;
+
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  const res = await getPeople(db, {
+    search: q,
+    status: status !== "all" ? status : undefined,
+    gender: gender !== "all" ? gender : undefined,
+    species: species !== "all" ? species : undefined,
+    sort,
+    order,
+    limit: pageSize,
+    offset,
+  });
+  items = res.items;
+  total = res.total;
+}
+
+const filters: FilterConfig[] = [
+  {
+    key: "status",
+    label: "Status",
+    currentValue: status,
+    options: [
+      { value: "alive", label: "Alive" },
+      { value: "deceased", label: "Deceased" },
+      { value: "unknown", label: "Unknown" },
+    ],
+  },
+  {
+    key: "species",
+    label: "Species",
+    currentValue: species,
+    options: [
+      { value: "human", label: "Human" },
+      { value: "pure_titan", label: "Pure Titan" },
+    ],
+  },
+  {
+    key: "gender",
+    label: "Gender",
+    currentValue: gender,
+    options: [
+      { value: "male", label: "Male" },
+      { value: "female", label: "Female" },
+      { value: "unknown", label: "Unknown" },
+    ],
+  },
+];
+
+const sortOptions: SortOption[] = [
+  { value: "name", label: "Alphabetical" },
+  { value: "birth", label: "Birth Year" },
+  { value: "id", label: "Record ID" },
+];
+
+const cardItems = items.map((p) => ({
+  id: p.id,
+  type: "person",
+  name: p.name,
+  subtitle:
+    p.species === "human"
+      ? p.gender !== "unknown"
+        ? `${p.gender} · human`
+        : "human"
+      : p.species,
+  japaneseName: p.japaneseName,
+  status: p.status,
+  code: p.id.replace("person/", "").slice(0, 4).toUpperCase(),
+}));
+---
+
+<ArchiveIndex
+  title="People"
+  designation="HUMAN & SHIFTER RECORDS // 001–180"
+  description="Classified biometric and historical records for all known military personnel, Titan shifters, civilians, and historical figures."
+  baseRoute="/people"
+  items={cardItems}
+  totalCount={total}
+  filters={filters}
+  sortOptions={sortOptions}
+  currentSort={sort}
+  currentOrder={order}
+  currentQuery={q}
+  currentPage={page}
+  pageSize={pageSize}
+/>

@@ -1,0 +1,195 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getPersonDetail } from "@/database/queries/people";
+import { getEntityRoute } from "@/utils/routing";
+import EntityDossier, {
+  type DossierMetadataItem,
+  type DossierRelationshipSection,
+} from "@/components/entity/EntityDossier.astro";
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect("/404");
+
+let personDetail = null;
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  personDetail = await getPersonDetail(db, id);
+}
+
+if (!personDetail) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { person, primarySource, aliases, relationships, titanHolders } =
+  personDetail;
+
+// Group relationships for presentation
+const mapRel = (r: any) => ({
+  id: r.relatedEntity.id,
+  type: r.relatedEntity.entityType,
+  name: r.relatedEntityName,
+  predicate: r.predicate,
+});
+
+const relationshipSections: DossierRelationshipSection[] = [
+  {
+    title: "Family & Lineage",
+    items: relationships
+      .filter((r) =>
+        [
+          "parent-of",
+          "child-of",
+          "sibling-of",
+          "spouse-of",
+          "member-of-family",
+        ].includes(r.predicate),
+      )
+      .map(mapRel),
+    layout: "grid",
+  },
+  {
+    title: "Military & Faction Affiliations",
+    items: relationships
+      .filter(
+        (r) =>
+          r.predicate === "member-of" &&
+          r.relatedEntity.entityType === "faction",
+      )
+      .map(mapRel),
+    layout: "blocks",
+  },
+  {
+    title: "Historical Event Participation",
+    items: relationships
+      .filter((r) => r.predicate === "participant-in")
+      .map(mapRel),
+    layout: "list",
+  },
+  {
+    title: "Key Locations",
+    items: relationships
+      .filter((r) =>
+        ["born-at", "died-at", "resided-at", "located-at"].includes(
+          r.predicate,
+        ),
+      )
+      .map(mapRel),
+    layout: "grid",
+  },
+];
+
+const metadata: DossierMetadataItem[] = [
+  {
+    label: "Species",
+    value: person.species.replace(/_/g, " "),
+    capitalize: true,
+  },
+  {
+    label: "Gender",
+    value: person.gender,
+    capitalize: true,
+  },
+];
+
+if (person.birthYearStart !== null || person.birthYearEnd !== null) {
+  metadata.push({
+    label: "Birth Year",
+    value: String(person.birthYearStart || person.birthYearEnd),
+  });
+}
+if (person.deathYearStart !== null || person.deathYearEnd !== null) {
+  metadata.push({
+    label: "Death Year",
+    value: String(person.deathYearStart || person.deathYearEnd),
+  });
+}
+if (person.canonStatus) {
+  metadata.push({
+    label: "Canon Status",
+    value: person.canonStatus,
+    capitalize: true,
+  });
+}
+
+const breadcrumbs = [
+  { label: "PEOPLE", href: "/people" },
+  { label: person.name, current: true },
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: person.name,
+  alternateName: person.japaneseName || undefined,
+  description:
+    person.summary ||
+    `${person.name} archival record in Survey Corps Archives.`,
+};
+---
+
+<EntityDossier
+  id={person.id}
+  type="person"
+  name={person.name}
+  japaneseName={person.japaneseName}
+  status={person.status}
+  aliases={aliases.map((a) => a.alias)}
+  summary={person.summary}
+  metadata={metadata}
+  relationships={relationshipSections}
+  primarySource={primarySource}
+  schemaType="profile"
+  schemaData={schemaData}
+  breadcrumbs={breadcrumbs}
+  backRoute="/people"
+  backLabel="RETURN TO PEOPLE ARCHIVE"
+>
+  {
+    titanHolders.length > 0 && (
+      <section>
+        <h2 class="tracking-classified text-archive-500 border-archive-800/80 mb-6 border-b pb-2 font-sans text-xs font-semibold uppercase">
+          Titan Inheritance
+        </h2>
+        <div class="space-y-4">
+          {titanHolders.map((th) => (
+            <a
+              href={getEntityRoute("titan", th.holder.titanId)}
+              class="group border-archive-800/60 bg-archive-950/60 hover:border-archive-600 hover:bg-archive-900/40 focus-visible:ring-brass-600/50 block rounded-sm border p-5 transition-all focus:outline-none focus-visible:ring-2"
+            >
+              <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <h3 class="text-paper-100 group-hover:text-brass-400 font-serif text-2xl transition-colors">
+                    {th.titan.name}
+                  </h3>
+                  <p class="text-archive-400 tracking-military mt-1 font-mono text-xs uppercase">
+                    {th.holder.isCurrent ? "Current Holder" : "Past Holder"}
+                    {th.holder.holderOrder &&
+                      ` • Inheritor #${th.holder.holderOrder}`}
+                  </p>
+                </div>
+                <div class="text-archive-500 space-y-1 font-mono text-xs sm:text-right">
+                  {th.predecessor && (
+                    <p>
+                      Inherited from:{" "}
+                      <span class="text-paper-200">{th.predecessor.name}</span>
+                    </p>
+                  )}
+                  {th.successor && (
+                    <p>
+                      Passed to:{" "}
+                      <span class="text-paper-200">{th.successor.name}</span>
+                    </p>
+                  )}
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+</EntityDossier>
