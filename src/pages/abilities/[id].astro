@@ -1,0 +1,101 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getAbilityDetail } from "@/database/queries/entities";
+import { getEntityRoute } from "@/utils/routing";
+import EntityDossier, {
+  type DossierMetadataItem,
+} from "@/components/entity/EntityDossier.astro";
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect("/404");
+
+let abilityDetail = null;
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  abilityDetail = await getAbilityDetail(db, id);
+}
+
+if (!abilityDetail) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { ability, titans } = abilityDetail;
+
+const metadata: DossierMetadataItem[] = [
+  {
+    label: "Trait Category",
+    value: ability.category.replace(/_/g, " "),
+    capitalize: true,
+  },
+  {
+    label: "Designation Code",
+    value: `AB${String(ability.id).padStart(2, "0")}`,
+  },
+];
+
+const breadcrumbs = [
+  { label: "ABILITIES", href: "/abilities" },
+  { label: ability.name, current: true },
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: ability.name,
+  description:
+    ability.description ||
+    `${ability.name} tactical trait record in Survey Corps Archives.`,
+};
+---
+
+<EntityDossier
+  id={`ability/${ability.id}`}
+  type="ability"
+  name={ability.name}
+  japaneseName={null}
+  status={null}
+  aliases={[]}
+  summary={ability.description}
+  metadata={metadata}
+  relationships={[]}
+  schemaType="article"
+  schemaData={schemaData}
+  breadcrumbs={breadcrumbs}
+  backRoute="/abilities"
+  backLabel="RETURN TO ABILITIES DIRECTORY"
+>
+  <!-- Associated Titan Powers Section -->
+  {
+    titans.length > 0 && (
+      <section>
+        <h2 class="tracking-classified text-archive-500 border-archive-800/80 mb-6 border-b pb-2 font-sans text-xs font-semibold uppercase">
+          Titans Manifesting This Trait
+        </h2>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {titans.map(({ titan, notes }) => (
+            <a
+              href={getEntityRoute("titan", titan.id)}
+              class="group border-archive-800/60 bg-archive-950/60 hover:border-archive-600 hover:bg-archive-900/40 focus-visible:ring-brass-600/50 block rounded-sm border p-5 transition-all focus:outline-none focus-visible:ring-2"
+            >
+              <h3 class="text-paper-100 group-hover:text-brass-400 font-serif text-xl transition-colors">
+                {titan.name}
+              </h3>
+              <p class="text-archive-500 tracking-military mt-1 font-mono text-xs uppercase">
+                {titan.titanClass.replace(/_/g, " ")}
+              </p>
+              {notes && (
+                <p class="text-archive-400 mt-2 font-sans text-xs leading-relaxed">
+                  {notes}
+                </p>
+              )}
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+</EntityDossier>

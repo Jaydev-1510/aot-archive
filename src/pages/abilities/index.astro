@@ -1,0 +1,80 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getAbilities } from "@/database/queries/entities";
+import ArchiveIndex, {
+  type FilterConfig,
+  type SortOption,
+} from "@/components/archive/ArchiveIndex.astro";
+
+const url = new URL(Astro.request.url);
+const q = url.searchParams.get("q") || "";
+const category = url.searchParams.get("category") || "all";
+const sort = (url.searchParams.get("sort") as "name" | "category") || "name";
+const order = (url.searchParams.get("order") as "asc" | "desc") || "asc";
+const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+const pageSize = 48;
+const offset = (page - 1) * pageSize;
+
+let items: any[] = [];
+let total = 0;
+
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  const res = await getAbilities(db, {
+    search: q,
+    category: category !== "all" ? category : undefined,
+    sort,
+    order,
+    limit: pageSize,
+    offset,
+  });
+  items = res.items;
+  total = res.total;
+}
+
+const filters: FilterConfig[] = [
+  {
+    key: "category",
+    label: "Category",
+    currentValue: category,
+    options: [
+      { value: "titan_power", label: "Titan Power" },
+      { value: "combat_skill", label: "Combat Skill" },
+      { value: "other", label: "Other" },
+    ],
+  },
+];
+
+const sortOptions: SortOption[] = [
+  { value: "name", label: "Ability Name" },
+  { value: "category", label: "Category" },
+];
+
+const cardItems = items.map((a) => ({
+  id: String(a.id),
+  type: "ability",
+  name: a.name,
+  subtitle: a.category.replace(/_/g, " ").toUpperCase(),
+  japaneseName: null,
+  status: null,
+  code: `AB${String(a.id).padStart(2, "0")}`,
+  href: `/abilities#${a.id}`,
+}));
+---
+
+<ArchiveIndex
+  title="Abilities"
+  designation="TITAN TRAITS & TACTICAL CAPABILITIES"
+  description="Classified combat techniques, hardening abilities, memory manipulation, and anatomical traits of the Titan powers."
+  baseRoute="/abilities"
+  items={cardItems}
+  totalCount={total}
+  filters={filters}
+  sortOptions={sortOptions}
+  currentSort={sort}
+  currentOrder={order}
+  currentQuery={q}
+  currentPage={page}
+  pageSize={pageSize}
+/>
