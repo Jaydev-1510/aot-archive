@@ -1,0 +1,83 @@
+---
+import { getEntityRoute } from "@/utils/routing";
+
+interface RelationshipItem {
+  id: string;
+  type: string;
+  name: string;
+  predicate: string;
+}
+
+interface Props {
+  title: string;
+  items: RelationshipItem[];
+  layout?: "grid" | "list" | "blocks";
+}
+
+const { title, items, layout = "grid" } = Astro.props;
+---
+
+<section>
+  <h2
+    class="tracking-classified text-archive-500 border-archive-800 mb-4 border-b pb-2 text-xs uppercase"
+  >
+    {title}
+  </h2>
+  {
+    layout === "grid" && (
+      <ul class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {items.map((item) => (
+          <li>
+            <a
+              href={getEntityRoute(item.type, item.id)}
+              class="group border-archive-800/50 hover:border-archive-600 focus-visible:ring-brass-600/50 flex items-baseline justify-between rounded-xs border-b border-dashed px-1 py-2.5 transition-colors focus-visible:ring-1 focus-visible:outline-none"
+            >
+              <span class="text-paper-200 group-hover:text-brass-400 transition-colors">
+                {item.name}
+              </span>
+              <span class="text-archive-500 text-[10px] tracking-widest uppercase">
+                {item.predicate.replace(/-/g, " ")}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  {
+    layout === "blocks" && (
+      <ul class="flex flex-col gap-2">
+        {items.map((item) => (
+          <li>
+            <a
+              href={getEntityRoute(item.type, item.id)}
+              class="group border-archive-800/30 bg-archive-900/20 hover:bg-archive-800/50 focus-visible:ring-brass-600/50 flex items-center justify-between rounded-sm border p-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
+            >
+              <span class="text-paper-200 font-serif text-xl">{item.name}</span>
+              <span class="text-archive-500 text-[10px] tracking-widest uppercase">
+                {item.predicate.replace(/-/g, " ")}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  {
+    layout === "list" && (
+      <ul class="flex flex-col gap-2">
+        {items.map((item) => (
+          <li>
+            <a
+              href={getEntityRoute(item.type, item.id)}
+              class="text-paper-300 hover:text-brass-400 focus-visible:ring-brass-600/50 flex items-center rounded-xs px-1 py-2 transition-colors focus-visible:ring-1 focus-visible:outline-none"
+            >
+              <span class="bg-archive-500 mr-3 h-2 w-2 rounded-full text-xs" />
+              {item.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</section>

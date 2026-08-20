@@ -1,0 +1,117 @@
+---
+import { getEntityRoute } from "@/utils/routing";
+import { ArrowRight } from "@lucide/astro";
+import Badge from "../ui/Badge.astro";
+
+interface Props {
+  id: string;
+  type: string;
+  name: string;
+  subtitle?: string;
+  japaneseName?: string | null;
+  status?: string | null;
+  code?: string;
+  badges?: string[];
+  href?: string;
+  class?: string;
+}
+
+const {
+  id,
+  type,
+  name,
+  subtitle,
+  japaneseName,
+  status,
+  code,
+  badges = [],
+  href = getEntityRoute(type, id),
+  class: className = "",
+} = Astro.props;
+
+const formattedCode = code || id.slice(-4).toUpperCase();
+---
+
+<article
+  class={`group relative flex flex-col justify-between rounded-sm border border-archive-800/80 bg-archive-950/60 p-6 transition-all duration-300 hover:border-archive-600 hover:bg-archive-900/40 hover:shadow-archive focus-within:border-brass-600/60 focus-within:ring-1 focus-within:ring-brass-600/50 ${className}`}
+>
+  <div class="space-y-4">
+    <!-- Header code & type -->
+    <div
+      class="border-archive-800/50 flex items-center justify-between border-b pb-3"
+    >
+      <span
+        class="tracking-classified text-archive-500 group-hover:text-paper-300 font-mono text-[10px] font-semibold uppercase transition-colors"
+      >
+        {type}
+      </span>
+      <span class="text-archive-500 font-mono text-[10px] tracking-widest">
+        {formattedCode}
+      </span>
+    </div>
+
+    <!-- Entity Name & Japanese Name -->
+    <div>
+      <h3
+        class="text-paper-100 group-hover:text-paper-50 font-serif text-2xl leading-tight transition-colors sm:text-3xl"
+      >
+        <a href={href} class="after:absolute after:inset-0 focus:outline-none">
+          {name}
+        </a>
+      </h3>
+
+      {
+        japaneseName && (
+          <p class="text-archive-500 text-md mt-1 font-sans" lang="ja">
+            {japaneseName}
+          </p>
+        )
+      }
+    </div>
+
+    <!-- Subtitle / Meta -->
+    {
+      subtitle && (
+        <p class="tracking-military text-archive-400 line-clamp-2 font-mono text-[11px] uppercase">
+          {subtitle}
+        </p>
+      )
+    }
+
+    <!-- Badges / Status -->
+    {
+      (status || badges.length > 0) && (
+        <div class="flex flex-wrap items-center gap-1.5 pt-2">
+          {status && (
+            <Badge
+              variant={status === "deceased" ? "blood" : "status"}
+              size="sm"
+            >
+              {status}
+            </Badge>
+          )}
+          {badges.map((badge) => (
+            <Badge variant="default" size="sm">
+              {badge}
+            </Badge>
+          ))}
+        </div>
+      )
+    }
+  </div>
+
+  <!-- Card Action footer -->
+  <div
+    class="border-archive-800/40 mt-8 flex items-center justify-between border-t pt-4"
+  >
+    <span
+      class="tracking-military text-archive-500 group-hover:text-paper-200 font-mono text-[10px] font-medium uppercase transition-colors"
+    >
+      VIEW RECORD
+    </span>
+    <ArrowRight
+      class="text-archive-500 group-hover:text-paper-100 h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+      aria-hidden="true"
+    />
+  </div>
+</article>

@@ -1,0 +1,36 @@
+---
+interface Props {
+  title: string;
+  count?: number;
+  code?: string;
+  class?: string;
+}
+
+const { title, count, code, class: className = "" } = Astro.props;
+---
+
+<div
+  class={`mb-6 flex items-center justify-between border-b border-archive-800/80 pb-2 ${className}`}
+>
+  <h2
+    class="tracking-classified text-archive-500 font-sans text-xs font-semibold uppercase"
+  >
+    {title}
+  </h2>
+  <div class="flex items-center gap-3">
+    {
+      count !== undefined && (
+        <span class="text-archive-500 font-mono text-[10px] tracking-widest">
+          [{count}]
+        </span>
+      )
+    }
+    {
+      code && (
+        <span class="tracking-classified text-archive-500 font-mono text-[10px] uppercase">
+          {code}
+        </span>
+      )
+    }
+  </div>
+</div>

@@ -1,0 +1,53 @@
+---
+interface Props {
+  id: string;
+  name: string;
+  japaneseName: string | null;
+  status: string | null;
+  aliases: string[];
+}
+
+const { id, name, japaneseName, status, aliases } = Astro.props;
+---
+
+<header class="border-archive-800/50 mb-12 border-b pb-12">
+  <div class="mb-4 flex items-center justify-between gap-4">
+    <span class="tracking-military text-archive-500 text-[10px] uppercase">
+      Archive Record ID: {id}
+    </span>
+    {
+      status && (
+        <span class="border-archive-800 text-archive-400 rounded-sm border px-2 py-1 text-[10px] tracking-widest uppercase">
+          {status}
+        </span>
+      )
+    }
+  </div>
+
+  <h1 class="text-paper-100 font-serif text-5xl sm:text-7xl">
+    {name}
+  </h1>
+
+  {
+    japaneseName && (
+      <p class="text-archive-400 mt-2 font-sans text-2xl opacity-80">
+        {japaneseName}
+      </p>
+    )
+  }
+  {
+    aliases.length > 0 && (
+      <div class="mt-6 flex flex-wrap gap-2">
+        {aliases.map((alias) => (
+          <span class="bg-archive-900/50 border-archive-800/50 text-paper-300 rounded-sm border px-2 py-1 text-xs">
+            {alias}
+          </span>
+        ))}
+      </div>
+    )
+  }
+  <div
+    class="via-brass-600/30 inset-x-0 mt-12 h-px bg-linear-to-r from-transparent to-transparent"
+  >
+  </div>
+</header>

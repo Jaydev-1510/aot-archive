@@ -1,0 +1,147 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import Container from "../ui/Container.astro";
+import ArchiveBreadcrumbs from "../archive/ArchiveBreadcrumbs.astro";
+import EntityHeader from "./EntityHeader.astro";
+import EntityMetadata from "./EntityMetadata.astro";
+import EntitySummary from "./EntitySummary.astro";
+import EntityRelationshipList from "./EntityRelationshipList.astro";
+import EntityProvenance from "./EntityProvenance.astro";
+import { ArrowLeft } from "@lucide/astro";
+
+export interface DossierMetadataItem {
+  label: string;
+  value?: string | number | null;
+  capitalize?: boolean;
+}
+
+export interface DossierRelationshipItem {
+  id: string;
+  type: string;
+  name: string;
+  predicate: string;
+}
+
+export interface DossierRelationshipSection {
+  title: string;
+  items: DossierRelationshipItem[];
+  layout?: "grid" | "list" | "blocks";
+}
+
+interface Props {
+  id: string;
+  type: string;
+  name: string;
+  japaneseName?: string | null;
+  status?: string | null;
+  code?: string;
+  aliases?: string[];
+  summary?: string | null;
+  metadata?: DossierMetadataItem[];
+  relationships?: DossierRelationshipSection[];
+  primarySource?: { title: string } | null;
+  schemaType?: string;
+  schemaData?: Record<string, any>;
+  breadcrumbs?: Array<{ label: string; href?: string; current?: boolean }>;
+  backRoute?: string;
+  backLabel?: string;
+  description?: string;
+}
+
+const {
+  id,
+  type,
+  name,
+  japaneseName = null,
+  status = null,
+  aliases = [],
+  summary,
+  metadata = [],
+  relationships = [],
+  primarySource,
+  schemaType = "article",
+  schemaData,
+  breadcrumbs = [
+    { label: type.toUpperCase() + "S", href: `/${type}s` },
+    { label: name, current: true },
+  ],
+  backRoute = `/${type}s`,
+  backLabel = `RETURN TO ${type.toUpperCase()} ARCHIVE`,
+  description,
+} = Astro.props as Props;
+
+const pageTitle = `${name} — Survey Corps Archives`;
+const pageDescription =
+  description ||
+  summary ||
+  `Classified archival record for ${name} (${type}) in the Survey Corps historical archives.`;
+
+const defaultSchema = {
+  "@context": "https://schema.org",
+  "@type": type === "person" ? "Person" : "Article",
+  name,
+  alternateName: japaneseName || undefined,
+  description: pageDescription,
+};
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  type={schemaType}
+  schemaData={schemaData || defaultSchema}
+>
+  <Container size="sm" as="main" id="main-content">
+    <ArchiveBreadcrumbs items={breadcrumbs} />
+
+    <EntityHeader
+      id={id}
+      name={name}
+      japaneseName={japaneseName ?? null}
+      status={status ?? null}
+      aliases={aliases}
+    />
+
+    <div class="space-y-16">
+      <!-- Entity Metadata Grid -->
+      {metadata.length > 0 && <EntityMetadata items={metadata} columns={4} />}
+
+      <!-- Summary / Historical Description -->
+      {summary && <EntitySummary text={summary} />}
+
+      <slot />
+
+      {
+        relationships.map(
+          (section) =>
+            section.items.length > 0 && (
+              <EntityRelationshipList
+                title={section.title}
+                items={section.items}
+                layout={section.layout || "grid"}
+              />
+            ),
+        )
+      }
+      {primarySource && <EntityProvenance sourceTitle={primarySource.title} />}
+
+      <footer
+        class="border-archive-800/80 mt-16 flex items-center justify-between border-t pt-10"
+      >
+        <a
+          href={backRoute}
+          class="tracking-military text-archive-500 hover:text-paper-100 focus-visible:ring-brass-600/50 inline-flex items-center gap-2 rounded-xs py-2 font-mono text-xs uppercase transition-colors focus:outline-none focus-visible:ring-2"
+        >
+          <ArrowLeft class="h-4 w-4" aria-hidden="true" />
+          <span>{backLabel}</span>
+        </a>
+
+        <span
+          class="text-archive-600 font-mono text-[10px] tracking-widest uppercase"
+        >
+          RECORD: {id}
+        </span>
+      </footer>
+    </div>
+  </Container>
+</BaseLayout>

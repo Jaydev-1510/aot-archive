@@ -1,0 +1,30 @@
+---
+interface ClassificationItem {
+  label: string;
+  value: string;
+  capitalize?: boolean;
+}
+
+interface Props {
+  items: ClassificationItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="grid grid-cols-2 gap-8 sm:grid-cols-4">
+  {
+    items.map((item) => (
+      <div class="space-y-1">
+        <span class="tracking-classified text-archive-500 block text-[10px] uppercase">
+          {item.label}
+        </span>
+        <span
+          class={`text-paper-200 text-sm ${item.capitalize ? "capitalize" : ""}`}
+        >
+          {item.value}
+        </span>
+      </div>
+    ))
+  }
+</section>

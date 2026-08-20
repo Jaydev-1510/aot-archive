@@ -1,0 +1,13 @@
+---
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+<section class="border-archive-800/30 border-t border-l pt-6 pl-6">
+  <p class="text-paper-200 text-lg leading-relaxed">
+    {text}
+  </p>
+</section>

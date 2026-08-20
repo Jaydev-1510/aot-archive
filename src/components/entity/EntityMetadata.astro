@@ -1,0 +1,44 @@
+---
+import MetadataRow from "../ui/MetadataRow.astro";
+
+interface MetadataEntry {
+  label: string;
+  value?: string | number | null;
+  capitalize?: boolean;
+}
+
+interface Props {
+  items: MetadataEntry[];
+  columns?: 2 | 3 | 4;
+  class?: string;
+}
+
+const { items, columns = 4, class: className = "" } = Astro.props as Props;
+
+const colClasses: Record<number, string> = {
+  2: "grid-cols-1 sm:grid-cols-2",
+  3: "grid-cols-1 sm:grid-cols-2 sm:grid-cols-3",
+  4: "grid-cols-2 sm:grid-cols-4",
+};
+
+const validItems = items.filter(
+  (item) =>
+    item.value !== undefined && item.value !== null && item.value !== "",
+);
+---
+
+{
+  validItems.length > 0 && (
+    <div
+      class={`grid gap-6 ${colClasses[columns] || colClasses[4]} ${className}`}
+    >
+      {validItems.map((item) => (
+        <MetadataRow
+          label={item.label}
+          value={item.value}
+          capitalize={item.capitalize}
+        />
+      ))}
+    </div>
+  )
+}
