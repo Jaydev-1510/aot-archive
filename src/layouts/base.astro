@@ -2,6 +2,24 @@
 import { Font } from "astro:assets";
 import "@/styles/global.css";
 import Navbar from "@/components/navbar.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+  image?: string;
+  type?: string;
+  schemaData?: Record<string, any>;
+}
+
+const {
+  title = "Attack on Titan Archive",
+  description = "A classified Survey Corps historical archive recovered from a military records facility.",
+  canonical = Astro.url.href,
+  image = "/banner.png",
+  type = "website",
+  schemaData,
+} = Astro.props;
 ---
 
 <html lang="en">
@@ -9,13 +27,45 @@ import Navbar from "@/components/navbar.astro";
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <Font cssVariable="--font-titan" />
-    <Font cssVariable="--font-shippori" />
+    <Font cssVariable="--font-titan" preload />
+    <Font cssVariable="--font-shippori" preload />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Attack on Titan Archive</title>
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:url" content={canonical} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    {canonical && <link rel="canonical" href={canonical} />}
+
+    <meta name="robots" content="index, follow" />
+    {
+      schemaData && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(schemaData)}
+        />
+      )
+    }
   </head>
   <body class="min-h-dvh">
+    <a
+      href="#main-content"
+      class="focus:border-brass-500 focus:bg-archive-950 focus:text-paper-50 focus:tracking-military focus:ring-brass-500 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-110 focus:border focus:px-4 focus:py-2 focus:font-sans focus:text-sm focus:uppercase focus:ring-2 focus:outline-none"
+    >
+      Skip to main content
+    </a>
     <Navbar />
     <slot />
   </body>
