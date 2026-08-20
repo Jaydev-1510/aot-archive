@@ -11,7 +11,7 @@
   --color-archive-800: #1d1d1a;
   --color-archive-700: #292925;
   --color-archive-600: #3a3a34;
-  --color-archive-500: #55554b;
+  --color-archive-500: #717165;
 
   --color-paper-50: #f4f1e8;
   --color-paper-100: #e8e4d8;
@@ -106,6 +106,17 @@
   ::selection {
     background: var(--color-brass-700);
     color: var(--color-paper-50);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
