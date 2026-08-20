@@ -1,0 +1,135 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getEventDetail } from "@/database/queries/entities";
+import EntityDossier, {
+  type DossierMetadataItem,
+  type DossierRelationshipSection,
+} from "@/components/entity/EntityDossier.astro";
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect("/404");
+
+let eventDetail = null;
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  eventDetail = await getEventDetail(db, id);
+}
+
+if (!eventDetail) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { event, primarySource, aliases, relationships } = eventDetail;
+
+const mapRel = (r: any) => ({
+  id: r.relatedEntity.id,
+  type: r.relatedEntity.entityType,
+  name: r.relatedEntityName,
+  predicate: r.predicate,
+});
+
+const relationshipSections: DossierRelationshipSection[] = [
+  {
+    title: "Participants & Key Personnel",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "person")
+      .map(mapRel),
+    layout: "grid",
+  },
+  {
+    title: "Involved Regiments & Factions",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "faction")
+      .map(mapRel),
+    layout: "blocks",
+  },
+  {
+    title: "Engagement Locations",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "location")
+      .map(mapRel),
+    layout: "grid",
+  },
+  {
+    title: "Associated Titans & Hardware",
+    items: relationships
+      .filter((r) => ["titan", "object"].includes(r.relatedEntity.entityType))
+      .map(mapRel),
+    layout: "grid",
+  },
+];
+
+const metadata: DossierMetadataItem[] = [];
+
+if (event.eventType) {
+  metadata.push({
+    label: "Event Type",
+    value: event.eventType,
+    capitalize: true,
+  });
+}
+if (event.yearStart !== null) {
+  metadata.push({
+    label: "Start Year",
+    value: `Year ${event.yearStart}`,
+  });
+}
+if (event.yearEnd !== null && event.yearEnd !== event.yearStart) {
+  metadata.push({
+    label: "End Year",
+    value: `Year ${event.yearEnd}`,
+  });
+}
+if (event.datePrecision) {
+  metadata.push({
+    label: "Chronological Precision",
+    value: event.datePrecision,
+    capitalize: true,
+  });
+}
+if (event.canonStatus) {
+  metadata.push({
+    label: "Canon Status",
+    value: event.canonStatus,
+    capitalize: true,
+  });
+}
+
+const breadcrumbs = [
+  { label: "EVENTS", href: "/events" },
+  { label: event.name, current: true },
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: event.name,
+  description:
+    event.summary ||
+    `${event.name} historical record in Survey Corps Archives.`,
+  startDate: event.yearStart ? String(event.yearStart) : undefined,
+  endDate: event.yearEnd ? String(event.yearEnd) : undefined,
+};
+---
+
+<EntityDossier
+  id={event.id}
+  type="event"
+  name={event.name}
+  japaneseName={null}
+  status={null}
+  aliases={aliases.map((a) => a.alias)}
+  summary={event.summary}
+  metadata={metadata}
+  relationships={relationshipSections}
+  primarySource={primarySource}
+  schemaType="article"
+  schemaData={schemaData}
+  breadcrumbs={breadcrumbs}
+  backRoute="/events"
+  backLabel="RETURN TO EVENTS CHRONICLE"
+/>

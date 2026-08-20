@@ -1,0 +1,86 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getEvents } from "@/database/queries/entities";
+import ArchiveIndex, {
+  type FilterConfig,
+  type SortOption,
+} from "@/components/archive/ArchiveIndex.astro";
+
+const url = new URL(Astro.request.url);
+const q = url.searchParams.get("q") || "";
+const eventType = url.searchParams.get("type") || "all";
+const sort = (url.searchParams.get("sort") as "year" | "name" | "id") || "year";
+const order = (url.searchParams.get("order") as "asc" | "desc") || "asc";
+const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+const pageSize = 48;
+const offset = (page - 1) * pageSize;
+
+let items: any[] = [];
+let total = 0;
+
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  const res = await getEvents(db, {
+    search: q,
+    eventType: eventType !== "all" ? eventType : undefined,
+    sort,
+    order,
+    limit: pageSize,
+    offset,
+  });
+  items = res.items;
+  total = res.total;
+}
+
+const filters: FilterConfig[] = [
+  {
+    key: "type",
+    label: "Event Type",
+    currentValue: eventType,
+    options: [
+      { value: "war", label: "War" },
+      { value: "battle", label: "Battle" },
+      { value: "expedition", label: "Expedition" },
+      { value: "political", label: "Political" },
+      { value: "disaster", label: "Disaster" },
+      { value: "other", label: "Other" },
+    ],
+  },
+];
+
+const sortOptions: SortOption[] = [
+  { value: "year", label: "Chronological Year" },
+  { value: "name", label: "Event Name" },
+  { value: "id", label: "Record ID" },
+];
+
+
+const cardItems = items.map((e) => ({
+  id: e.id,
+  type: "event",
+  name: e.name,
+  subtitle: e.yearStart
+    ? `YEAR ${e.yearStart}${e.yearEnd && e.yearEnd !== e.yearStart ? `–${e.yearEnd}` : ""} · ${e.eventType || "EVENT"}`
+    : (e.eventType || "HISTORICAL EVENT").toUpperCase(),
+  japaneseName: null,
+  status: null,
+  code: e.id.replace("event/", "").slice(0, 4).toUpperCase(),
+}));
+---
+
+<ArchiveIndex
+  title="Events"
+  designation="HISTORICAL CHRONICLE & MILITARY CAMPAIGN RECORDS"
+  description="Chronological archives of military engagements, Wall breaches, political coups, and global historical turning points."
+  baseRoute="/events"
+  items={cardItems}
+  totalCount={total}
+  filters={filters}
+  sortOptions={sortOptions}
+  currentSort={sort}
+  currentOrder={order}
+  currentQuery={q}
+  currentPage={page}
+  pageSize={pageSize}
+/>
