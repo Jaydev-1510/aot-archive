@@ -2,10 +2,15 @@ import { eq } from "drizzle-orm";
 import type { Database } from "../index";
 import { entities, relationshipTypes, relationships, sources } from "../schema";
 import type { EntityId, EntityRelationship } from "./types";
+import { getEntityNames } from "./entities";
 
 function resolveRelationship(
-  row: Omit<EntityRelationship, "direction" | "predicate">,
+  row: Omit<
+    EntityRelationship,
+    "direction" | "predicate" | "relatedEntityName"
+  >,
   direction: "outgoing" | "incoming",
+  nameMap: Map<string, string>,
 ): EntityRelationship {
   const { relationshipType } = row;
   const predicate =
@@ -13,7 +18,12 @@ function resolveRelationship(
       ? relationshipType.slug
       : (relationshipType.inverseSlug ?? relationshipType.slug);
 
-  return { ...row, direction, predicate };
+  return {
+    ...row,
+    direction,
+    predicate,
+    relatedEntityName: nameMap.get(row.relatedEntity.id) ?? "Unknown",
+  };
 }
 
 /**
@@ -57,9 +67,16 @@ export async function getRelationshipsForEntity(
       .where(eq(relationships.objectId, id)),
   ]);
 
+  const relatedIds = [
+    ...outgoing.map((r) => r.relatedEntity.id),
+    ...incoming.map((r) => r.relatedEntity.id),
+  ];
+
+  const nameMap = await getEntityNames(db, relatedIds);
+
   return [
-    ...outgoing.map((row) => resolveRelationship(row, "outgoing")),
-    ...incoming.map((row) => resolveRelationship(row, "incoming")),
+    ...outgoing.map((row) => resolveRelationship(row, "outgoing", nameMap)),
+    ...incoming.map((row) => resolveRelationship(row, "incoming", nameMap)),
   ].sort((left, right) => left.relationship.id - right.relationship.id);
 }
 

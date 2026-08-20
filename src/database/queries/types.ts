@@ -46,6 +46,8 @@ export interface EntityRelationship {
   /** Predicate as seen from the requested entity, after inverse resolution. */
   predicate: string;
   relatedEntity: EntityRecord;
+  /** The display name of the related entity, resolved across supertypes. */
+  relatedEntityName: string;
 }
 
 export interface TitanAbility {
@@ -55,6 +57,7 @@ export interface TitanAbility {
 
 export interface TitanHolder {
   holder: TitanHolderRecord;
+  titan: TitanRecord;
   person: PersonRecord;
   predecessor: PersonRecord | null;
   successor: PersonRecord | null;
@@ -112,4 +115,50 @@ export interface GraphEdge {
 export interface GraphResult {
   nodes: GraphNode[];
   edges: GraphEdge[];
+}
+
+export interface TitanDetail {
+  titan: TitanRecord;
+  aliases: AliasRecord[];
+  abilities: TitanAbility[];
+  holders: TitanHolder[];
+  currentHolder: TitanHolder | null;
+  relationships: EntityRelationship[];
+}
+
+export interface EventDetail {
+  event: EventRecord;
+  primarySource: SourceRecord | null;
+  aliases: AliasRecord[];
+  relationships: EntityRelationship[];
+}
+
+export interface LocationDetail {
+  location: LocationRecord;
+  parentLocation: LocationRecord | null;
+  aliases: AliasRecord[];
+  relationships: EntityRelationship[];
+}
+
+export interface FactionDetail {
+  faction: FactionRecord;
+  aliases: AliasRecord[];
+  relationships: EntityRelationship[];
+}
+
+export interface ObjectDetail {
+  object: ObjectRecord;
+  aliases: AliasRecord[];
+  relationships: EntityRelationship[];
+}
+
+export interface FamilyDetail {
+  family: FamilyRecord;
+  aliases: AliasRecord[];
+  relationships: EntityRelationship[];
+}
+
+export interface AbilityDetail {
+  ability: AbilityRecord;
+  titans: Array<{ titan: TitanRecord; notes: string | null }>;
 }
