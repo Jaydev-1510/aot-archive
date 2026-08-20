@@ -99,9 +99,12 @@ function isActive(href: string) {
 
     <div class="group/dropdown relative px-2">
       <button
+        id="history-menu-trigger"
         type="button"
         class="group focus-visible:ring-brass-600/50 text-paper-300 hover:text-paper-100 relative flex items-baseline gap-2 rounded-sm px-4 py-2 transition-colors focus:outline-none focus-visible:ring-2"
         aria-expanded="false"
+        aria-haspopup="true"
+        aria-controls="history-menu"
       >
         <span
           class="text-archive-500 group-hover:text-brass-600/70 font-mono text-xs tracking-widest transition-colors"
@@ -114,7 +117,9 @@ function isActive(href: string) {
       </button>
 
       <div
-        class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 translate-y-2 pt-4 opacity-0 transition-all duration-300 group-hover/dropdown:pointer-events-auto group-hover/dropdown:translate-y-0 group-hover/dropdown:opacity-100 motion-reduce:transition-none"
+        id="history-menu"
+        role="menu"
+        class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 translate-y-2 pt-4 opacity-0 transition-all duration-300 group-focus-within/dropdown:pointer-events-auto group-focus-within/dropdown:translate-y-0 group-focus-within/dropdown:opacity-100 group-hover/dropdown:pointer-events-auto group-hover/dropdown:translate-y-0 group-hover/dropdown:opacity-100 motion-reduce:transition-none"
       >
         <div
           class="border-archive-800 bg-archive-950 shadow-heavy before:bg-brass-600/50 relative w-56 border p-2 before:absolute before:-top-px before:left-1/2 before:h-px before:w-8 before:-translate-x-1/2"
@@ -129,6 +134,7 @@ function isActive(href: string) {
               historyItems.map((item) => (
                 <a
                   href={item.href}
+                  role="menuitem"
                   class="tracking-military text-paper-300 hover:text-paper-50 hover:bg-archive-900/50 focus-visible:ring-brass-600/50 rounded-sm px-3 py-2 text-[11px] uppercase transition-colors focus:outline-none focus-visible:ring-1"
                 >
                   {item.label}
@@ -142,9 +148,12 @@ function isActive(href: string) {
 
     <div class="group/dropdown relative px-2">
       <button
+        id="world-menu-trigger"
         type="button"
         class="group focus-visible:ring-brass-600/50 text-paper-300 hover:text-paper-100 relative flex items-baseline gap-2 rounded-sm px-4 py-2 transition-colors focus:outline-none focus-visible:ring-2"
         aria-expanded="false"
+        aria-haspopup="true"
+        aria-controls="world-menu"
       >
         <span
           class="text-archive-500 group-hover:text-brass-600/70 font-mono text-xs tracking-widest transition-colors"
@@ -157,7 +166,9 @@ function isActive(href: string) {
       </button>
 
       <div
-        class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 translate-y-2 pt-4 opacity-0 transition-all duration-300 group-hover/dropdown:pointer-events-auto group-hover/dropdown:translate-y-0 group-hover/dropdown:opacity-100 motion-reduce:transition-none"
+        id="world-menu"
+        role="menu"
+        class="pointer-events-none absolute top-full left-1/2 -translate-x-1/2 translate-y-2 pt-4 opacity-0 transition-all duration-300 group-focus-within/dropdown:pointer-events-auto group-focus-within/dropdown:translate-y-0 group-focus-within/dropdown:opacity-100 group-hover/dropdown:pointer-events-auto group-hover/dropdown:translate-y-0 group-hover/dropdown:opacity-100 motion-reduce:transition-none"
       >
         <div
           class="border-archive-800 bg-archive-950 shadow-heavy before:bg-brass-600/50 relative w-48 border p-2 before:absolute before:-top-px before:left-1/2 before:h-px before:w-8 before:-translate-x-1/2"
@@ -172,6 +183,7 @@ function isActive(href: string) {
               worldItems.map((item) => (
                 <a
                   href={item.href}
+                  role="menuitem"
                   class="tracking-military text-paper-300 hover:text-paper-50 hover:bg-archive-900/50 focus-visible:ring-brass-600/50 rounded-sm px-3 py-2 text-[11px] uppercase transition-colors focus:outline-none focus-visible:ring-1"
                 >
                   {item.label}
@@ -188,9 +200,10 @@ function isActive(href: string) {
     <button
       id="search-trigger"
       type="button"
-      class="group text-paper-300 hover:text-paper-100 focus-visible:ring-brass-600/50 flex items-center gap-3 rounded-sm transition-colors focus:outline-none focus-visible:ring-2"
+      class="group text-paper-300 hover:text-paper-100 focus-visible:ring-brass-600/50 flex min-h-11 items-center gap-3 rounded-sm p-2 transition-colors focus:outline-none focus-visible:ring-2"
       aria-label="Open Search"
       aria-haspopup="dialog"
+      aria-controls="search-dialog"
     >
       <span class="hidden items-center gap-2 md:flex">
         <span class="tracking-classified text-[10px] uppercase">Search</span>
@@ -200,7 +213,8 @@ function isActive(href: string) {
         >
       </span>
       <Search
-        size={16}
+        size={18}
+        aria-hidden="true"
         class="opacity-80 transition-opacity group-hover:opacity-100"
       />
     </button>
@@ -211,16 +225,16 @@ function isActive(href: string) {
     <button
       id="mobile-menu-trigger"
       type="button"
-      class="text-paper-300 hover:text-paper-100 focus-visible:ring-brass-600/50 rounded-sm p-1 transition-colors focus:outline-none focus-visible:ring-2 lg:hidden"
+      class="text-paper-300 hover:text-paper-100 focus-visible:ring-brass-600/50 flex min-h-11 min-w-11 items-center justify-center rounded-sm p-2 transition-colors focus:outline-none focus-visible:ring-2 lg:hidden"
       aria-label="Open Mobile Menu"
       aria-expanded="false"
       aria-controls="mobile-menu"
     >
-      <Menu />
+      <Menu aria-hidden="true" class="h-6 w-6" />
     </button>
   </div>
   <div
-    class="via-brass-600/30 absolute inset-x-0 top-18 h-px bg-linear-to-r from-transparent to-transparent"
+    class="via-brass-600/30 absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent to-transparent"
   >
   </div>
 </nav>
@@ -235,6 +249,7 @@ function isActive(href: string) {
   <div
     class="bg-archive-black/80 absolute inset-0 backdrop-blur-sm transition-opacity"
     id="search-backdrop"
+    aria-hidden="true"
   >
   </div>
 
@@ -248,20 +263,28 @@ function isActive(href: string) {
     </div>
 
     <div class="border-archive-800/50 flex items-center border-b px-6 py-4">
-      <Search class="text-archive-500 mr-4" />
+      <Search class="text-archive-500 mr-4 shrink-0" aria-hidden="true" />
       <input
         type="text"
         id="search-input"
-        class="text-paper-50 placeholder:text-archive-600 flex-1 border-none bg-transparent font-sans text-lg focus:outline-none"
+        role="combobox"
+        aria-autocomplete="list"
+        aria-controls="search-results-list"
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        aria-label="Query archive index"
+        class="text-paper-50 placeholder:text-archive-600 focus-visible:ring-brass-600/50 flex-1 border-none bg-transparent font-sans text-lg focus:outline-none"
         placeholder="Query archive index..."
         autocomplete="off"
       />
-      <kbd
+      <button
         id="search-close"
-        class="text-archive-500 hover:text-paper-100 tracking-classified border-archive-800 focus-visible:ring-brass-600/50 rounded-sm border px-2 py-1 text-[11px] uppercase transition-colors focus:outline-none focus-visible:ring-2"
+        type="button"
+        aria-label="Close search dialog"
+        class="text-archive-500 hover:text-paper-100 tracking-classified border-archive-800 focus-visible:ring-brass-600/50 flex min-h-9 min-w-9 items-center justify-center rounded-sm border px-2.5 py-1 text-[11px] uppercase transition-colors focus:outline-none focus-visible:ring-2"
       >
         Esc
-      </kbd>
+      </button>
     </div>
 
     <div
@@ -272,15 +295,17 @@ function isActive(href: string) {
         id="search-empty-state"
         class="text-archive-500 mt-8 flex h-full flex-col items-center justify-center space-y-4 text-center"
       >
-        <Search class="mb-2 opacity-100" />
+        <Search class="mb-2 opacity-100" aria-hidden="true" />
         <p class="tracking-military text-[10px] uppercase">Awaiting Query</p>
       </div>
       <div
         id="search-loading-state"
         class="text-archive-500 mt-8 flex hidden h-full flex-col items-center justify-center space-y-4 text-center"
+        aria-live="polite"
       >
         <div
           class="border-archive-700 border-t-archive-500 mb-2 h-4 w-4 animate-spin rounded-full border-2"
+          aria-hidden="true"
         >
         </div>
         <p class="tracking-military text-[10px] uppercase">
@@ -290,6 +315,7 @@ function isActive(href: string) {
       <div
         id="search-no-results"
         class="text-archive-500 mt-8 flex hidden h-full flex-col items-center justify-center space-y-4 text-center"
+        aria-live="polite"
       >
         <p class="tracking-military text-[10px] uppercase">No Records Found</p>
       </div>
@@ -297,6 +323,7 @@ function isActive(href: string) {
         id="search-results-list"
         class="flex hidden flex-col gap-1"
         role="listbox"
+        aria-label="Search results"
       >
       </ul>
     </div>
@@ -319,8 +346,47 @@ function isActive(href: string) {
   role="dialog"
   aria-modal="true"
   aria-label="Mobile Navigation"
-  class="bg-archive-950 pointer-events-none fixed inset-0 z-60 opacity-0 transition-opacity duration-300 lg:hidden"
+  class="bg-archive-950 pointer-events-none fixed inset-0 z-80 opacity-0 transition-opacity duration-300 lg:hidden"
 >
+  <div
+    class="border-archive-800/50 bg-archive-950 absolute inset-x-0 top-0 z-10 flex items-center justify-between border-b px-5 py-4 sm:px-8"
+  >
+    <div class="flex items-center gap-4">
+      <div
+        class="border-archive-700/60 bg-archive-900/40 shadow-inset flex h-10 w-10 items-center justify-center border"
+      >
+        <img
+          src={SurveyCorpsLogo.src}
+          alt=""
+          aria-hidden="true"
+          class="h-9 w-9 opacity-60"
+        />
+      </div>
+      <span class="text-archive-500 font-serif text-2xl leading-none"
+        >AoT Archives</span
+      >
+    </div>
+    <button
+      id="mobile-menu-close"
+      type="button"
+      class="text-paper-300 hover:text-paper-100 focus-visible:ring-brass-600/50 flex min-h-11 min-w-11 items-center justify-center rounded-sm p-2 transition-colors focus:outline-none focus-visible:ring-2"
+      aria-label="Close Mobile Menu"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        ><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg
+      >
+    </button>
+  </div>
   <div
     class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.02)_0%,transparent_60%)]"
   >
@@ -335,17 +401,31 @@ function isActive(href: string) {
       </p>
       <div class="flex flex-col gap-3">
         {
-          primaryNav.map((item) => (
-            <a
-              href={item.href}
-              class="group text-paper-300 hover:text-paper-50 flex items-baseline gap-4 font-serif text-2xl transition-colors"
-            >
-              <span class="text-archive-600 group-hover:text-brass-600/70 font-mono text-xs tracking-widest transition-colors">
-                {item.number}
-              </span>
-              <span>{item.label}</span>
-            </a>
-          ))
+          primaryNav.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <a
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                class={`group flex items-baseline gap-4 font-serif text-2xl transition-colors ${
+                  active
+                    ? "text-paper-50"
+                    : "text-paper-300 hover:text-paper-50"
+                }`}
+              >
+                <span
+                  class={`font-mono text-xs tracking-widest transition-colors ${
+                    active
+                      ? "text-brass-600"
+                      : "text-archive-600 group-hover:text-brass-600/70"
+                  }`}
+                >
+                  {item.number}
+                </span>
+                <span>{item.label}</span>
+              </a>
+            );
+          })
         }
       </div>
     </div>
@@ -359,14 +439,22 @@ function isActive(href: string) {
         </p>
         <div class="flex flex-col gap-4">
           {
-            historyItems.map((item) => (
-              <a
-                href={item.href}
-                class="tracking-military text-paper-300 hover:text-paper-100 text-[11px] uppercase transition-colors"
-              >
-                {item.label}
-              </a>
-            ))
+            historyItems.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <a
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  class={`tracking-military text-[11px] uppercase transition-colors ${
+                    active
+                      ? "text-paper-50"
+                      : "text-paper-300 hover:text-paper-100"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })
           }
         </div>
       </div>
@@ -378,14 +466,22 @@ function isActive(href: string) {
         </p>
         <div class="flex flex-col gap-4">
           {
-            worldItems.map((item) => (
-              <a
-                href={item.href}
-                class="tracking-military text-paper-300 hover:text-paper-100 text-[11px] uppercase transition-colors"
-              >
-                {item.label}
-              </a>
-            ))
+            worldItems.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <a
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  class={`tracking-military text-[11px] uppercase transition-colors ${
+                    active
+                      ? "text-paper-50"
+                      : "text-paper-300 hover:text-paper-100"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })
           }
         </div>
       </div>
@@ -395,14 +491,16 @@ function isActive(href: string) {
       class="border-archive-800/50 flex items-center justify-between border-t pt-8"
     >
       <span
-        class="tracking-classified text-archive-500 text-xs uppercase transition-colors duration-700 hover:text-zinc-200"
+        class="tracking-classified text-archive-500 hover:text-paper-100 text-xs uppercase transition-colors duration-700"
         >Survey Corps Records</span
       >
     </div>
   </div>
 </div>
-<!-- line not found -->
+
 <script>
+  import { getEntityRoute } from "@/utils/routing";
+
   const nav = document.getElementById("global-nav");
   const navBg = document.getElementById("nav-bg");
   const searchTrigger = document.getElementById("search-trigger");
@@ -413,6 +511,7 @@ function isActive(href: string) {
   const searchClose = document.getElementById("search-close");
   const mobileMenuTrigger = document.getElementById("mobile-menu-trigger");
   const mobileMenu = document.getElementById("mobile-menu");
+  const mobileMenuClose = document.getElementById("mobile-menu-close");
 
   let isSearchOpen = false;
   let isMobileMenuOpen = false;
@@ -435,6 +534,32 @@ function isActive(href: string) {
     );
   }
 
+  function trapFocus(container: HTMLElement | null, event: KeyboardEvent) {
+    if (!container) return;
+    const focusables = container.querySelectorAll<HTMLElement>(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+    );
+    const visibleFocusables = Array.from(focusables).filter(
+      (el) => !el.hasAttribute("disabled") && el.offsetParent !== null,
+    );
+    if (visibleFocusables.length === 0) return;
+
+    const first = visibleFocusables[0];
+    const last = visibleFocusables[visibleFocusables.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      }
+    } else {
+      if (document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
   function handleScroll() {
     if (window.scrollY > 20) {
       navBg?.classList.remove("opacity-0");
@@ -450,11 +575,25 @@ function isActive(href: string) {
   window.addEventListener("scroll", handleScroll, { passive: true });
   handleScroll();
 
+  const historyTrigger = document.getElementById("history-menu-trigger");
+  const worldTrigger = document.getElementById("world-menu-trigger");
+
+  historyTrigger?.addEventListener("click", () => {
+    const isExpanded = historyTrigger.getAttribute("aria-expanded") === "true";
+    historyTrigger.setAttribute("aria-expanded", String(!isExpanded));
+  });
+
+  worldTrigger?.addEventListener("click", () => {
+    const isExpanded = worldTrigger.getAttribute("aria-expanded") === "true";
+    worldTrigger.setAttribute("aria-expanded", String(!isExpanded));
+  });
+
   function openSearch() {
     isSearchOpen = true;
     searchDialog?.classList.remove("opacity-0", "pointer-events-none");
     searchPanel?.classList.remove("scale-200");
     searchPanel?.classList.remove("opacity-0");
+    searchTrigger?.setAttribute("aria-expanded", "true");
     setTimeout(() => searchInput?.focus(), 50);
     document.body.style.overflow = "hidden";
   }
@@ -464,7 +603,11 @@ function isActive(href: string) {
     searchDialog?.classList.add("opacity-0", "pointer-events-none");
     searchPanel?.classList.add("scale-200");
     searchPanel?.classList.add("opacity-0");
+    searchTrigger?.setAttribute("aria-expanded", "false");
+    searchInput?.setAttribute("aria-expanded", "false");
+    searchInput?.removeAttribute("aria-activedescendant");
     document.body.style.overflow = "";
+    searchTrigger?.focus();
   }
 
   searchTrigger?.addEventListener("click", openSearch);
@@ -472,6 +615,12 @@ function isActive(href: string) {
   searchBackdrop?.addEventListener("click", closeSearch);
 
   document.addEventListener("keydown", (e) => {
+    if (isSearchOpen && e.key === "Tab") {
+      trapFocus(searchDialog, e);
+    }
+    if (isMobileMenuOpen && e.key === "Tab") {
+      trapFocus(mobileMenu, e);
+    }
     if ((e.metaKey || e.ctrlKey) && e.key === "k") {
       e.preventDefault();
       isSearchOpen ? closeSearch() : openSearch();
@@ -495,12 +644,8 @@ function isActive(href: string) {
     if (isMobileMenuOpen) {
       mobileMenu?.classList.remove("opacity-0", "pointer-events-none");
       mobileMenuTrigger?.setAttribute("aria-expanded", "true");
-
-      if (mobileMenuTrigger) {
-        mobileMenuTrigger.innerHTML =
-          '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x-icon lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>';
-      }
       document.body.style.overflow = "hidden";
+      setTimeout(() => mobileMenuClose?.focus(), 50);
     } else {
       closeMobileMenu();
     }
@@ -510,15 +655,12 @@ function isActive(href: string) {
     isMobileMenuOpen = false;
     mobileMenu?.classList.add("opacity-0", "pointer-events-none");
     mobileMenuTrigger?.setAttribute("aria-expanded", "false");
-
-    if (mobileMenuTrigger) {
-      mobileMenuTrigger.innerHTML =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>';
-    }
     document.body.style.overflow = "";
+    mobileMenuTrigger?.focus();
   }
 
   mobileMenuTrigger?.addEventListener("click", toggleMobileMenu);
+  mobileMenuClose?.addEventListener("click", closeMobileMenu);
 
   const searchResultsList = document.getElementById("search-results-list");
   const searchEmptyState = document.getElementById("search-empty-state");
@@ -533,28 +675,21 @@ function isActive(href: string) {
     searchNoResults?.classList.add("hidden");
     searchResultsList?.classList.add("hidden");
 
-    if (state === "empty") searchEmptyState?.classList.remove("hidden");
-    else if (state === "loading")
+    if (state === "empty") {
+      searchEmptyState?.classList.remove("hidden");
+      searchInput?.setAttribute("aria-expanded", "false");
+      searchInput?.removeAttribute("aria-activedescendant");
+    } else if (state === "loading") {
       searchLoadingState?.classList.remove("hidden");
-    else if (state === "no-results")
+      searchInput?.setAttribute("aria-expanded", "false");
+      searchInput?.removeAttribute("aria-activedescendant");
+    } else if (state === "no-results") {
       searchNoResults?.classList.remove("hidden");
-    else if (state === "results") searchResultsList?.classList.remove("hidden");
-  }
-
-  function getEntityRoute(type: string, id: string) {
-    switch (type) {
-      case "person":
-        return `/people/${id}`;
-      case "titan":
-        return `/titans/${id}`;
-      case "event":
-        return `/events/${id}`;
-      case "location":
-        return `/locations/${id}`;
-      case "faction":
-        return `/factions/${id}`;
-      default:
-        return `/${type}s/${id}`;
+      searchInput?.setAttribute("aria-expanded", "false");
+      searchInput?.removeAttribute("aria-activedescendant");
+    } else if (state === "results") {
+      searchResultsList?.classList.remove("hidden");
+      searchInput?.setAttribute("aria-expanded", "true");
     }
   }
 
@@ -580,8 +715,8 @@ function isActive(href: string) {
         if (searchResultsList) {
           searchResultsList.innerHTML = results
             .map(
-              (result: any) => `
-            <li role="option" aria-selected="false" class="search-result-item group flex items-center justify-between p-3 border border-transparent hover:border-archive-700/50 hover:bg-archive-900/40 rounded-sm cursor-pointer transition-colors" data-href="${getEntityRoute(result.entityType, result.entityId)}">
+              (result: any, index: number) => `
+            <li id="search-result-${index}" role="option" aria-selected="false" tabindex="-1" class="search-result-item group flex items-center justify-between p-3 border border-transparent hover:border-archive-700/50 hover:bg-archive-900/40 rounded-sm cursor-pointer transition-colors" data-href="${getEntityRoute(result.entityType, result.entityId)}">
               <span class="font-serif text-2xl text-paper-200 group-hover:text-paper-50 transition-colors pointer-events-none">${result.name}</span>
               <span class="text-[9px] tracking-classified uppercase text-archive-500 group-hover:text-paper-300 transition-colors pointer-events-none">${result.entityType}</span>
             </li>
@@ -637,12 +772,11 @@ function isActive(href: string) {
           (currentSelectedIndex - 1 + items.length) % items.length;
       }
 
-      items[currentSelectedIndex].classList.add(
-        "bg-archive-900/60",
-        "border-archive-700",
-      );
-      items[currentSelectedIndex].setAttribute("aria-selected", "true");
-      items[currentSelectedIndex].scrollIntoView({ block: "nearest" });
+      const activeItem = items[currentSelectedIndex] as HTMLElement;
+      activeItem.classList.add("bg-archive-900/60", "border-archive-700");
+      activeItem.setAttribute("aria-selected", "true");
+      activeItem.scrollIntoView({ block: "nearest" });
+      input.setAttribute("aria-activedescendant", activeItem.id);
     }
   });
 
