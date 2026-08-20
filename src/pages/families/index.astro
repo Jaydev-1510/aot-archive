@@ -1,0 +1,77 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getFamilies } from "@/database/queries/entities";
+import ArchiveIndex, {
+  type FilterConfig,
+  type SortOption,
+} from "@/components/archive/ArchiveIndex.astro";
+
+const url = new URL(Astro.request.url);
+const q = url.searchParams.get("q") || "";
+const royal = url.searchParams.get("royal") || "all";
+const sort = (url.searchParams.get("sort") as "name") || "name";
+const order = (url.searchParams.get("order") as "asc" | "desc") || "asc";
+const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10));
+const pageSize = 48;
+const offset = (page - 1) * pageSize;
+
+let items: any[] = [];
+let total = 0;
+
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  const isRoyal =
+    royal === "true" ? true : royal === "false" ? false : undefined;
+  const res = await getFamilies(db, {
+    search: q,
+    isRoyal,
+    sort,
+    order,
+    limit: pageSize,
+    offset,
+  });
+  items = res.items;
+  total = res.total;
+}
+
+const filters: FilterConfig[] = [
+  {
+    key: "royal",
+    label: "Bloodline",
+    currentValue: royal,
+    options: [
+      { value: "true", label: "Royal Bloodline" },
+      { value: "false", label: "Non-Royal Lineage" },
+    ],
+  },
+];
+
+const sortOptions: SortOption[] = [{ value: "name", label: "Family Name" }];
+
+const cardItems = items.map((f) => ({
+  id: f.id,
+  type: "family",
+  name: f.name,
+  subtitle: f.isRoyalBloodline ? "ROYAL BLOODLINE" : "NOBLE LINEAGE",
+  japaneseName: null,
+  status: null,
+  code: f.id.replace("family/", "").slice(0, 4).toUpperCase(),
+}));
+---
+
+<ArchiveIndex
+  title="Families"
+  designation="NOBLE HOUSES & GENEALOGICAL LINEAGES"
+  description="Historical gene records and ancestral lineages, including the royal Fritz/Reiss lineage, the Yeagers, and the Ackerman clan."
+  baseRoute="/families"
+  items={cardItems}
+  totalCount={total}
+  filters={filters}
+  sortOptions={sortOptions}
+  currentSort={sort}
+  currentOrder={order}
+  currentQuery={q}
+  currentPage={page}
+  pageSize={pageSize}
+/>

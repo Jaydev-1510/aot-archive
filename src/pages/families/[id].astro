@@ -1,0 +1,97 @@
+---
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import { getFamilyDetail } from "@/database/queries/entities";
+import EntityDossier, {
+  type DossierMetadataItem,
+  type DossierRelationshipSection,
+} from "@/components/entity/EntityDossier.astro";
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect("/404");
+
+let familyDetail = null;
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  familyDetail = await getFamilyDetail(db, id);
+}
+
+if (!familyDetail) {
+  return new Response(null, {
+    status: 404,
+    statusText: "Not found",
+  });
+}
+
+const { family, aliases, relationships } = familyDetail;
+
+const mapRel = (r: any) => ({
+  id: r.relatedEntity.id,
+  type: r.relatedEntity.entityType,
+  name: r.relatedEntityName,
+  predicate: r.predicate,
+});
+
+const relationshipSections: DossierRelationshipSection[] = [
+  {
+    title: "Documented Family Members & Descendants",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "person")
+      .map(mapRel),
+    layout: "grid",
+  },
+  {
+    title: "Associated Lineage Factions",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "faction")
+      .map(mapRel),
+    layout: "blocks",
+  },
+  {
+    title: "Ancestral Seats & Territories",
+    items: relationships
+      .filter((r) => r.relatedEntity.entityType === "location")
+      .map(mapRel),
+    layout: "grid",
+  },
+];
+
+const metadata: DossierMetadataItem[] = [
+  {
+    label: "Lineage Classification",
+    value: family.isRoyalBloodline ? "Royal Bloodline" : "Noble Clan",
+    capitalize: true,
+  },
+];
+
+const breadcrumbs = [
+  { label: "FAMILIES", href: "/families" },
+  { label: family.name, current: true },
+];
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: family.name,
+  description:
+    family.description ||
+    `${family.name} genealogical record in Survey Corps Archives.`,
+};
+---
+
+<EntityDossier
+  id={family.id}
+  type="family"
+  name={family.name}
+  japaneseName={null}
+  status={null}
+  aliases={aliases.map((a) => a.alias)}
+  summary={family.description}
+  metadata={metadata}
+  relationships={relationshipSections}
+  schemaType="article"
+  schemaData={schemaData}
+  breadcrumbs={breadcrumbs}
+  backRoute="/families"
+  backLabel="RETURN TO FAMILIES ARCHIVE"
+/>
