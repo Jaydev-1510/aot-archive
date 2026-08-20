@@ -1,0 +1,27 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import Container from "@/components/ui/Container.astro";
+import ErrorState from "@/components/ui/ErrorState.astro";
+
+export const prerender = true;
+---
+
+<BaseLayout
+  title="Record Not Found — Survey Corps Archives"
+  description="The requested archival document does not exist in the active records."
+>
+  <Container
+    size="sm"
+    as="main"
+    id="main-content"
+    class="flex min-h-dvh items-center justify-center"
+  >
+    <ErrorState
+      code="404"
+      title="ARCHIVAL RECORD NOT FOUND"
+      message="The requested document does not exist in the current survey corps archive. Access may be restricted or the record redacted."
+      actionHref="/"
+      actionLabel="RETURN TO ARCHIVE"
+    />
+  </Container>
+</BaseLayout>
