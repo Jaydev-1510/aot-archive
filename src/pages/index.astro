@@ -15,7 +15,7 @@ export const prerender = true;
     aria-modal="true"
     aria-labelledby="archive-title"
     aria-describedby="archive-description"
-    class="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-[#050505]/95 px-4 py-8 opacity-0 backdrop-blur-md"
+    class="bg-archive-black/95 fixed inset-0 z-50 flex items-center justify-center overflow-y-auto px-4 py-8 opacity-0 backdrop-blur-md"
   >
     <div
       aria-hidden="true"
@@ -24,11 +24,11 @@ export const prerender = true;
     </div>
 
     <section
-      class="relative w-full max-w-2xl overflow-hidden border border-stone-800 bg-[#0b0908] shadow-[0_25px_80px_rgba(0,0,0,0.7)]"
+      class="border-archive-800 bg-archive-950 relative w-full max-w-2xl overflow-hidden border shadow-[0_25px_80px_rgba(0,0,0,0.7)]"
     >
       <div
         aria-hidden="true"
-        class="h-px w-full bg-linear-to-r from-transparent via-stone-500 to-transparent"
+        class="via-archive-500 h-px w-full bg-linear-to-r from-transparent to-transparent"
       >
       </div>
       <div
@@ -40,13 +40,13 @@ export const prerender = true;
         <header>
           <div class="flex items-center justify-between gap-4">
             <p
-              class="tracking-classified shrink-0 text-[11px] font-medium text-stone-500 uppercase"
+              class="tracking-classified text-archive-500 shrink-0 text-[11px] font-medium uppercase"
             >
               Survey Corps Archives
             </p>
-            <span class="h-px flex-1 bg-stone-800"></span>
+            <span class="bg-archive-800 h-px flex-1"></span>
             <p
-              class="hidden text-[9px] tracking-[0.3em] text-stone-700 uppercase transition-colors duration-700 hover:text-zinc-200 sm:block"
+              class="text-archive-600 hover:text-paper-100 hidden text-[9px] tracking-[0.3em] uppercase transition-colors duration-700 sm:block"
               aria-hidden="true"
             >
               ARCHIVE // 001
@@ -55,13 +55,13 @@ export const prerender = true;
 
           <h1
             id="archive-title"
-            class="mt-6 text-center font-serif text-4xl text-stone-100 sm:text-6xl"
+            class="text-paper-100 mt-6 text-center font-serif text-4xl sm:text-6xl"
           >
             Attack on Titan
           </h1>
 
           <p
-            class="mt-2 text-center text-lg tracking-wide text-stone-500 italic"
+            class="text-archive-500 mt-2 text-center text-lg tracking-wide italic"
             lang="ja"
           >
             進撃の巨人 アーカイブ
@@ -69,24 +69,24 @@ export const prerender = true;
         </header>
 
         <div aria-hidden="true" class="my-7 flex items-center gap-3">
-          <span class="h-px flex-1 bg-stone-800"></span>
+          <span class="bg-archive-800 h-px flex-1"></span>
 
           <span
-            class="text-[9px] tracking-[0.35em] text-stone-700 uppercase transition-colors duration-700 hover:text-zinc-200"
+            class="text-archive-600 hover:text-paper-100 text-[9px] tracking-[0.35em] uppercase transition-colors duration-700"
           >
             Classified Record
           </span>
 
-          <span class="h-px flex-1 bg-stone-800"></span>
+          <span class="bg-archive-800 h-px flex-1"></span>
         </div>
 
         <div
           id="archive-description"
-          class="space-y-4 text-sm leading-7 text-stone-400 sm:text-[15px]"
+          class="text-paper-300 space-y-4 text-sm leading-7 sm:text-[15px]"
         >
           <p>
             An archival reconstruction of the world of
-            <span class="text-stone-200"> Attack on Titan</span> — its people, bloodlines,
+            <span class="text-paper-200"> Attack on Titan</span> — its people, bloodlines,
             Titans, factions, events, locations, and history.
           </p>
 
@@ -98,18 +98,18 @@ export const prerender = true;
         </div>
 
         <aside
-          class="mt-7 border border-amber-900/30 bg-amber-950/10 px-4 py-4 backdrop-blur-2xl"
+          class="border-brass-900/30 bg-brass-950/10 mt-7 border px-4 py-4 backdrop-blur-2xl"
           aria-label="Audio experience notice"
         >
           <div>
             <div>
               <p
-                class="text-[12px] font-semibold tracking-[0.3em] text-amber-500 uppercase"
+                class="text-brass-500 text-[12px] font-semibold tracking-[0.3em] uppercase"
               >
                 Archive Notice
               </p>
 
-              <p class="mt-2 text-sm leading-6 text-stone-500">
+              <p class="text-archive-500 mt-2 text-sm leading-6">
                 The archive may begin with an atmospheric audio sequence.
                 Headphones are recommended. Sound can be enabled or disabled at
                 any time.
@@ -121,7 +121,7 @@ export const prerender = true;
         <button
           id="start-btn"
           type="button"
-          class="group mt-8 flex w-full items-center justify-center gap-2 border border-stone-600 bg-stone-100 px-5 py-3.5 text-xs font-semibold tracking-[0.3em] text-black uppercase transition-all duration-300 hover:border-stone-300 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-stone-300 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0908]"
+          class="group border-archive-600 bg-paper-100 hover:border-paper-300 hover:bg-paper-50 focus-visible:ring-paper-300 focus-visible:ring-offset-archive-950 mt-8 flex w-full items-center justify-center gap-2 border px-5 py-3.5 text-xs font-semibold tracking-[0.3em] text-black uppercase transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           <span>Enter the Archive</span>
 
@@ -131,12 +131,12 @@ export const prerender = true;
         </button>
 
         <footer
-          class="mt-6 flex flex-col gap-2 text-[9px] tracking-[0.25em] text-stone-700 uppercase sm:flex-row sm:items-center sm:justify-between"
+          class="text-archive-600 mt-6 flex flex-col gap-2 text-[9px] tracking-[0.25em] uppercase sm:flex-row sm:items-center sm:justify-between"
         >
-          <span class="transition-colors duration-700 hover:text-zinc-200"
+          <span class="hover:text-paper-100 transition-colors duration-700"
             >Survey Corps Intelligence Division</span
           >
-          <span class="transition-colors duration-700 hover:text-zinc-200"
+          <span class="hover:text-paper-100 transition-colors duration-700"
             >Records Reconstructed</span
           >
         </footer>
@@ -144,7 +144,7 @@ export const prerender = true;
 
       <div
         aria-hidden="true"
-        class="h-px w-full bg-linear-to-r from-transparent via-stone-700 to-transparent"
+        class="via-archive-700 h-px w-full bg-linear-to-r from-transparent to-transparent"
       >
       </div>
     </section>
@@ -158,38 +158,58 @@ export const prerender = true;
     class="absolute z-40 my-auto h-auto w-screen opacity-0"></video>
   <audio id="openingSong" src={openingSong} preload="auto"></audio>
   <main
-    id="hero"
-    class="relative z-40 flex min-h-dvh items-center justify-center bg-cover bg-center opacity-0"
+    id="main-content"
+    class="relative z-40 flex min-h-dvh items-center justify-center bg-cover bg-center px-4 opacity-0"
   >
-    <div class="text-paper-200 w-fit">
-      <h1 class="font-serif text-4xl whitespace-nowrap sm:text-7xl">
+    <div class="text-paper-200 mx-auto w-full max-w-4xl text-center">
+      <h1 class="font-serif text-3xl sm:text-5xl md:text-7xl">
         Attack on Titan Archives
       </h1>
-      <div class="flex items-center gap-5">
-        <div class="h-px flex-1 bg-white"></div>
-        <h2 class="text-md font-sans whitespace-nowrap sm:text-2xl">
-          進撃の巨人 アーカイブ
-        </h2>
-        <div class="h-px flex-1 bg-white"></div>
+      <div class="mt-4 flex items-center justify-center gap-5">
+        <div class="h-px max-w-24 flex-1 bg-white/40"></div>
+        <h2 class="font-sans text-sm sm:text-2xl">進撃の巨人 アーカイブ</h2>
+        <div class="h-px max-w-24 flex-1 bg-white/40"></div>
       </div>
     </div>
   </main>
   <script>
     const modal = document.getElementById("intro-modal") as HTMLElement;
-    const hero = document.getElementById("hero") as HTMLElement;
+    const hero = document.getElementById("main-content") as HTMLElement;
     const button = document.getElementById("start-btn") as HTMLButtonElement;
     const video = document.getElementById("openingVideo") as HTMLVideoElement;
     const music = document.getElementById("openingSong") as HTMLAudioElement;
 
-    if (localStorage.getItem("aot-intro-seen")) {
-      modal.remove();
-      hero.classList.add("fade-in");
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (localStorage.getItem("aot-intro-seen") || prefersReducedMotion) {
+      modal?.remove();
+      hero?.classList.add("fade-in");
       document.dispatchEvent(new CustomEvent("archive-sequence-complete"));
     } else {
-      modal.classList.add("fade-in");
-      button.addEventListener("click", async () => {
+      modal?.classList.add("fade-in");
+      button?.focus();
+
+      // Focus trap within modal
+      modal?.addEventListener("keydown", (e) => {
+        if (e.key === "Tab") {
+          e.preventDefault();
+          button?.focus();
+        }
+      });
+
+      button?.addEventListener("click", async () => {
         localStorage.setItem("aot-intro-seen", "1");
         button.disabled = true;
+
+        if (prefersReducedMotion) {
+          modal.remove();
+          hero.classList.add("fade-in");
+          document.dispatchEvent(new CustomEvent("archive-sequence-complete"));
+          return;
+        }
+
         video.currentTime = 0;
         music.currentTime = 0;
         video.muted = true;
