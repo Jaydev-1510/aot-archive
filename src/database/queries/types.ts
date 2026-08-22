@@ -92,7 +92,16 @@ export type TimelineEntry =
 
 export interface SearchResult {
   entityId: string;
-  entityType: "person" | "titan" | "event" | "location" | "faction";
+  entityType:
+    | "person"
+    | "titan"
+    | "event"
+    | "location"
+    | "faction"
+    | "object"
+    | "ability"
+    | "family";
+  summary?: string | null;
   name: string;
   /** Lower FTS5 BM25 scores rank before higher scores. */
   rank: number;
