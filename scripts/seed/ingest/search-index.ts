@@ -1,11 +1,3 @@
-/**
- * search_index — Phase 11 / Phase 8 FTS5 indexing statements.
- *
- * Appends full search index rebuild statements to the seed ingestion plan,
- * keeping the FTS5 virtual table synchronized with canonical people, titans,
- * events, locations, and factions, along with their consolidated aliases.
- */
-
 export function buildSearchIndexStatements(): string[] {
   return [
     `DELETE FROM search_index;`,
@@ -18,6 +10,9 @@ INNER JOIN (
   UNION ALL SELECT id, name, summary FROM events
   UNION ALL SELECT id, name, description AS summary FROM locations
   UNION ALL SELECT id, name, description AS summary FROM factions
+  UNION ALL SELECT id, name, description AS summary FROM objects
+  UNION ALL SELECT id, name, description AS summary FROM abilities
+  UNION ALL SELECT id, name, description AS summary FROM families
 ) AS record ON record.id = entities.id;`,
   ];
 }
