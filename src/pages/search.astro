@@ -2,19 +2,41 @@
 import BaseLayout from "@/layouts/base.astro";
 import { createDb } from "@/database";
 import { env } from "cloudflare:workers";
-import { searchArchive } from "@/database/queries/search";
-import { Search } from "@lucide/astro";
-import { getEntityRoute } from "@/utils/routing";
+import { searchArchive, type SearchFilterType } from "@/database/queries/search";
+import { Search, ChevronLeft, ChevronRight } from "@lucide/astro";
 
-const query = Astro.url.searchParams.get("q") || "";
+import Container from "@/components/ui/Container.astro";
+import ArchiveBreadcrumbs from "@/components/archive/ArchiveBreadcrumbs.astro";
+import ArchiveHeader from "@/components/archive/ArchiveHeader.astro";
+import EntityCard from "@/components/entity/EntityCard.astro";
+import EmptyState from "@/components/ui/EmptyState.astro";
+import ErrorState from "@/components/ui/ErrorState.astro";
+
+
+
+const url = new URL(Astro.request.url);
+const query = url.searchParams.get("q") || "";
+const rawType = url.searchParams.get("type") || "all";
+const validTypes = ["all", "people", "titans", "events", "locations", "factions", "objects", "abilities", "families"];
+const typeFilter = validTypes.includes(rawType) ? (rawType as SearchFilterType) : "all";
+
+const pageParam = url.searchParams.get("page");
+let page = pageParam ? parseInt(pageParam, 10) : 1;
+if (isNaN(page) || page < 1) page = 1;
+
+const LIMIT = 20;
+
 let results: any[] = [];
-let error = null;
+let total = 0;
+let error: string | null = null;
 
 if (query.trim().length > 0) {
   try {
     if (env && env.DB) {
       const db = createDb(env.DB);
-      results = await searchArchive(db, query, 50);
+      const res = await searchArchive(db, query, LIMIT, typeFilter, page);
+      results = res.results;
+      total = res.total;
     } else {
       error = "Search unavailable: Database binding missing.";
     }
@@ -24,16 +46,13 @@ if (query.trim().length > 0) {
   }
 }
 
-const groupedResults = results.reduce(
-  (acc, result) => {
-    if (!acc[result.entityType]) acc[result.entityType] = [];
-    acc[result.entityType].push(result);
-    return acc;
-  },
-  {} as Record<string, typeof results>,
-);
+const totalPages = Math.ceil(total / LIMIT);
 
-const typesOrder = ["person", "titan", "event", "location", "faction"];
+function getPageUrl(newPage: number) {
+  const newUrl = new URL(url.toString());
+  newUrl.searchParams.set("page", newPage.toString());
+  return newUrl.toString();
+}
 
 const pageTitle = query
   ? `Search: ${query} — Survey Corps Archives`
@@ -43,116 +62,163 @@ const pageDescription =
 ---
 
 <BaseLayout title={pageTitle} description={pageDescription}>
-  <main
-    id="main-content"
-    class="fade-in mx-auto min-h-dvh max-w-4xl px-6 pt-32 pb-24"
-  >
-    <header class="border-archive-800/50 mb-12 flex-col pb-8">
-      <h1
-        class="text-paper-200 animate-fade-in mb-10 text-center font-serif text-5xl sm:text-7xl md:text-8xl"
-      >
-        Archive Search
-      </h1>
-      <div
-        class="via-brass-600/50 inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent"
-        aria-hidden="true"
-      >
-      </div>
-      <form action="/search" method="get" class="relative" role="search">
-        <label for="search-page-input" class="sr-only"
-          >Query archive index</label
-        >
-        <Search
-          size={20}
-          aria-hidden="true"
-          class="text-archive-500 absolute top-1/2 left-4 -translate-y-1/2"
-        />
-        <input
-          type="text"
-          id="search-page-input"
-          name="q"
-          value={query}
-          placeholder="Query archive index..."
-          class="bg-archive-900/50 border-archive-800 text-paper-50 focus:border-brass-600/50 focus-visible:ring-brass-600/50 w-full rounded-sm border px-12 py-4 font-sans text-lg transition-colors focus:outline-none focus-visible:ring-2"
-          autofocus
-        />
-        <button
-          type="submit"
-          aria-label="Submit search"
-          class="tracking-classified text-archive-500 hover:text-paper-100 focus-visible:ring-brass-600/50 absolute top-1/2 right-4 -translate-y-1/2 rounded-sm p-1 text-xs uppercase transition-colors focus:outline-none focus-visible:ring-2"
-        >
-          Search
-        </button>
+  <Container class="pt-8 pb-24">
+    <ArchiveBreadcrumbs
+      items={[
+        { label: "Archive", href: "/" },
+        { label: "Search" },
+      ]}
+    />
+
+    <ArchiveHeader 
+      title="Archive Discovery" 
+      description="Query the complete classified archival database" 
+    />
+
+    <div class="mb-12 border border-archive-800 bg-archive-900/40 p-4 sm:p-6 rounded-sm shadow-sm relative overflow-hidden">
+      <div class="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[100%_4px] opacity-20" aria-hidden="true"></div>
+
+      <form action="/search" method="get" class="relative z-10 flex flex-col gap-6" role="search">
+        <div class="relative flex items-center">
+          <label for="search-input" class="sr-only">Query archive index</label>
+          <Search size={24} aria-hidden="true" class="text-archive-500 absolute left-4" />
+          <input
+            type="text"
+            id="search-input"
+            name="q"
+            value={query}
+            placeholder="Search records by name, designation, or alias..."
+            class="bg-archive-950/80 border-archive-700 text-paper-50 focus:border-brass-600/50 focus-visible:ring-brass-600/50 w-full rounded-sm border pl-14 pr-32 py-4 text-xl sm:text-lg transition-colors focus:outline-none focus-visible:ring-2 shadow-inner"
+            autofocus={!query}
+          />
+          <button
+            type="submit"
+            aria-label="Submit search"
+            class="tracking-classified text-paper-200 bg-archive-800 hover:bg-brass-700 hover:text-paper-50 border border-archive-700 hover:border-brass-600 focus-visible:ring-brass-600/50 absolute right-3 h-10 px-4 rounded-sm font-mono text-xs uppercase transition-colors focus:outline-none focus-visible:ring-2"
+          >
+            Query
+          </button>
+        </div>
+
+        {/* Filters */}
+        <fieldset class="flex flex-wrap items-center gap-3">
+          <legend class="sr-only">Filter by record type</legend>
+          <span class="text-archive-500 tracking-military text-xs uppercase font-mono mr-2">Classification:</span>
+          {validTypes.map(t => (
+            <label class="relative cursor-pointer">
+              <input 
+                type="radio" 
+                name="type" 
+                value={t} 
+                checked={t === typeFilter} 
+                class="sr-only peer"
+                onchange="this.form.submit()"
+              />
+              <span class="inline-flex h-8 items-center justify-center rounded-sm border px-3 text-xs font-mono uppercase tracking-widest transition-colors
+                border-archive-800 bg-archive-900/50 text-archive-400
+                peer-hover:bg-archive-800 peer-hover:text-paper-200
+                peer-checked:border-brass-600/60 peer-checked:bg-brass-900/20 peer-checked:text-brass-400
+                peer-focus-visible:ring-2 peer-focus-visible:ring-brass-600/50">
+                {t}
+              </span>
+            </label>
+          ))}
+        </fieldset>
       </form>
-      <div
-        class="via-brass-600/50 inset-x-0 top-0 h-px bg-linear-to-r from-transparent to-transparent"
-        aria-hidden="true"
-      >
-      </div>
-      <div
-        class="via-brass-600/30 absolute inset-x-0 mt-8 h-px bg-linear-to-r from-transparent to-transparent"
-        aria-hidden="true"
-      >
-      </div>
-    </header>
+    </div>
 
-    {
-      query && !error && results.length === 0 && (
-        <div class="py-20 text-center" aria-live="polite">
-          <p class="text-archive-500 font-serif text-sm">
-            No records found matching "{query}"
-          </p>
-        </div>
-      )
-    }
+    <div aria-live="polite" class="min-h-100">
+      {error ? (
+        <ErrorState 
+          title="Query Failed" 
+          message={error} 
+        />
+      ) : query.trim() === "" ? (
+        <EmptyState 
+          title="Awaiting Query" 
+          description="Enter a search term above to scan the archive index for people, titans, events, and other classified records." 
+          icon="search"
+        />
+      ) : results.length === 0 ? (
+        <EmptyState 
+          title="No Records Found" 
+          description={`No matches in the current database for "${query}"${typeFilter !== "all" ? ` under classification '${typeFilter}'` : ""}.`} 
+          icon="search"
+        >
+          <a 
+            href="/search" 
+            class="mt-6 inline-flex h-10 items-center justify-center rounded-sm border border-archive-700 bg-archive-800 px-6 font-mono text-xs uppercase tracking-widest text-paper-200 transition-colors hover:border-archive-600 hover:bg-archive-700 hover:text-paper-50"
+          >
+            Reset Query
+          </a>
+        </EmptyState>
+      ) : (
+        <div class="space-y-8">
+          <div class="flex items-center justify-between border-b border-archive-800/80 pb-4">
+            <h2 class="text-paper-200 font-serif text-2xl">
+              Search Results
+            </h2>
+            <div class="text-archive-500 font-mono text-xs uppercase tracking-widest">
+              Found {total} records
+            </div>
+          </div>
 
-    {
-      error && (
-        <div class="text-blood-500 py-20 text-center" role="alert">
-          <p>{error}</p>
-        </div>
-      )
-    }
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {results.map((result) => (
+              <EntityCard 
+                id={result.entityId}
+                type={result.entityType}
+                name={result.name}
+                subtitle={result.summary || undefined}
+                badges={[result.entityType]}
+              />
+            ))}
+          </div>
 
-    {
-      results.length > 0 && (
-        <div class="space-y-12" aria-live="polite">
-          {typesOrder.map(
-            (type) =>
-              groupedResults[type]?.length > 0 && (
-                <section>
-                  <h2 class="tracking-classified text-archive-500 text-md mb-4 uppercase">
-                    {type}s
-                  </h2>
-                  <div
-                    class="via-brass-600/30 inset-x-0 h-px bg-linear-to-r from-transparent to-transparent"
-                    aria-hidden="true"
-                  />
-                  <ul class="flex flex-col gap-2">
-                    {groupedResults[type].map((result: any) => (
-                      <li>
-                        <a
-                          href={getEntityRoute(
-                            result.entityType,
-                            result.entityId,
-                          )}
-                          class="group border-archive-800/30 bg-archive-900/20 hover:bg-archive-800/50 hover:border-archive-700 focus-visible:ring-brass-600/50 flex items-center gap-4 rounded-sm border p-4 transition-colors focus-visible:ring-2 focus-visible:outline-none"
-                        >
-                          <span class="text-paper-100 group-hover:text-paper-50 font-serif text-2xl transition-colors sm:text-3xl">
-                            {result.name}
-                          </span>
-                          <span class="tracking-military text-archive-500 group-hover:text-paper-300 text-[11px] uppercase transition-colors">
-                            {result.entityType}
-                          </span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              ),
+          {totalPages > 1 && (
+            <nav
+              aria-label="Pagination"
+              class="border-archive-800/80 mt-12 flex flex-col items-center justify-between gap-4 border-t pt-6 sm:flex-row"
+            >
+              <div class="text-archive-500 font-mono text-xs">
+                PAGE {page} / {totalPages}
+              </div>
+
+              <div class="flex items-center gap-2">
+                {page > 1 ? (
+                  <a
+                    href={getPageUrl(page - 1)}
+                    class="border-archive-700 bg-archive-900/60 tracking-military text-paper-200 hover:border-archive-600 hover:bg-archive-800/80 hover:text-paper-50 focus-visible:ring-brass-600/50 inline-flex min-h-11 items-center gap-2 rounded-sm border px-4 py-2 font-mono text-xs uppercase transition-colors focus:outline-none focus-visible:ring-2"
+                  >
+                    <ChevronLeft class="h-4 w-4" aria-hidden="true" />
+                    <span>Previous</span>
+                  </a>
+                ) : (
+                  <span class="border-archive-900 bg-archive-950/40 tracking-military text-archive-600 inline-flex min-h-11 cursor-not-allowed items-center gap-2 rounded-sm border px-4 py-2 font-mono text-xs uppercase opacity-40">
+                    <ChevronLeft class="h-4 w-4" aria-hidden="true" />
+                    <span>Previous</span>
+                  </span>
+                )}
+
+                {page < totalPages ? (
+                  <a
+                    href={getPageUrl(page + 1)}
+                    class="border-archive-700 bg-archive-900/60 tracking-military text-paper-200 hover:border-archive-600 hover:bg-archive-800/80 hover:text-paper-50 focus-visible:ring-brass-600/50 inline-flex min-h-11 items-center gap-2 rounded-sm border px-4 py-2 font-mono text-xs uppercase transition-colors focus:outline-none focus-visible:ring-2"
+                  >
+                    <span>Next</span>
+                    <ChevronRight class="h-4 w-4" aria-hidden="true" />
+                  </a>
+                ) : (
+                  <span class="border-archive-900 bg-archive-950/40 tracking-military text-archive-600 inline-flex min-h-11 cursor-not-allowed items-center gap-2 rounded-sm border px-4 py-2 font-mono text-xs uppercase opacity-40">
+                    <span>Next</span>
+                    <ChevronRight class="h-4 w-4" aria-hidden="true" />
+                  </span>
+                )}
+              </div>
+            </nav>
           )}
         </div>
-      )
-    }
-  </main>
+      )}
+    </div>
+  </Container>
 </BaseLayout>
