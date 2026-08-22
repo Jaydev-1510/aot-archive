@@ -353,14 +353,14 @@ describe("SEED AND VALIDATION", () => {
 describe("SEARCH ARCHIVE", () => {
   // Test 1 — Exact full name
   test("exact full name ranks first", async () => {
-    const results = await searchArchive(db, "Eren Yeager");
+    const { results } = await searchArchive(db, "Eren Yeager");
     expect(results.length).toBeGreaterThan(0);
     expect(results[0].entityId).toBe("eren_yeager");
   });
 
   // Test 2 — Prefix
   test("prefix search ranks properly", async () => {
-    const results = await searchArchive(db, "Eren");
+    const { results } = await searchArchive(db, "Eren");
     expect(results.length).toBeGreaterThan(0);
     const ids = results.map((r) => r.entityId);
     expect(ids).toContain("eren_yeager");
@@ -374,7 +374,7 @@ describe("SEARCH ARCHIVE", () => {
 
   // Test 3 — Surname
   test("surname matches prioritize strongly relevant canonical names", async () => {
-    const results = await searchArchive(db, "Yeager");
+    const { results } = await searchArchive(db, "Yeager");
     expect(results.length).toBeGreaterThan(0);
     const ids = results.map((r) => r.entityId);
     expect(ids).toContain("eren_yeager");
@@ -385,28 +385,28 @@ describe("SEARCH ARCHIVE", () => {
 
   // Test 4 — Alias
   test("alias search functions correctly", async () => {
-    const results = await searchArchive(db, "Shingeki");
+    const { results } = await searchArchive(db, "Shingeki");
     expect(results.length).toBeGreaterThan(0);
     expect(results.some((r) => r.entityId === "attack_titan")).toBe(true);
   });
 
   // Test 5 — Japanese
   test("japanese text searches function correctly", async () => {
-    const results = await searchArchive(db, "進撃の巨人");
+    const { results } = await searchArchive(db, "進撃の巨人");
     expect(results.length).toBeGreaterThan(0);
     expect(results.some((r) => r.entityId === "attack_titan")).toBe(true);
   });
 
   // Test 6 — Multi-token relevance
   test("multi-token relevance outranks single-token", async () => {
-    const results = await searchArchive(db, "Armored Titan");
+    const { results } = await searchArchive(db, "Armored Titan");
     expect(results.length).toBeGreaterThan(0);
     expect(results[0].entityId).toBe("armored_titan");
   });
 
   // Test 7 — Exact phrase vs token overlap
   test("exact phrase beats token overlap", async () => {
-    const results = await searchArchive(db, "Eren Yeager");
+    const { results } = await searchArchive(db, "Eren Yeager");
     const ids = results.map((r) => r.entityId);
     const erenIndex = ids.indexOf("eren_yeager");
     const carlaIndex = ids.indexOf("carla_yeager");
@@ -417,25 +417,25 @@ describe("SEARCH ARCHIVE", () => {
 
   // Test 8 — Empty query
   test("empty query returns empty list safely", async () => {
-    const results = await searchArchive(db, "   ");
+    const { results } = await searchArchive(db, "   ");
     expect(results.length).toBe(0);
   });
 
   // Test 9 — Malformed FTS input
   test("malformed input handled safely", async () => {
-    const results = await searchArchive(db, '"" OR AND ** // --');
+    const { results } = await searchArchive(db, '"" OR AND ** // --');
     expect(Array.isArray(results)).toBe(true);
   });
 
   // Test 10 — Result limit
   test("result limit is respected", async () => {
-    const results = await searchArchive(db, "Titan", 3);
+    const { results } = await searchArchive(db, "Titan", 3);
     expect(results.length).toBeLessThanOrEqual(3);
   });
 
   // Additional sanity tests
   test("entity-type handling check", async () => {
-    const results = await searchArchive(db, "Coordinate");
+    const { results } = await searchArchive(db, "Coordinate");
     expect(results.length).toBeGreaterThan(0);
     expect(["titan", "ability", "location", "person"]).toContain(
       results[0].entityType,
@@ -443,7 +443,7 @@ describe("SEARCH ARCHIVE", () => {
   });
 
   test("nonexistent search returns empty list", async () => {
-    const results = await searchArchive(db, "NonexistentLoreThing");
+    const { results } = await searchArchive(db, "NonexistentLoreThing");
     expect(results.length).toBe(0);
   });
 });
@@ -749,5 +749,39 @@ describe("ENTITY DOSSIER CONTRACTS", () => {
     expect(await getObjectDetail(db, "object/nonexistent_123")).toBeNull();
     expect(await getFamilyDetail(db, "family/nonexistent_123")).toBeNull();
     expect(await getAbilityDetail(db, 999999)).toBeNull();
+  });
+});
+
+describe("ADVANCED SEARCH CONTRACT", () => {
+  test("returns total count and hasMore flag", async () => {
+    const res = await searchArchive(db, "Titan", 5);
+    expect(res.results.length).toBeLessThanOrEqual(5);
+    expect(typeof res.total).toBe("number");
+    expect(typeof res.hasMore).toBe("boolean");
+  });
+
+  test("filters by entity type correctly", async () => {
+    const resPeople = await searchArchive(db, "Eren", 10, "people");
+    expect(resPeople.results.every((r) => r.entityType === "person")).toBe(true);
+
+    const resTitans = await searchArchive(db, "Titan", 10, "titans");
+    expect(resTitans.results.every((r) => r.entityType === "titan")).toBe(true);
+  });
+
+  test("pagination offset applies correctly", async () => {
+    const resPage1 = await searchArchive(db, "Titan", 2, "all", 1);
+    const resPage2 = await searchArchive(db, "Titan", 2, "all", 2);
+    
+    // Ensure the results shift
+    if (resPage1.results.length === 2 && resPage2.results.length > 0) {
+      expect(resPage1.results[0].entityId).not.toBe(resPage2.results[0].entityId);
+    }
+  });
+
+  test("invalid or empty queries return structured empty response", async () => {
+    const res = await searchArchive(db, "   ");
+    expect(res.results.length).toBe(0);
+    expect(res.total).toBe(0);
+    expect(res.hasMore).toBe(false);
   });
 });
