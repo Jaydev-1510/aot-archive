@@ -1,0 +1,162 @@
+---
+import { getEntityRoute } from "@/utils/routing";
+import Badge from "../ui/Badge.astro";
+import { ArrowRight, MapPin, Users, Shield, Zap } from "@lucide/astro";
+import type { TimelineEventItem } from "@/database/queries/timeline";
+
+interface Props {
+  event: TimelineEventItem;
+  class?: string;
+}
+
+const { event, class: className = "" } = Astro.props as Props;
+
+const badgeVariantMap: Record<
+  string,
+  "blood" | "survey" | "brass" | "status" | "default"
+> = {
+  war: "blood",
+  battle: "blood",
+  disaster: "blood",
+  expedition: "survey",
+  political: "brass",
+};
+
+const badgeVariant = event.eventType
+  ? badgeVariantMap[event.eventType] || "default"
+  : "default";
+
+const dateDisplay =
+  event.yearStart !== null
+    ? event.yearEnd !== null && event.yearEnd !== event.yearStart
+      ? `YEAR ${event.yearStart}–${event.yearEnd}`
+      : event.datePrecision === "approximate"
+        ? `c. YEAR ${event.yearStart}`
+        : `YEAR ${event.yearStart}`
+    : "ANCIENT ERA";
+---
+
+<article
+  class={`group relative pl-6 sm:pl-10 transition-all duration-300 ${className}`}
+>
+  <div
+    class="border-archive-950 bg-archive-800 group-hover:bg-brass-500 group-hover:border-brass-600 shadow-subtle absolute top-6 left-0 flex h-4 w-4 -translate-x-1/2 items-center justify-center rounded-full border-2 transition-colors"
+    aria-hidden="true"
+  >
+    <div
+      class="bg-archive-400 group-hover:bg-archive-950 h-1.5 w-1.5 rounded-full"
+    >
+    </div>
+  </div>
+
+  <div
+    class="border-archive-800/80 bg-archive-950/70 shadow-archive hover:border-archive-600 hover:bg-archive-900/40 focus-within:border-brass-600/60 focus-within:ring-brass-600/50 rounded-sm border p-6 transition-all duration-300 focus-within:ring-1"
+  >
+    <div
+      class="border-archive-800/50 flex flex-wrap items-center justify-between gap-3 border-b pb-3"
+    >
+      <div
+        class="tracking-classified text-archive-500 flex items-center gap-2 font-mono text-[10px] uppercase"
+      >
+        <span>RECORD // {event.code}</span>
+        <span>•</span>
+        <span class="text-brass-500">{dateDisplay}</span>
+      </div>
+
+      {
+        event.eventType && (
+          <Badge variant={badgeVariant} size="sm">
+            {event.eventType}
+          </Badge>
+        )
+      }
+    </div>
+
+    <div class="mt-4">
+      <h3
+        class="text-paper-100 group-hover:text-paper-50 font-serif text-2xl transition-colors sm:text-3xl"
+      >
+        <a
+          href={getEntityRoute("event", event.id)}
+          class="after:absolute after:inset-0 focus:outline-none"
+        >
+          {event.name}
+        </a>
+      </h3>
+    </div>
+
+    {
+      event.summary && (
+        <p class="text-archive-400 mt-3 font-sans text-xs leading-relaxed sm:text-sm">
+          {event.summary}
+        </p>
+      )
+    }
+    {
+      (event.locations.length > 0 ||
+        event.participants.length > 0 ||
+        event.factions.length > 0 ||
+        event.titans.length > 0) && (
+        <div class="border-archive-800/40 mt-6 flex flex-wrap items-center gap-3 border-t pt-4 font-mono text-xs">
+          {event.locations.map((loc) => (
+            <div class="text-archive-500 relative z-10 flex items-center gap-1">
+              <MapPin class="text-archive-500 h-3 w-3" aria-hidden="true" />
+              <a
+                href={getEntityRoute("location", loc.id)}
+                class="text-paper-300 hover:text-brass-400 text-[11px] uppercase transition-colors hover:underline"
+              >
+                {loc.name}
+              </a>
+            </div>
+          ))}
+
+          {event.factions.map((fac) => (
+            <div class="text-archive-500 relative z-10 flex items-center gap-1">
+              <Shield class="text-survey-500 h-3 w-3" aria-hidden="true" />
+              <a
+                href={getEntityRoute("faction", fac.id)}
+                class="text-paper-300 hover:text-survey-400 text-[11px] uppercase transition-colors hover:underline"
+              >
+                {fac.name}
+              </a>
+            </div>
+          ))}
+
+          {event.participants.slice(0, 3).map((person) => (
+            <div class="text-archive-500 relative z-10 flex items-center gap-1">
+              <Users class="text-archive-500 h-3 w-3" aria-hidden="true" />
+              <a
+                href={getEntityRoute("person", person.id)}
+                class="text-paper-300 hover:text-paper-100 text-[11px] uppercase transition-colors hover:underline"
+              >
+                {person.name}
+              </a>
+            </div>
+          ))}
+
+          {event.titans.map((titan) => (
+            <div class="text-archive-500 relative z-10 flex items-center gap-1">
+              <Zap class="text-blood-500 h-3 w-3" aria-hidden="true" />
+              <a
+                href={getEntityRoute("titan", titan.id)}
+                class="text-paper-300 hover:text-blood-400 text-[11px] uppercase transition-colors hover:underline"
+              >
+                {titan.name}
+              </a>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    <div
+      class="border-archive-800/40 tracking-military text-archive-500 group-hover:text-paper-200 mt-6 flex items-center justify-between border-t pt-4 font-mono text-[10px] uppercase transition-colors"
+    >
+      <span>OPEN EVENT DOSSIER</span>
+      <ArrowRight
+        class="text-archive-500 group-hover:text-paper-100 h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+        aria-hidden="true"
+      />
+    </div>
+  </div>
+</article>

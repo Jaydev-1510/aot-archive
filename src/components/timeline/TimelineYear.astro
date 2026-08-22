@@ -1,0 +1,43 @@
+---
+import Badge from "../ui/Badge.astro";
+import TimelineEvent from "./TimelineEvent.astro";
+import type { TimelineGroup } from "@/database/queries/timeline";
+interface Props {
+  group: TimelineGroup;
+  class?: string;
+}
+
+const { group, class: className = "" } = Astro.props as Props;
+---
+
+<section
+  aria-labelledby={`year-heading-${group.yearNumeric ?? "ancient"}`}
+  class={`relative mb-16 last:mb-0 ${className}`}
+>
+  <div class="mb-8 flex items-center gap-4">
+    <div
+      class="border-brass-600/80 bg-archive-950 shadow-subtle z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border"
+      aria-hidden="true"
+    >
+      <div class="bg-brass-500 h-2.5 w-2.5 animate-pulse rounded-full"></div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-3">
+      <h2
+        id={`year-heading-${group.yearNumeric ?? "ancient"}`}
+        class="text-paper-50 font-serif text-2xl tracking-tight uppercase sm:text-4xl"
+      >
+        {group.yearLabel}
+      </h2>
+
+      <Badge variant="brass" size="sm">
+        {group.events.length}
+        {group.events.length === 1 ? "RECORD" : "RECORDS"}
+      </Badge>
+    </div>
+  </div>
+
+  <div class="space-y-8">
+    {group.events.map((event) => <TimelineEvent event={event} />)}
+  </div>
+</section>

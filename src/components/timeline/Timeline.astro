@@ -1,0 +1,54 @@
+---
+import TimelineYear from "./TimelineYear.astro";
+import EmptyState from "../ui/EmptyState.astro";
+import Button from "../ui/Button.astro";
+import type { TimelineGroup } from "@/database/queries/timeline";
+
+interface Props {
+  groups: TimelineGroup[];
+  hasActiveFilters?: boolean;
+  class?: string;
+}
+
+const {
+  groups,
+  hasActiveFilters = false,
+  class: className = "",
+} = Astro.props as Props;
+---
+
+<div class={`relative ${className}`}>
+  {
+    groups.length > 0 ? (
+      <div class="relative">
+        <div
+          class="from-brass-600/80 via-archive-800 absolute top-3.5 bottom-8 left-3.5 w-px -translate-x-1/2 bg-linear-to-b to-transparent"
+          aria-hidden="true"
+        />
+
+        <div class="space-y-4">
+          {groups.map((group) => (
+            <TimelineYear group={group} />
+          ))}
+        </div>
+      </div>
+    ) : (
+      <EmptyState
+        title="No Historical Events Found"
+        description={
+          hasActiveFilters
+            ? "No classified chronicle records match your specified timeline filters or period range."
+            : "The Survey Corps historical chronicle currently contains zero indexed event records."
+        }
+        icon="search"
+        class="my-16"
+      >
+        {hasActiveFilters && (
+          <Button href="/timeline" variant="secondary" size="md">
+            Reset Chronicle Filters
+          </Button>
+        )}
+      </EmptyState>
+    )
+  }
+</div>

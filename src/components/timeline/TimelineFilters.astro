@@ -1,0 +1,166 @@
+---
+import Button from "../ui/Button.astro";
+import { Search, SlidersHorizontal } from "@lucide/astro";
+
+interface Props {
+  currentType?: string;
+  currentQuery?: string;
+  fromYear?: number | string;
+  toYear?: number | string;
+  currentOrder?: "asc" | "desc";
+  totalEvents?: number;
+  class?: string;
+}
+
+const {
+  currentType = "all",
+  currentQuery = "",
+  fromYear = "",
+  toYear = "",
+  currentOrder = "asc",
+  class: className = "",
+} = Astro.props as Props;
+
+const eventTypeOptions = [
+  { value: "all", label: "All Event Types" },
+  { value: "war", label: "War" },
+  { value: "battle", label: "Battle" },
+  { value: "expedition", label: "Expedition" },
+  { value: "political", label: "Political" },
+  { value: "disaster", label: "Disaster" },
+  { value: "other", label: "Other" },
+];
+
+const hasActiveFilters = Boolean(
+  (currentQuery && currentQuery.trim() !== "") ||
+  (currentType && currentType !== "all") ||
+  fromYear ||
+  toYear ||
+  currentOrder !== "asc",
+);
+---
+
+<section
+  aria-label="Chronicle filter controls"
+  class={`mb-12 rounded-sm border border-archive-800/80 bg-archive-950/70 p-4 sm:p-6 shadow-archive ${className}`}
+>
+  <form action="/timeline" method="get" role="search" class="space-y-4">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-12">
+      <!-- Keyword Search Input -->
+      <div class="relative lg:col-span-4">
+        <label for="timeline-search" class="sr-only"
+          >Search Historical Events</label
+        >
+        <Search
+          class="text-archive-500 absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2"
+          aria-hidden="true"
+        />
+        <input
+          type="text"
+          id="timeline-search"
+          name="q"
+          value={currentQuery}
+          placeholder="Search chronicle records..."
+          class="border-archive-800 bg-archive-900/40 text-paper-50 placeholder:text-archive-500 focus:border-brass-600/60 focus-visible:ring-brass-600/50 min-h-11 w-full rounded-sm border py-2.5 pr-4 pl-10 font-sans text-sm focus:outline-none focus-visible:ring-2"
+        />
+      </div>
+
+      <!-- Event Type Filter -->
+      <div class="lg:col-span-3">
+        <label for="timeline-type" class="sr-only">Event Type</label>
+        <div class="relative">
+          <select
+            id="timeline-type"
+            name="type"
+            class="border-archive-800 bg-archive-900/40 tracking-military text-paper-200 focus:border-brass-600/60 focus-visible:ring-brass-600/50 min-h-11 w-full cursor-pointer appearance-none rounded-sm border px-3 py-2.5 font-sans text-xs uppercase focus:outline-none focus-visible:ring-2"
+          >
+            {
+              eventTypeOptions.map((opt) => (
+                <option value={opt.value} selected={currentType === opt.value}>
+                  TYPE: {opt.label}
+                </option>
+              ))
+            }
+          </select>
+          <SlidersHorizontal
+            class="text-archive-500 pointer-events-none absolute top-1/2 right-3 h-3.5 w-3.5 -translate-y-1/2 opacity-60"
+            aria-hidden="true"
+          />
+        </div>
+      </div>
+
+      <!-- Year Range (From / To) -->
+      <div class="flex items-center gap-2 lg:col-span-3">
+        <div class="relative flex-1">
+          <label for="timeline-from" class="sr-only">From Year</label>
+          <input
+            type="number"
+            id="timeline-from"
+            name="from"
+            value={fromYear}
+            placeholder="From Yr"
+            class="border-archive-800 bg-archive-900/40 text-paper-100 placeholder:text-archive-500 focus:border-brass-600/60 focus-visible:ring-brass-600/50 min-h-11 w-full rounded-sm border px-3 py-2 font-mono text-xs focus:outline-none focus-visible:ring-2"
+          />
+        </div>
+        <span class="text-archive-600 font-mono text-xs">–</span>
+        <div class="relative flex-1">
+          <label for="timeline-to" class="sr-only">To Year</label>
+          <input
+            type="number"
+            id="timeline-to"
+            name="to"
+            value={toYear}
+            placeholder="To Yr"
+            class="border-archive-800 bg-archive-900/40 text-paper-100 placeholder:text-archive-500 focus:border-brass-600/60 focus-visible:ring-brass-600/50 min-h-11 w-full rounded-sm border px-3 py-2 font-mono text-xs focus:outline-none focus-visible:ring-2"
+          />
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 lg:col-span-2">
+        <button
+          type="submit"
+          name="order"
+          value={currentOrder === "asc" ? "desc" : "asc"}
+          class="border-archive-800 bg-archive-900/40 text-archive-500 hover:border-archive-600 hover:text-paper-100 focus-visible:ring-brass-600/50 flex min-h-11 flex-1 items-center justify-center rounded-sm border px-3 py-2 font-mono text-xs uppercase focus:outline-none focus-visible:ring-2"
+          aria-label={`Chronological order: currently ${currentOrder.toUpperCase()}, toggle to ${currentOrder === "asc" ? "descending" : "ascending"}`}
+        >
+          {currentOrder === "asc" ? "ASC ↑" : "DESC ↓"}
+        </button>
+
+        <Button type="submit" variant="primary" size="md" class="flex-1">
+          Filter
+        </Button>
+      </div>
+    </div>
+    {
+      hasActiveFilters && (
+        <div class="border-archive-800/40 flex flex-wrap items-center gap-2 border-t pt-3">
+          <span class="tracking-classified text-archive-500 font-mono text-[10px] uppercase">
+            Active Chronology Filters:
+          </span>
+          {currentQuery && (
+            <span class="border-brass-800/40 bg-brass-950/20 text-brass-400 inline-flex items-center gap-1.5 rounded-sm border px-2 py-0.5 font-mono text-[10px]">
+              Query: "{currentQuery}"
+            </span>
+          )}
+          {currentType && currentType !== "all" && (
+            <span class="border-archive-700 bg-archive-900/60 text-paper-300 inline-flex items-center gap-1.5 rounded-sm border px-2 py-0.5 font-mono text-[10px]">
+              Type: {currentType.toUpperCase()}
+            </span>
+          )}
+          {(fromYear || toYear) && (
+            <span class="border-archive-700 bg-archive-900/60 text-paper-300 inline-flex items-center gap-1.5 rounded-sm border px-2 py-0.5 font-mono text-[10px]">
+              Period: {fromYear || "?"} – {toYear || "?"}
+            </span>
+          )}
+          <a
+            href="/timeline"
+            class="tracking-military text-archive-500 hover:text-blood-400 ml-auto font-mono text-[10px] uppercase transition-colors"
+          >
+            Reset Chronicle View
+          </a>
+        </div>
+      )
+    }
+  </form>
+</section>

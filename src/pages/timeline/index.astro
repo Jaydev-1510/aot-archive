@@ -1,0 +1,104 @@
+---
+import BaseLayout from "@/layouts/base.astro";
+import Container from "@/components/ui/Container.astro";
+import ArchiveBreadcrumbs from "@/components/archive/ArchiveBreadcrumbs.astro";
+import ArchiveHeader from "@/components/archive/ArchiveHeader.astro";
+import TimelineFilters from "@/components/timeline/TimelineFilters.astro";
+import Timeline from "@/components/timeline/Timeline.astro";
+import { createDb } from "@/database";
+import { env } from "cloudflare:workers";
+import {
+  getTimelineEvents,
+  type TimelineGroup,
+  type TimelineEventItem,
+} from "@/database/queries/timeline";
+
+const url = new URL(Astro.request.url);
+const q = url.searchParams.get("q") || "";
+const type = url.searchParams.get("type") || "all";
+const fromStr = url.searchParams.get("from");
+const toStr = url.searchParams.get("to");
+const order = (url.searchParams.get("order") as "asc" | "desc") || "asc";
+
+const fromYear = fromStr ? parseInt(fromStr, 10) : undefined;
+const toYear = toStr ? parseInt(toStr, 10) : undefined;
+
+let groups: TimelineGroup[] = [];
+let events: TimelineEventItem[] = [];
+let total = 0;
+let yearRange = { min: null as number | null, max: null as number | null };
+
+if (env && env.DB) {
+  const db = createDb(env.DB);
+  const res = await getTimelineEvents(db, {
+    search: q,
+    type: type !== "all" ? type : undefined,
+    fromYear: !isNaN(fromYear as number) ? fromYear : undefined,
+    toYear: !isNaN(toYear as number) ? toYear : undefined,
+    order,
+  });
+  groups = res.groups;
+  events = res.events;
+  total = res.total;
+  yearRange = res.yearRange;
+}
+
+const hasActiveFilters = Boolean(
+  (q && q.trim() !== "") ||
+  (type && type !== "all") ||
+  fromStr ||
+  toStr ||
+  order !== "asc",
+);
+
+const breadcrumbs = [{ label: "CHRONICLE", current: true }];
+
+const pageTitle = "Chronicle — Survey Corps Archives";
+const pageDescription =
+  "Chronological record of historical events, military campaigns, Titan incursions, and global turning points from antiquity to the modern era.";
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Chronicle of Historical Events",
+  description: pageDescription,
+  about: {
+    "@type": "Event",
+    name: "Attack on Titan History",
+  },
+};
+---
+
+<BaseLayout
+  title={pageTitle}
+  description={pageDescription}
+  type="website"
+  schemaData={schemaData}
+>
+  <Container size="lg" as="main" id="main-content">
+    <ArchiveBreadcrumbs items={breadcrumbs} />
+
+    <ArchiveHeader
+      title="Chronicle"
+      designation="CHRONOLOGY // THE HISTORY OF THE WORLD"
+      recordCount={total}
+      recordType="HISTORICAL EVENTS"
+      description="Classified chronological timeline of military operations, Wall Maria breaches, political upheavals, and world-shaping engagements."
+    />
+
+    <TimelineFilters
+      currentQuery={q}
+      currentType={type}
+      fromYear={fromStr || ""}
+      toYear={toStr || ""}
+      currentOrder={order}
+      totalEvents={total}
+    />
+
+    <Timeline
+      groups={groups}
+      hasActiveFilters={hasActiveFilters}
+      class="mt-8"
+    />
+  </Container>
+</BaseLayout>
